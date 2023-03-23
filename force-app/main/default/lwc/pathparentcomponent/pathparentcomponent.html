@@ -1,0 +1,109 @@
+<template>
+    <lightning-card>
+        <p>{activetab}</p> 
+        <lightning-tabset   active-tab-value={activeTab} >
+            
+                <lightning-tab label="Inventory Management" value="Inventory Management" onactive={handleActive}> <lightning-card>
+                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                        <template for:each={steps} for:item="step">
+                            <lightning-progress-step label={step.label} value={step.value} key={step.label} onclick={moveToCmp} ></lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                </lightning-card>
+            
+                <template if:true={isInvSummary}>
+                 <c-test-_-table-_-tag  onproductdetails={Handleproductdetails}   onrefreshinventory={pagerefresh} onpassproductdetails={handlepassproductdetails}   ></c-test-_-table-_-tag>
+                     
+                </template>
+                <template  if:true={isOrderInv}>
+                    <c-supplier-details-table    productnamee={passproductvalue} onsupplierselection={moveToSupplierSelection}> </c-supplier-details-table>
+                </template>
+                <template if:true={isSupplierSelection}>
+                    <c-supplier-datatable  > </c-supplier-datatable>
+                </template>
+                <template if:true={isOrderSummary}>
+                    <c-orders-datatable  > </c-orders-datatable>
+                </template>
+             </lightning-tab>
+            
+                
+
+                <!-- <template if:true={opentab}>
+                    <lightning-tab label="Opportunity Information"> 
+                        <c-opp-quantity-url > </c-opp-quantity-url> 
+                    </lightning-tab>
+                </template> -->
+                <lightning-tab  label="Receiving Manager" value="Receiving Manger"  onactive={handleActive}>
+                    <c-delivery-information> </c-delivery-information>
+                </lightning-tab>
+
+
+                <lightning-tab  label="Quality Assurance" value="QUALITY ASSURANCE"  >
+                    <!-- <c-p-f-q-a-manager-component> </c-p-f-q-a-manager-component> -->
+                    <c-p-f-q-a-manager-component  ></c-p-f-q-a-manager-component>
+                </lightning-tab>
+
+
+
+
+                <template if:true={isShowModal}>
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                    title="Close" onclick={handleBack}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="close" label="Select One Record"
+                                        variant="inverse" size="small" onclick={closeThePopup}></lightning-icon>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <div>
+                                   <h2 id="modal-heading-06" class="slds-text-heading_medium slds-text-align_left">{oppTab} Opportunities Information 
+                                    </h2>
+                                </div>
+                            </header>
+                            <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
+                                <lightning-card>
+                                    <c-opp-quantity-url listopportunities={tabContent} tabname={oppTab}  > </c-opp-quantity-url> 
+                                </lightning-card>
+                            </div>
+                            
+                       <!-- modal footer start-->
+                       <!-- <footer class="slds-modal__footer"> -->
+                          <!-- <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button> -->
+                       <!-- </footer> -->
+                    
+                    </div>
+                 </section>
+                 <div class="slds-backdrop slds-backdrop_open"></div>
+                 </template>
+
+                
+                
+                        <!-- <template for:each={tabs} for:item="tab"> -->
+                            <!-- <template if:true={tab.label}> -->
+                                <!-- <lightning-tab key={tab.label} label={tab.label} value={tab.label}  onactive={handleActive}>
+                                    <c-opp-quantity-url listopportunities={tab.content} tabname={tab.label}  onremovetab={handleRemoveTab}> </c-opp-quantity-url> 
+                                </lightning-tab> -->
+                            <!-- </template> -->
+                            
+                        <!-- </template> -->
+                        <!-- <lightning-tab  label={oppTab} value={oppTab}  onactive={handleActive}>
+                            <c-opp-quantity-url listopportunities={tabContent} tabname={oppTab}  onremovetab={handleRemoveTab}> </c-opp-quantity-url> 
+                        </lightning-tab> -->
+
+                
+
+
+
+    
+            
+            
+            
+        </lightning-tabset>
+    </lightning-card>
+    
+    
+
+    
+</template>

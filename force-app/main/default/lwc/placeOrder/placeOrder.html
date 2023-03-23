@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Product and Supplier Details" icon-name="standard:record">
+        <div class="slds-m-around_medium">
+            <lightning-layout horizontal-align="space">
+                <lightning-layout-item >
+                    <lightning-input label="Product" disabled value={productName}></lightning-input> <lightning-input label="Threshold Value" disabled value={Thresholdvalue}></lightning-input>
+
+                </lightning-layout-item>
+                <lightning-layout-item >
+                    <lightning-input label="Warehouse" disabled value={WarehouseName} ></lightning-input> <lightning-input label="Order Quantity" onchange={GetOrderQuantity} class="slds-m-bottom_x-small"></lightning-input>
+                </lightning-layout-item>
+                
+            </lightning-layout>
+            <lightning-dual-listbox name="Suppliers"
+                            label="Suppliers"
+                            source-label="Available"
+                            selected-label="Selected"
+                            field-level-help="Select your preferred Suppliers"
+                            options={SuppliersNamesList}
+                            onchange={handleChange}></lightning-dual-listbox>
+            
+            <lightning-card> 
+                    <lightning-button variant="brand" label="Send Order" title="Primary action" onclick={HandleSendOrder} icon-position="right" class="slds-align_absolute-center"></lightning-button>
+            </lightning-card>
+           
+                
+               
+            
+                
+            
+                
+            
+            
+            
+            
+            
+        </div>
+     </lightning-card>
+    
+</template>

@@ -1,0 +1,115 @@
+<template>
+  <div class="slds-box slds-theme_default">
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+          <thead>
+              <tr>
+                  <th class="" scope="col">
+                      <div class="slds-truncate" title="Order Number">Order Number</div>
+                    </th>
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="Product Name">Product Name</div>
+                    </th>
+                    
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Pending Quantity">Pending Quantity</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Under QA">Received Quantity</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Under QA">Under QA</div>
+                      </th>
+                      <th class="" scope="col">
+                          <div class="slds-truncate" title="Approved Quantity">Approved Quantity</div>
+                        </th>
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Approved Quantity">Rejected Quantity</div>
+                        </th>
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Rejected Quantity">QA Check</div>
+                        </th>
+              </tr>
+          </thead>
+          <tbody>
+              <template for:each={QATableList} for:item="ordPro">
+                  <tr key={ordPro.Id}>
+                    <td onclick={getOrderId} data-orderurl={ordPro.Order.OrderNumber}><a href={recordPageUrl} target="_blank">{ordPro.Order.OrderNumber}</a></td>
+                      <td>{ordPro.Product2.Name}</td>
+                      <td>{ordPro.Order.Pending_Quantityy1__c}</td>
+                      <td>{ordPro.Order.Under_QA__c}</td>
+                      <td>{ordPro.UnderQAQuantity}</td>
+                      <td>{ordPro.Product2.Approved_Quantity__c}</td>
+                      <td>{ordPro.Product2.Rejected_Quantity__c}</td>
+                      <td> <lightning-button variant="brand" label="Inspect" title="Inspect" data-set={ordPro.Order.Id} data-proid={ordPro.Product2.Id} onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+                      </td>
+                  </tr>
+              </template>
+              
+          </tbody>
+      </table>
+      
+  </div>  
+  <template if:true={isShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close" onclick={handleBack}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" label="Select One Record"
+                        variant="inverse" size="small" onclick={closeThePopup}></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <div>
+                   <h2 id="modal-heading-06" class="slds-text-heading_medium slds-text-align_left">Products Quality Check
+                    </h2>
+                </div>
+            </header>
+            <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
+                <lightning-card>
+                    <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
+                        cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
+
+                        <thead>
+                            <tr class="slds-table-height_reset">
+                              <th class="" scope="col">
+                                  <div class="slds-truncate" title="Product Name">Batch Number</div>
+                                </th>
+                                
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Batch Number">Status</div>
+                                  </th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={aslist} for:item="asset">
+                                <tr key={asset.Id}>
+                                    <td>{asset.Batch_Number__c}</td>
+                                    <td ><lightning-combobox
+                                      name="  Status"
+                                      label="Status"
+                                      value={value}
+                                      placeholder="Select Progress"
+                                      options={options}
+                                      onchange={handlestatusupdation} data-assetid={asset.Id} ></lightning-combobox></td>
+                                    <!--<td> <lightning-button variant="Neutral" label="select" onclick={handleVerify}
+                                            class="slds-m-left_x-large"></lightning-button>
+                                    </td>-->
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </lightning-card>
+            </div>
+            
+       <!-- modal footer start-->
+       <footer class="slds-modal__footer">
+          <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
+          
+       </footer>
+    
+    </div>
+ </section>
+ <div class="slds-backdrop slds-backdrop_open"></div>
+ </template> 
+</template>

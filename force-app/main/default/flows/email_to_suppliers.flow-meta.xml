@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>pf_Send_email_to_supplier</name>
+        <label>Send email to supplier</label>
+        <locationX>314</locationX>
+        <locationY>575</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>pfEmailTemplateBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddressesArray</name>
+            <value>
+                <elementReference>emailAddressCollection</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Requirement for Products</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Revised_Email</name>
+        <label>Revised Email</label>
+        <locationX>50</locationX>
+        <locationY>575</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>RevisedEmailTemplate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddressesArray</name>
+            <value>
+                <elementReference>emailAddressCollection</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Price  Negotiation</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>Requestforquotesemaillist</name>
+        <label>Request for Quotes Email List</label>
+        <locationX>314</locationX>
+        <locationY>455</locationY>
+        <assignmentItems>
+            <assignToReference>emailAddressCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.supplier_Email__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>emailAddressCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>quote_automation@k-cqjr5k147upssfvf9zommipivpinhx2wjv2prh9oj5jqyqnk.5g-i1ljoea3.ap24.apex.salesforce.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>pf_Send_email_to_supplier</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>revisedemaillist</name>
+        <label>Revised Email List</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <assignmentItems>
+            <assignToReference>emailAddressCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.supplier_Email__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>emailAddressCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>quote_automation@k-cqjr5k147upssfvf9zommipivpinhx2wjv2prh9oj5jqyqnk.5g-i1ljoea3.ap24.apex.salesforce.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Revised_Email</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Revised_or_not</name>
+        <label>Revised or not</label>
+        <locationX>182</locationX>
+        <locationY>335</locationY>
+        <defaultConnector>
+            <targetReference>Requestforquotesemaillist</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>if_revised</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Revised__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>revisedemaillist</targetReference>
+            </connector>
+            <label>if revised</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>email to suppliers {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>email to suppliers</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Revised_or_not</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>supplier_Email__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Quote</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>pfEmailTemplateBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;p&gt;Hi {!$Record.Supplier__c},&lt;/p&gt;&lt;p&gt;Greetings!&lt;/p&gt;&lt;p&gt;I am the inventory manager from Procufine, a procurement management company based in hyderabad..Our company is interested in procuring some of the products that you have to offer.More details of our requirements are as follows:!&lt;/p&gt;
+&lt;table style=&quot;width:100%;border-collapse:collapse;text-align:left;&quot;&gt; &lt;tr&gt; &lt;th style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;Product Name&lt;/th&gt; &lt;th style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;Order Quantity&lt;/th&gt; &lt;th style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;Location&lt;/th&gt;&lt;/tr&gt; &lt;tr&gt; &lt;td style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;{!$Record.Product__r.Name}&lt;/td&gt; &lt;td style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;{!$Record.Order_Quantity__c}&lt;/td&gt; &lt;td style=&quot;border: 1px solid #dddddd;padding: 5px;&quot;&gt;{!$Record.warehouse__c}&lt;/td&gt; &lt;/tr&gt;  &lt;/table&gt;
+&lt;p&gt;Could you please share current availability, best prices and delivery details (lead time, delivery schedule etc.) so that we can take this conversation forward?&lt;/p&gt;
+&lt;p&gt;Looking forward to your reply.&lt;/p&gt;&lt;p&gt;Thanks,&lt;br&gt;Procufine DevOrg&lt;br&gt;Inventory Manager &lt;br&gt; Pro.Inc., Hyderabad &lt;br&gt;(+91)-1234567890!&lt;/p&gt;
+&lt;p&gt;P.S. Please Reply All on this email with the details and do not change the subject.&lt;/p&gt;
+&lt;p style=&quot;display:none&quot;&gt;quoteid:{!$Record.Id}.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>RevisedEmailTemplate</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;p&gt;Hi {!$Record.Supplier_Account__r.Name},&lt;/p&gt;
+&lt;p&gt;Thank you for sharing your proposal and costs with us. All of us at (company name) were impressed with the effort you have put into this.&lt;/p&gt;
+
+&lt;p&gt;While we are happy with the content of your proposal, we&apos;re unable to meet your price. This is for several reasons, including (add an explanation).&lt;/p&gt;
+
+&lt;p&gt;We still want to work with you, and we wanted to know if you were prepared to negotiate on the price. Our current budget for the project is (insert figure).&lt;/p&gt;
+
+&lt;p&gt;I&apos;m more than happy to discuss this with you. Please get in touch with me at (insert details) to arrange a suitable date and time.&lt;/p&gt;
+
+&lt;p&gt;Many thanks,&lt;/p&gt;
+&lt;p&gt;{!$Record.Inventory_Manager__r.FirstName} &lt;/p&gt;
+&lt;p style=&quot;display:none&quot;&gt;quoteid:{!$Record.Id}.&lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>emailAddressCollection</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

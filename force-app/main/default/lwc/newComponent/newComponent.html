@@ -1,0 +1,35 @@
+<template>
+    
+    <lightning-card>
+        <lightning-datatable data={SupplierLIST} columns={columns} key-field="Id" >
+        </lightning-datatable>
+       
+    </lightning-card>
+    
+    <lightning-card>
+        <!-- <lightning-button
+        variant="brand"
+        label="Place Order"
+        onclick={handlePlaceOrder}
+        class="slds-m-left_x-small"
+        > -->
+        <div class="slds-clearfix">
+            <div class="slds-align_absolute-center">
+                <lightning-button variant="brand"
+                label="Place Order"
+                onclick={handlePlaceOrder}
+                 class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    <!-- </lightning-button> -->
+    
+    <!-- class="slds-align_absolute-center" -->
+
+        </lightning-card>
+        
+    </template>
+
+
+
+
+</template>
