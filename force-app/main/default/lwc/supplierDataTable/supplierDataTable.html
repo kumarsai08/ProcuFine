@@ -1,0 +1,317 @@
+<template>
+    <lightning-card>
+      <!-- <div class="slds-m-around_left"> -->
+        <!-- <lightning-layout vertical-align="space"> -->  
+          <!-- <template  if:true={isShowProductCombobox} > -->
+            <lightning-combobox
+            name="Select Product Name"
+            label="Select Product Name"
+            value={Value}
+            options={productNameFilter}
+            onchange={handleProductChange}
+            field-level-help="Select a Product"
+            style="width:200px;"
+            class="slds-align_absolute-center"></lightning-combobox>
+          <!-- </template> -->
+         
+          <template  if:true={isShowQuoteStatus} >
+            <lightning-combobox
+            name="Select Quote Status"
+            label="Select Quote Status"
+            value={QuoteStatusValue}
+            options={QuoteStatusOptions}
+            onchange={handleQuoteChange}
+            field-level-help="Select the quote status"
+            style="width:200px;"
+            class="slds-align_absolute-center"></lightning-combobox>
+          </template>
+
+          <!-- <template  if:true={isShowSupplierName} >
+            <lightning-combobox
+            name="Select Supplier Name"
+            label="Select Supplier Name"
+            value={Value}
+            options={supplierNFilter}
+            onchange={handleSupplierChange}
+            field-level-help="Select Supplier Name"
+            style="width:200px;"
+            class="slds-align_absolute-center"></lightning-combobox>
+          </template> -->
+         
+          <!-- </lightning-layout>                -->
+          <!-- </div> -->
+         
+         
+          <template  if:true={showAccordion} >
+            <lightning-accordion
+            allow-multiple-sections-open
+            active-section-name={section}
+            onsectiontoggle={handleSectionToggle}>
+            <template for:each={supplierNameFilter} for:item="suppliername" for:index="index">
+              <div class="slds-p-left_small" key={suppliername}>  
+                <lightning-accordion-section name={suppliername} label={suppliername}>
+                  <div class="c-container">
+                    <lightning-layout horizontal-align={horizontalAlign}>
+                      <!-- <lightning-layout-item flexibility="auto" padding="around-small"> -->
+                         <!-- Quote Number : <a href={QuoteIdRedirect} target="_blank">{StrQuoteId}</a> -->
+                        <!-- <p class="slds-p-around_small">Quote Number : <a  name={storequoteid}   onclick={RecordPage}  target="_blank">{StrQuoteId}</a></p> -->
+                      <!-- </lightning-layout-item> -->
+                      <lightning-layout-item flexibility="auto" padding="around-small">
+                        Product :<a onclick={NavigatetoProduct}  target="_blank">{productChange}</a>
+                      </lightning-layout-item>
+                
+                      <!-- <template  if:true={isShowButtons} >
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                          <lightning-button variant="Brand" label="Add Quote Line items" title="Successful action" onclick={HandleCreateButton} class="slds-m-left_x-small" ></lightning-button>
+                         
+                        </lightning-layout-item>
+                      </template>
+                      <lightning-layout-item flexibility="auto" padding="around-small">
+                        <lightning-button variant="Brand" label="View Documents" title="Successful action" onclick={handleViewDocuments} class="slds-m-left_x-small" ></lightning-button>
+                       
+                      </lightning-layout-item> -->
+                      <!-- <template  if:true={isShowButtons} >
+                        <lightning-layout-item >
+                     <lightning-input type="text" label="Enter Input Quantity"   onchange={handlequantity} disabled={disabled}></lightning-input>
+                        </lightning-layout-item>
+                      </template> -->
+
+                      <template  if:true={isShowButtons} >
+                    
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                          <lightning-button variant="destructive" label="Reject" title="Destructive action" onclick={handlereject} class="slds-m-left_x-small" ></lightning-button>
+                          
+                        </lightning-layout-item>
+                        </template>
+                     
+                    </lightning-layout>
+                  </div>
+                  <!-- <template if:true={isShowAfterQLI}> -->
+                  <template if:true={IsShowQuoteLineItems}>
+                    <lightning-card>
+                     
+                      <div class="slds-box slds-theme_default">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                          <thead>
+                            <tr>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Quote Number">Quote Number</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Product Name">Quote Line Number</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="List Price">List Price</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Sales Price">Sales Price</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Quantity">Quantity</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Discount">Discount</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Delivery Date">Delivery Date</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Description">Description</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Total Price">Total Price</div>
+                              </th>
+                              <template  if:true={isShowButtons}>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="Update Button"></div>
+                              </th>
+                              </template>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="ViewDocuments Button">View Documents</div>
+                              </th>
+                              <template  if:true={isShowButtons}>
+                                <th class="" scope="col">
+                                  <div class="slds-truncate" title="Revise"></div>
+                                </th>
+                              </template>
+                              <th class="" scope="col">
+                                <div class="slds-truncate" title="FinalisedPrice">Finalised Price</div>
+                              </th>
+                              <!-- <th class="" scope="col"> -->
+                                <!-- <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div> -->
+                                <!-- </th> -->
+                               
+                               
+                               
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <template for:each={PFQuoteLineItemsList} for:item="PFQL">
+                                <tr key={PFQL.Id}>
+                                  <td><a name={PFQL.Quote.Id} data-quotenavigation= {PFQL.Quote.Id} onclick={navigateToQuote} target="_blank">{PFQL.Quote.QuoteNumber}</a></td>
+                                  <td><a  name={PFQL.Id}  data-strquotelineid={PFQL.Id} onclick={Navigatetoquotelinenumber}  target="_blank">{PFQL.LineNumber}</a></td>
+                                  <td>{PFQL.ListPrice}</td>
+                                  <td><lightning-input type="text"  value={PFQL.UnitPrice} onchange={handlesalesprice}></lightning-input></td>
+                                  <td><lightning-input type="text" label="" value={PFQL.Quantity}  onchange={handlequantity} ></lightning-input></td>
+                                  <td><lightning-input type="text" label="" value={PFQL.Discount} onchange={handlediscount} ></lightning-input></td>
+                                  <td><lightning-input type="date" label="" value={PFQL.Quote.PF_Estimated_Delivery_Date__c} onchange={handleDeliveryDate} disabled={disabled}></lightning-input></td>
+                                  <td><lightning-input type="text" label="" value={PFQL.Description} onchange={handledescription} ></lightning-input></td>
+                                  <td>{PFQL.TotalPrice}</td>
+                                  <template  if:true={isShowButtons}>
+                                  <td><lightning-button variant="brand" label="Update" title="Primary action" data-qlid={PFQL.Id} data-quantity={PFQL.Quantity} data-discount={PFQL.Discount} data-description={PFQL.Description}  data-salesprice={PFQL.UnitPrice}  onclick={handleupdate} data-qid={PFQL.QuoteId} class="slds-m-left_x-small"></lightning-button> </td>
+                                  </template>
+                                  <td> <lightning-icon icon-name="utility:preview" alternative-text="Preview" title="Preview" onclick={handlepdfids} data-qid={PFQL.QuoteId}></lightning-icon> </td>
+                                  <!-- <td><lightning-button variant="brand" label="View Documents" title="Primary action" onclick={handlepdfids} data-qid={PFQL.QuoteId} class="slds-m-left_x-small slds-button_stretch"></lightning-button> </td> -->
+                                  <template  if:true={isShowButtons}>
+                                  <td><lightning-button variant="destructive-text" label="Revise" title="Destructive action with a lighter look"  data-qid={PFQL.QuoteId} onclick={handlerevise} class="slds-m-left_x-small"></lightning-button> </td>
+                                  </template>
+                                  <template  if:true={isShowButtons}>
+                                    <td><lightning-input type="checkbox" name='finalise' class="slds-p-left_xx-large" data-quoteid={PFQL.QuoteId} onchange={handleInputChange1} ></lightning-input> </td>
+                                  </template>
+                                  <template  if:true={showFinalisedColumn}>
+                                    <td>{PFQL.FinalisedValue}</td>
+                                  </template>
+                                 
+                                </tr>
+                              </template>
+                            </tbody>
+                          </table>
+                         
+                        </div>  
+                      </lightning-card>
+                    <!-- </template> -->
+                    <template  if:true={isShowButtons} >
+                      <lightning-button variant="Brand" label="Place Order" title="Successful action" onclick={HandlePlaceOrder} class="slds-align_absolute-center" ></lightning-button>
+                    </template>
+                  </template>
+                  </lightning-accordion-section>
+                 
+                </div>
+               
+              </template>
+            </lightning-accordion>
+          </template>
+         
+         
+         
+         
+        </lightning-card>  
+        <template if:true={isShowModal}>
+         
+         
+         
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <!-- modal header start -->
+              <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                  <lightning-icon icon-name="utility:close"
+                  alternative-text="close"
+                  variant="inverse"
+                  size="small" ></lightning-icon>
+                  <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Quote line items</h2>
+              </header>
+             
+              <!-- modal body start -->
+              <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning-layout>
+                  <lightning-layout-item padding="around-small">
+                    <p class="slds-p-around_small">Quote Number : <a  name={storequoteid}   onclick={RecordPage}  target="_blank"> {StrQuoteId}</a></p>
+                    <p class="slds-p-around_small">Product : {productChange}</p>
+                    <lightning-input type="text" name='Quantity' label="Enter Quantity"  class="slds-p-around_x-small" onchange={handleInputChange1}></lightning-input>
+                    <lightning-input type="text" name='SalesPrice' label="Enter Sales Price" class="slds-p-around_x-small" onchange={handleInputChange1}></lightning-input>
+                    <!-- <lightning-input type="checkbox" name='finalise'  field-level-help=" This is the final Price Bro" label="Finalised Price" class="slds-p-around_x-small" onchange={handleInputChange1} ></lightning-input>     -->
+                  </lightning-layout-item>
+                  <lightning-layout-item padding="around-small">
+                    <lightning-input type="text" name='Discount' label="Discount" class="slds-p-around_x-small slds-m-left_xx-large" onchange={handleInputChange1}></lightning-input>
+                    <lightning-input type="text" name='Line Item Description' label="Line Item Description" class="slds-p-around_x-small slds-m-left_xx-large" onchange={handleInputChange1}></lightning-input>
+                  </lightning-layout-item>
+                </lightning-layout>
+               
+               
+               
+              </div>
+             
+              <!-- modal footer start-->
+              <footer class="slds-modal__footer">
+                <lightning-button variant="Success" label="Create" title="Primary action" onclick={HandleCreateQLI} class="slds-m-left_x-small"></lightning-button>  </footer>
+               
+              </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+          </template>  
+
+          <template if:true={isShowPDFs}>
+         
+         
+         
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+              <div class="slds-modal__container">
+                <!-- modal header start -->
+                <header class="slds-modal__header">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideDocumentsPopUp}>
+                    <lightning-icon icon-name="utility:close"
+                    alternative-text="close"
+                    variant="inverse"
+                    size="small" onclick={closeModal}></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                  </button>
+                  <h2 id="modal-heading-001" class="slds-text-heading_medium slds-hyphenate"></h2>
+                </header>
+               
+                <!-- modal body start -->
+                <div style="height:25px;">
+                  <lightning-card title="Quote PDFs Preview">
+                    <template if:true={showMessage}>
+                      <div class="slds-align_absolute-center" style="height:5rem">{message}</div>
+                      <!-- <p>{message}</p> -->
+                    </template>
+                    <template for:each={filesList} for:item="file">
+                        <div key={file.value} class="slds-box">
+                          <lightning-layout>
+                            <lightning-layout-item size="4">
+                              <!-- <div class="slds-col slds-large-size_4-of-12 slds-medium-size_4-of-12 slds-size_12-of-12"> -->
+                              <p>{file.label}</p>
+                              <!-- <strong>FileName - </strong> -->
+                            <!-- </div> -->
+                           </lightning-layout-item>
+                            <lightning-layout-item size="8">
+                              <!-- <div class="slds-col slds-large-size_4-of-12 slds-medium-size_4-of-12 slds-size_12-of-12"> -->
+                              <a href={PDFRedirect} target="_blank"><lightning-button label="Preview"
+                              variant="brand"
+                             data-id={file.value}
+                             onclick={previewHandler}
+                             class="slds-float_right"
+                              ></lightning-button> </a>
+                            <!-- </div>  -->
+                          </lightning-layout-item>
+                        </lightning-layout>
+                            
+                        </div>
+                    </template>
+  
+  
+  
+  
+               </lightning-card>
+                 
+                 
+                 
+                </div>
+               
+                <!-- modal footer start-->
+                <footer class="slds-modal__footer">
+                   <!-- <lightning-button variant="Success" label="Create" title="Primary action" onclick={HandleCreateQLI} class="slds-m-left_x-small"></lightning-button>  -->
+                   </footer>
+                 
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>  
+         
+         
+         
+         
+        </template>

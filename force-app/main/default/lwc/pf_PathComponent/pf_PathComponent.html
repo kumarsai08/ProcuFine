@@ -1,0 +1,54 @@
+<template>
+  <lightning-card title="Lightning Path" icon-name="standard:sales_path">
+    <lightning-progress-indicator current-step={currentvalue} type="path" variant="base">
+      <lightning-progress-step label="Inventory Summary" value="1" onclick={pathHandler}></lightning-progress-step>
+      <lightning-progress-step label="Place Order" value="2" onclick={pathHandler2}></lightning-progress-step>
+      <lightning-progress-step label="Supplier Selection" value="3" onclick={pathHandler3}></lightning-progress-step>
+      <lightning-progress-step label="Order Summary" value="4" onclick={pathHandler4}></lightning-progress-step>
+      
+    </lightning-progress-indicator>
+    
+  </lightning-card>    
+  <template if:true={summary}>
+    <lightning-card >
+      <c-pf_-Opportunity-Summary onproductdetails={Handleproductdetails} onvaluee={handleAnswer}> </c-pf_-Opportunity-Summary>
+      
+    </lightning-card>
+    
+  </template>
+  
+  
+  <template if:true={isShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+        title="Close" onclick={handleBack}>
+        <lightning-icon icon-name="utility:close" alternative-text="close" label="Select One Record"
+        variant="inverse" size="small" onclick={closeThePopup}></lightning-icon>
+      </button>
+      <div>
+        <h2 id="modal-heading-06" class="slds-text-heading_medium slds-text-align_left">{oppTab} Opportunities Information 
+        </h2>
+      </div>
+    </header>
+    <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
+      <lightning-card>
+        <c-oppquantitytab listopportunities={tabContent} tabname={oppTab}  > 
+        </c-oppquantitytab> 
+      </lightning-card>
+    </div>
+    
+    <!-- modal footer start-->
+    <!-- <footer class="slds-modal__footer"> -->
+      <!-- <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button> -->
+      <!-- </footer> -->
+      
+    </div>
+  </section>
+  <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+
+</template>
