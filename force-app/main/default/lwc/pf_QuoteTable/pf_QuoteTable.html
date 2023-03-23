@@ -1,0 +1,40 @@
+<template>
+    <lightning-card>
+        <div class="slds-box slds-theme_default">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="slds-truncate" title="Quantity">Quantity</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="List Price">List Price</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Sales Price">Sales Price</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Discount">Discount</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Checkbox">Checkbox</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={QuoteItem} for:item="quotelist">
+                        <tr key={quotelist.Id}>
+                            <td>{quotelist.Quantity}</td>
+                            <td>{quotelist.ListPrice}</td>   
+                            <td>{quotelist.UnitPrice}</td>
+                            <td>{quotelist.Discount}</td>
+                            <td><div>
+                                <lightning-input type="checkbox"></lightning-input>
+                            </div></td>
+                        </tr>
+                    </template>
+            </tbody>
+        </table>
+        </div> 
+    </lightning-card>
+</template>

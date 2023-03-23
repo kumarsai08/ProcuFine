@@ -1,0 +1,140 @@
+<template>
+    <lightning-card>
+        <div class="slds-text-heading_medium">Product Inventory Information </div>
+<div class="slds-box slds-theme_default">
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <thead>
+            <tr>
+                  
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Product Name">Product Name</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div>
+                  </th>
+                  <th class="" scope="col">
+                    <div class="slds-truncate" title="Stock On Hand">UoM</div>
+                  </th>
+                  <th class="" scope="col">
+                      <div class="slds-truncate" title="Stock On Hand">Stock On Hand</div>
+                    </th>
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="Threshold">Threshold</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Warehouse">Warehouse</div>
+                      </th>
+                      
+                      
+
+                    
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={Inventory} for:item="invnt">
+                <tr key={invnt.Id}>
+                    
+                    <td>{invnt.Product__r.Name}</td>
+                    <td>{invnt.Quantity__c}</td>
+
+                    <td>{invnt.Product__r.UoM__c}</td>
+
+                    <td>{invnt.Stock_On_Hand__c}</td>
+                    <td>{invnt.Threshold__c}</td>
+                    <!-- <td></td>-->
+                    <!-- <td></td>  -->
+                    <td>{invnt.Warehouse__r.Name}</td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</div>   
+</lightning-card>
+
+
+
+<lightning-card>
+    <div class="slds-text-heading_medium">Product Suppliers Details </div>
+  <div class="slds-box slds-theme_default">
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+          <thead>
+              <tr>  
+                    <th class="" scope="col">
+                        <div class="slds-truncate">
+                            <lightning-input onchange={Handlecheckbox} type="checkbox"></lightning-input>
+                        </div>
+                    </th>
+                    
+                    <th class="" scope="col">
+                      
+                        <lightning-combobox
+                        name="progress"
+                        label="Supplier Name"
+                        value={value}
+                        options={supplieroptions}
+                        placeholder="Select Supplier"
+                        onchange={handleChange} ></lightning-combobox>
+
+                      
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Product Name">Supplier Grade</div>
+                      </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Product Name">Product Name</div>
+                      </th>
+                       <th class="" scope="col">
+                         <div class="slds-truncate" title="Quantity">Quantity</div> 
+                       </th>
+                                           
+  
+                      
+              </tr>
+          </thead>
+          <tbody>
+              <template for:each={pslist} for:item="ps" for:index="index">
+                  <tr key={ps.Id}>
+                    
+                      <!-- <td>  <lightning-input type="checkbox-button"  label="Input One" name="input1" value='hello' onchange={Handlecheckbox} data-transfer={ps} checked={ischeckvalue} ></lightning-input>  </td> -->
+                     <td><div>
+                        <lightning-input type="checkbox" data-quantity={ps.Quantity__c} data-id={ps.Id} data-pos={index} data-sname={ps.Account__r.Name}  onchange={handleOrderQuantity}></lightning-input>
+                    </div></td>
+
+
+
+                      <td> {ps.Account__r.Name} </td>
+                      <td> {ps.Account__r.grade__c} </td>
+                      <td> {ps.Product__r.Name} </td>
+                      
+                     <td><input type="number" id={ps.Id} value={IntMaxOrderingQuantity} data-sname={ps.Account__r.Name} onchange={handleInputQuantity} data-index={index} class="pt-3-half" contenteditable="true" disabled > </td>
+                  </tr>
+                  
+              </template>
+          </tbody>
+      </table>
+      <p align="center"> Total Quantity Ordering :    {IntMaxOrderingQuantity} </p>
+      <p align="center"  >  Maximum Quantity that can be Ordered : {differenceValue} </p>
+  </div>   
+  </lightning-card>
+
+  <lightning-card>
+            
+            <lightning-button variant="brand" label="Request for Quotes" title="Primary action" onclick={handleSendMail} class="slds-align_absolute-center"></lightning-button>  
+           <template if:true={loading}>
+            <div class="spinner">
+                please wait....
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+        </template>
+        <!-- </lightning-card> -->
+
+  </lightning-card>
+
+  
+
+
+
+
+
+
+</template>

@@ -1,0 +1,59 @@
+<template>
+    <lightning-card>
+        <div class="slds-box slds-theme_default">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr>
+                          <th><lightning-layout-item size="1" padding="around small">
+                            <lightning-input type="search" onchange={handleKeyChange} class="slds-m-bottom_small" label="Order ID" value={searchKey}></lightning-input>
+                          </lightning-layout-item></th>
+                          <th class="" scope="col">
+                            <lightning-combobox
+                            name="Status"
+                            label="Status"
+                            value={value}
+                            options={orderOptions}
+                            onchange={handleStatusChange} ></lightning-combobox> 
+                        </th>
+                          <th><lightning-input type="search" onchange={handleSupplierChange} class="slds-m-bottom_small" label="Supplier Name" value={searchSupplier}></lightning-input></th>
+
+                            <th data-id="EffectiveDate" onclick={sortDate} class="" scope="col">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <span class="slds-truncate" title="EffectiveDate">Order Date</span>
+                                    <div if:true={isDateSort}>
+                                        <div if:true={isAsc}>
+                                            &#9650;
+                                        </div>
+                                        <div if:true={isDsc}>
+                                            &#9660;
+                                        </div>
+                                    </div>
+                                </a>
+                              <!-- <div class="slds-truncate" title="Order Date">Order Date</div> -->
+                            </th>
+                            <th class="" scope="col">
+                                <lightning-combobox
+                                name="Order Products"
+                                label="Order Products"
+                                value={value}
+                                options={productNameOptions}
+                                onchange={handleProductChange} ></lightning-combobox>
+                            </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={OrderList} for:item="ord">
+                        <tr key={ord.Id}>
+                            <td><a  name={ord.Id} data-strorderid= {ord.Id}  onclick={RecordPage}  target="_blank">{ord.OrderNumber}</a></td>
+                            <td>{ord.Status}</td>
+                            <td>{ord.Account.Name}</td>
+                            <td>{ord.EffectiveDate}</td>
+                            <td><a  name={ord.Product__c}  data-strprodid= {ord.Product__c} onclick={Navigatetoproductpage}  target="_blank">{ord.Product__r.Name}</a></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div> 
+    </lightning-card>
+</template>
