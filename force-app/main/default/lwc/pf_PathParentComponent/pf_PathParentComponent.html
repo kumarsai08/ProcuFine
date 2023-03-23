@@ -1,0 +1,65 @@
+<template>
+    <lightning-card>
+        <p>{activetab}</p> 
+        <lightning-tabset   active-tab-value={activeTab} >
+            
+                <lightning-tab label="Inventory Management" value="Inventory Management" onactive={handleActive}> <lightning-card>
+                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                        <template for:each={steps} for:item="step">
+                            <lightning-progress-step label={step.label} value={step.value} key={step.label} onclick={moveToCmp} ></lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                </lightning-card>
+            
+                <template if:true={isInvSummary}>
+                 <c-pf_-opportunity-summary  onproductdetails={Handleproductdetails}    onpassproductdetails={handlepassproductdetails}   ></c-pf_-opportunity-summary>
+                </template>
+                <template  if:true={isOrderInv}>
+                    <c-supplier-details-table    productnamee={passproductvalue}  onsupplierselection={moveToSupplierSelection}> </c-supplier-details-table>
+                </template>
+                <template if:true={isSupplierSelection}>
+                  <c-supplier-data-table  > </c-supplier-data-table>
+              </template>
+              <template if:true={isOrderSummary}>
+                <c-pf_-order-datable  > </c-pf_-order-datable>
+            </template>
+         <!-- </lightning-tab> -->
+
+                <template if:true={isShowModal}>
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                      <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={handleBack}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" label="Select One Record"
+                        variant="inverse" size="small" onclick={closeThePopup}></lightning-icon>
+                      </button>
+                      <div>
+                        <h2 id="modal-heading-06" class="slds-text-heading_medium slds-text-align_left">{oppTab} Opportunity Information 
+                        </h2>
+                      </div>
+                    </header>
+                    <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
+                      <lightning-card>
+                        <c-oppquantitytab listopportunities={tabContent} tabname={oppTab}  > 
+                        </c-oppquantitytab> 
+                      </lightning-card>
+                    </div>
+                    </div>
+                  </section>
+                  <div class="slds-backdrop slds-backdrop_open"></div>
+                </template>
+             </lightning-tab>
+        
+                <lightning-tab  label="Receiving Manger" value="Receiving Manger"  onactive={handleActive}>
+                    <c-pf_-delivery-information> </c-pf_-delivery-information>
+                </lightning-tab>
+                <lightning-tab  label="Quality Assurance" value="Quality Assurance"  >
+                    <c-pf_-q-a-manager> </c-pf_-q-a-manager>
+                </lightning-tab>
+
+                
+        </lightning-tabset>
+    </lightning-card>   
+</template>

@@ -1,0 +1,65 @@
+<template>
+    <lightning-card>
+<div class="slds-box slds-theme_default">
+  <!-- <lightning-button label = "Refresh" onclick={handleRefresh} variant="brand" class="slds-float_right" ></lightning-button> -->
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <thead>
+            <tr>
+              <th class="" scope="col">
+                <lightning-combobox
+                name="Product Name"
+                label="Product Name"
+                value={value}
+                options={productNameOptions}
+                onchange={handleProductChange} >
+                </lightning-combobox>
+                </th>             
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div>
+                    </th>
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="On Order">On Order</div>
+                    </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Order Received">Order Received</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Under QA">Under QA</div>
+                      </th>
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Defective Quantity">Defective Quantity</div>
+                        </th>
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Ready For Delivery">Ready For Delivery</div>
+                        </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Place Order"></div>
+                      </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <template for:each={Product} for:item="prdct">
+                <tr key={prdct.Id}>
+                    <!-- <td>{prdct.Name}</td> -->
+                    <td><a name={prdct.Id} data-orderproducturl= {prdct.Id} onclick={navigateToProduct} target="_blank">{prdct.Name}</a></td>
+                    <td> <a onclick={getProductName} data-prod={prdct.Name} > {prdct.Quantity__c} </a> </td>
+                    <td>{prdct.PF_On_Order__c}</td>
+                    <td>{prdct.PF_Orders_Received__c}</td>
+                    <td>{prdct.PF_Under_QA__c}</td>
+                    <td>{prdct.Rejected_Quantity__c}</td>
+                    <td>{prdct.Approved_Quantity__c}</td>
+                    <td> <template if:true={prdct.check} >
+                      <lightning-button variant="brand" label="Place-Order" title="PlaceOrder" onclick={handlepassproductname} data-productname={prdct.Name}  style="width: max-content;display: flex" class="slds-m-left_x-small"></lightning-button>
+
+                    </template>
+                      
+                      
+                      </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</div> 
+</lightning-card>
+</template>
