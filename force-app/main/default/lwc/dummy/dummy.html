@@ -1,0 +1,20 @@
+<template>
+   <div>
+    <lightning-button variant="brand" label="Brand" title="Primary action" onclick={handle} class="slds-m-left_x-small"></lightning-button>
+ 
+   </div>
+   <template if:true={show}> 
+    <lightning-tabset>
+        <template for:each={tabs} for:item="tab">
+            <lightning-tab key={tab.label} label={tab.label}>
+                {tab.content}
+            </lightning-tab>
+        </template>
+    </lightning-tabset>
+
+   </template>
+    
+
+
+    
+</template>

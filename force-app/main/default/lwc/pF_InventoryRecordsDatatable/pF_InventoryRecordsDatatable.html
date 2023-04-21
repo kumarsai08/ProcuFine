@@ -1,0 +1,13 @@
+<template>
+    
+    <template if:true={PFInvList}>
+        <lightning-datatable data={PFInvList} columns={columns} key-field="Id" onrowaction={handleClick}>
+        </lightning-datatable>
+       
+    </template>
+    <template if:true={error}>
+        {error}
+    </template>
+    
+    <div if:true={actionName}> {actionName} </div>
+</template>
