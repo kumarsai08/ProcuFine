@@ -1,7 +1,7 @@
 import { LightningElement, api,track} from 'lwc';
-import getwarehousenamerecords from '@salesforce/apex/ExampleController.getwarehousenamerecords';
-import getProductNames from '@salesforce/apex/ExampleController.getProductNames';
-import getSupplierNames from '@salesforce/apex/ExampleController.getSupplierNames';
+import getwarehousenamerecords from '@salesforce/apex/Pf_Inventory_Summary.getwarehousenamerecords';
+import getProductNames from '@salesforce/apex/Pf_Inventory_Summary.getProductNames';
+import getSupplierNames from '@salesforce/apex/Pf_Inventory_Summary.getSupplierNames';
 import PFGetQuoteLineItems from '@salesforce/apex/GetSuppleirDetails.PFGetQuoteLineItems';
 import CreateQuotelineitems from '@salesforce/apex/GetSuppleirDetails.CreateQuotelineitems';
 import UpdateQuoteLineItemAndQuoteStatus from '@salesforce/apex/GetSuppleirDetails.UpdateQuoteLineItemAndQuoteStatus';
@@ -10,332 +10,247 @@ import getRelatedFilesByRecordId from '@salesforce/apex/GetSuppleirDetails.getRe
 import RejectedQuoteStatusUpdation from '@salesforce/apex/GetSuppleirDetails.RejectedQuoteStatusUpdation';
 import CreateQuoteAndQuoteLineItems from '@salesforce/apex/GetSuppleirDetails.CreateQuoteAndQuoteLineItems';
 import { NavigationMixin } from 'lightning/navigation';
-
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-
-
-import { refreshApex } from '@salesforce/apex';
-
 export default class SupplierDatatable extends NavigationMixin(LightningElement) {
-    @api Inventory;
-    @api warehouseNamesList=[];
-    @api warehouseNameOptions;
-    @api warehouseChange;
-    @api productNameFilter;
-    @api productNamesListFilter=[];
-    @api productChange;
-    @api supplierNameList=[];
-    @api supplierNameFilter;
-    @api showAccordion;
-    @api isShowModal;
-    @api isShowProductCombobox;
-    @api prodName;
-    @api wareHouseName;
-    @api suppName;
-    @api IsShowQuoteLineItems;
-    @api PFQuoteLineItemsList;
-    @api section;
-     @api StrQuoteId;
-    @api inputQuantity='';
-    @api inputListPrice='';
-    @api finalised;
-    @api openSections
-    @api quoteID;
-    @api PricebookEntryId;
-    @api QuoteIdRedirect;
-    @api inputDiscount='';
-    @api inputLineitemdescription='';
-    @track loading = false;
-    @api isShowQuoteStatus;
-   @api QuoteStatusValue;
-   @api isShowButtons=false ;
-   @api showFinalisedColumn = false;
-   @api storequoteid;
-   @api StrSelect='';
-   @api warehouslist=[];
-    @api selectedquote;
-    @api openedSupplierList=[];
-    @api filesList =[];
-    @api isShowPDFs=false;
-    @api PDFRedirect='';
-    @api message;
-    @api showMessage=false
-    @api isShowAfterQLI=false;
-    @api pdfid;
-    @api pdfrowid;
+
+    @api list_WarehouseNamesList=[];
+    @api list_WarehouseNameOptions;
+    @api list_ProductNameFilter;
+    @api list_ProductNamesListFilter=[];
+    @api list_PFQuoteLineItemsList;
+    @api list_SupplierNameList=[];
+    @api list_SupplierNameFilter;
+    @api list_warehouslist=[];
+    @api list_openedSupplierList=[];
+    @api list_FilesList =[];
+    @api list_QuoteIds=[];
+    @api strSection;
+    @api StrQuoteId;
+    @api strMessage;
+    @api strWarehouseChange;
+    @api strwareHouseName;
+    @api strproductChange;
+    @api strQuoteIDs;
+    @api strPricebookEntryId;
+    @api strQuoteIdRedirect;
+    @api strInputLineitemdescription='';
+    @api strQuoteStatusValue;
+    @api strStorequoteid;
+    @api StrSelect='';
+    @api strPdfid;
+    @api strPdfrowid;
     @api StrPlaceOrderQId;
-    @api ListQuoteIds=[];
-    @api disabled=false;
-    @api productId='';
-    @api WarehouseId='';
-    @api inputDeliveryDate='';
+    @api strProductId='';
+    @api strWarehouseId='';
+    @api strInputDeliveryDate='';
+    @api strRecordId;
+    @api blnShowAccordion;
+    @api blnIsShowModal;
+    @api blnFinalised;
+    @api blnIsShowProductCombobox;
+    @api blnIsShowQuoteLineItems;
+    @track blnloading = false;
+    @api blnDisabled=false;
+    @api blnIsShowQuoteStatus;
+    @api blnIsShowButtons=false ;
+    @api blnIsShowPDFs=false;
+    @api blnshowMessage=false
+    @api blnIsShowAfterQLI=false;
+    @api blnshowFinalisedColumn = false;
+    @api intInputQuantity='';
+    @api intInputListPrice='';
+    @api intInputDiscount='';
+    @api openSections;
     
-
-    
-
+    //In this connectedCallback function a value is assigned to a variable and a Apex method is called to populate a list of warehouse names.
     connectedCallback(){
-        this.QuoteStatusValue='Open';
+        this.strQuoteStatusValue='Open';
     getwarehousenamerecords({}).then(result=>{
-        
         result.forEach(element => {
-            this.warehouseNamesList.push({label:element,value:element});
-            this.warehouseNameOptions = JSON.parse(JSON.stringify(this.warehouseNamesList));
-            console.log('line 53'+JSON.stringify(this.warehouseNameOptions));
+            this.list_WarehouseNamesList.push({label:element,value:element});
+            this.list_WarehouseNameOptions = JSON.parse(JSON.stringify(this.list_WarehouseNamesList));
+            console.log('line 53'+JSON.stringify(this.list_WarehouseNameOptions));
         });
 })
 .catch(error=>{
     console.log('error'+error);
 })
-
-
    }
 
+   //This method is used to handle the change event when the user selects a warehouse, and it populates the product names list based on the selected warehouse.
    handleWarehouseChange(event){
-    this.section='';
-   // this.IsShowQuoteLineItems=false;
-
+    this.strSection='';
     console.log('line 95');
-    this.warehouseChange=event.detail.value;
-    this.warehouslist.push(event.detail.value);
-    this.productNamesListFilter=[];
-    getProductNames({wareHouseName:this.warehouseChange}).then(result=>{
-        
+    this.strWarehouseChange=event.detail.value;
+    this.list_warehouslist.push(event.detail.value);
+    this.list_ProductNamesListFilter=[];
+    getProductNames({strwareHouseName:this.strWarehouseChange}).then(result=>{  
         result.forEach(element => {
-            this.productNamesListFilter.push({label:element.Product__r.Name,value:element.Product__r.Name});
-            this.productNameFilter = JSON.parse(JSON.stringify(this.productNamesListFilter));
-            console.log('line 53'+JSON.stringify(this.productNameFilter));
+            this.list_ProductNamesListFilter.push({label:element.Product__r.Name,value:element.Product__r.Name});
+            this.list_ProductNameFilter = JSON.parse(JSON.stringify(this.list_ProductNamesListFilter));
+            console.log('line 53'+JSON.stringify(this.list_ProductNameFilter));
         });
     })
     .catch(error=>{
     console.log('error'+error);
     })
-    this.isShowProductCombobox=true;
-
+    this.blnIsShowProductCombobox=true;
    }
    
+   //This code is used to handle the change event on a product dropdown and fetches the corresponding supplier names for the selected product, based on the warehouse and quote status values.
    handleProductChange(event){
-    this.section='';
-    
+    this.strSection='';
    console.log('handle product change');
     //this.IsShowQuoteLineItems=false;
-    this.productChange=event.detail.value;
-    this.supplierNameList=[];
-    this.supplierNameFilter = ''
-    getSupplierNames({productName:this.productChange,WarehouseName : this.warehouseChange , QuoteStatusValue : this.QuoteStatusValue}).then(result=>{
-        
-        result.forEach(element => {
-            this.supplierNameList.push(element.Account__r.Name);
-            this.supplierNameFilter = JSON.parse(JSON.stringify(this.supplierNameList));
-            console.log('line 53'+JSON.stringify(this.supplierNameFilter));
+    this.strproductChange=event.detail.value;
+    this.list_SupplierNameList=[];
+    this.list_SupplierNameFilter = ''
+    getSupplierNames({productName:this.strproductChange,WarehouseName : this.strWarehouseChange , QuoteStatusValue : this.strQuoteStatusValue}).then(result=>{
+        result.forEach(element => { 
+            this.list_SupplierNameList.push(element.Account__r.Name);
+            this.list_SupplierNameFilter = JSON.parse(JSON.stringify(this.list_SupplierNameList));
+            console.log('line 53'+JSON.stringify(this.list_SupplierNameFilter));
         });
     })
     .catch(error=>{
     console.log('error'+error);
     })
-    this.isShowButtons=true;
-    this.isShowQuoteStatus = true;
-    this.showAccordion=true;
-    
-
-   // this.showAccordion=true;
-
-
-
+    this.blnIsShowButtons=true;
+    this.blnIsShowQuoteStatus = true;
+    this.blnShowAccordion=true;
    }
+
+   
    HandleCreateButton(event){
-    this.isShowModal=true;
+    this.blnIsShowModal=true;
    }
 
+   //This method is used to hide a modal box by setting the boolean variable.
    hideModalBox(event){
-    this.isShowModal=false;
+    this.blnIsShowModal=false;
    }
 
-//    RecordPage(event){
-    // const attributesyyyy = event.target.name;
-        // this[NavigationMixin.Navigate]({
-            // type: 'standard__recordPage',
-            // attributes: {
-               // recordId: attributesyyyy,
-               //objectApiName: 'Contact',
-                // actionName: 'view'
-            // },
-        // });
-    // }
-
+//This function handles toggling of a section and retrieving quote line items based on selected product, supplier, warehouse, and quote status.
 handleSectionToggle(event){
-    //this.section='';
     console.log('section toggle change');
     this.StrQuoteId='';
-    // this.QuoteIdRedirect='';
-    this.IsShowQuoteLineItems=false;
-   // if(this.showAccordion===true){
-     // event.stopPropagation();
-    //}
-    this.PFQuoteLineItemsList=[];
-    this.section=String(event.detail.openSections);
+    this.blnIsShowQuoteLineItems=false;
+    this.list_PFQuoteLineItemsList=[];
+    this.strSection=String(event.detail.openSections);
     this.openSections = String(event.detail.openSections);
-    this.openedSupplierList.push(this.section);
-
-
-
+    this.list_openedSupplierList.push(this.strSection);
     const openSections = String(event.detail.openSections);
     console.log('osname'+  openSections);
         console.log('openSections'+  openSections);
-        console.log('prod'+ this.productChange);
-        console.log('ware'+ this.warehouseChange);
-        
-
-        PFGetQuoteLineItems({productname: this.productChange,suppliername: openSections,warehouse:this.warehouseChange,QuoteStatusValue : this.QuoteStatusValue}).then(result=>{
+        console.log('prod'+ this.strproductChange);
+        console.log('ware'+ this.strWarehouseChange);
+        PFGetQuoteLineItems({productname: this.strproductChange,suppliername: openSections,warehouse:this.strWarehouseChange,QuoteStatusValue : this.strQuoteStatusValue}).then(result=>{
             console.log('line 97'+JSON.stringify(result));
-            this.QuoteIdRedirect='https://absyz-1ab-dev-ed.develop.lightning.force.com/lightning/r/Quote/'+result[0].QuoteId+'/view';
-            this.quoteID=result[0].QuoteId;
-
-            this.productId = result[0].Quote.Product__c;
-            console.log('pline'+this.productId)
-            this.PricebookEntryId=result[0].PricebookEntryId;
-            //this.quotelineid=  result[0].Id;
-           // this.PFQuoteLineItemsList=result;
+            this.strQuoteIdRedirect='https://absyz-1ab-dev-ed.develop.lightning.force.com/lightning/r/Quote/'+result[0].QuoteId+'/view';
+            this.strQuoteIDs=result[0].QuoteId;
+            this.strProductId = result[0].Quote.Product__c;
+            console.log('pline'+this.strProductId)
+            this.strPricebookEntryId=result[0].PricebookEntryId;
            this.StrQuoteId = result[0].Quote.QuoteNumber;
-           this.storequoteid = result[0].QuoteId;
-           //if(this.QuoteStatusValue==='Closed'){
-            //this.PFInvList=result;
-        
+           this.strStorequoteid = result[0].QuoteId;
         let templist=[];
-       
         var newData = JSON.parse(JSON.stringify(result));
-
-        
         newData.forEach(record => {
             console.log('203'+ record.QuoteId)
-            this.ListQuoteIds.push(record.QuoteId);
-
-
+            this.list_QuoteIds.push(record.QuoteId);
             let tempRecs = Object.assign({},record);
             if(record.Quote.Status==='Closed'){
                 tempRecs.FinalisedValue='Finalised';
+                tempRecs.blnDisabled=true;
+            }else if(record.Quote.Status==='Open'){
+                tempRecs.FinalisedValue='Open';
+                tempRecs.blnDisabled=true;
             }else{
                 tempRecs.FinalisedValue='Rejected';
-
+                tempRecs.blnDisabled=true;
             }
-        
            templist.push(tempRecs);
            console.log('old :: '+JSON.stringify(templist))
-           
-
-
         });
-        //templist.shift();
         console.log('new :: '+JSON.stringify(templist))
-        this.PFQuoteLineItemsList=templist;
-        //this.isShowAfterQLI=false;
-
-        //if(this.PFQuoteLineItemsList.length>1){
-            this.isShowAfterQLI=true;
-        //}
-
-         
-
-       
-        //this.PFInvList=templist;
-        
-        
-    
-          // }else{
-           // this.PFQuoteLineItemsList=result;
-          // }
-          if(this.QuoteStatusValue==='Closed' || this.QuoteStatusValue==='Rejected'  ){
-            this.disabled= true;
-            this.isShowButtons=false;
-            this.showFinalisedColumn=true;
-
+        this.list_PFQuoteLineItemsList=templist;
+        console.log('this.list_PFQuoteLineItemsList',this.list_PFQuoteLineItemsList)
+            for(let i=0; i<this.list_PFQuoteLineItemsList.length;i++){
+                if(this.list_PFQuoteLineItemsList[i].FinalisedValue ==='Open'){
+                    this.list_PFQuoteLineItemsList[this.list_PFQuoteLineItemsList.length - 1].blnDisabled = false;
+                }
+            }
+            this.blnIsShowAfterQLI=true;
+          if(this.strQuoteStatusValue==='Closed' || this.strQuoteStatusValue==='Rejected'  ){
+            this.blnDisabled= true;
+            this.blnIsShowButtons=false;
+            this.blnshowFinalisedColumn=true;
         }
         else{
-            this.disabled= false;
-
-            this.isShowButtons=true;
-           this.showFinalisedColumn=false;
+            this.blnDisabled= false;
+            this.blnIsShowButtons=true;
+            this.blnshowFinalisedColumn=false;
         }
-            this.IsShowQuoteLineItems=true;
-           
+            this.blnIsShowQuoteLineItems=true;
         })
         .catch(error=>{
             console.log('error handleSectionToggle'+JSON.stringify(error));
         })
-        
-
 }
 
-
+//This function used to handle a refresh event and updates list of quote line items based on the selected product, supplier, warehouse, and quote status values.
 HandleRefresh(){
     console.log('refresh event');
-    //this.StrQuoteId='';
-    //if(this.showAccordion===true){
-     //   event.stopPropagation();
-   // }
-    this.PFQuoteLineItemsList=[];
-    //this.section=String(event.detail.openSections);
-
+    this.list_PFQuoteLineItemsList=[];
     const openSections = String(this.openSections);
     console.log('osname'+  openSections);
         console.log('openSections'+  openSections);
-        console.log('prod'+ this.productChange);
-        console.log('ware'+ this.warehouseChange);
+        console.log('prod'+ this.strproductChange);
+        console.log('ware'+ this.strWarehouseChange);
 
-        PFGetQuoteLineItems({productname: this.productChange,suppliername: openSections,warehouse:this.warehouseChange,QuoteStatusValue : this.QuoteStatusValue}).then(result=>{
+        PFGetQuoteLineItems({productname: this.strproductChange,suppliername: openSections,warehouse:this.strWarehouseChange,QuoteStatusValue : this.strQuoteStatusValue}).then(result=>{
             console.log('refresh result'+JSON.stringify(result)); 
-
-            
-           // this.quoteID=result[0].QuoteId;
-           /* console.log('160'+this.quoteID);
-           this.StrQuoteId = result[0].Quote.QuoteNumber;
-           console.log('157'+JSON.stringify(this.StrQuoteId));
-
-           
-            this.PricebookEntryId=result[0].PricebookEntryId;
-            
-            
-            console.log('164'+this.PricebookEntryId);*/
-            //this.IsShowQuoteLineItems=false;
             let templist=[];
-       
         var newData = JSON.parse(JSON.stringify(result));
-
-        
         newData.forEach(record => {
             let tempRecs = Object.assign({},record);
             if(record.Quote.Status==='Closed'){
                 tempRecs.FinalisedValue='Finalised';
+                tempRecs.blnDisabled=true;
+            }else if(record.Quote.Status==='Open'){
+                tempRecs.FinalisedValue='Open';
+                tempRecs.blnDisabled=true;
             }else{
-                tempRecs.FinalisedValue='---';
-
+                tempRecs.FinalisedValue='Rejected';
+                tempRecs.blnDisabled=true;
             }
-        
            templist.push(tempRecs);
-        });
-        //templist.shift();
-        this.PFQuoteLineItemsList=templist;
-
-           // this.PFQuoteLineItemsList=result;
-           // this.PFQuoteLineItemsList=result;
-            //this.IsShowQuoteLineItems=true;
            
+        });
+        this.list_PFQuoteLineItemsList=templist;
+            for(let i=0; i<this.list_PFQuoteLineItemsList.length;i++){
+                if(this.list_PFQuoteLineItemsList[i].FinalisedValue ==='Open'){
+                    this.list_PFQuoteLineItemsList[this.list_PFQuoteLineItemsList.length - 1].blnDisabled = false;
+                }
+            }
+            this.blnIsShowAfterQLI=true;
         })
         .catch(error=>{
             console.log('error handleSectionToggle'+JSON.stringify(error));
         })
-
 }
+
+//The function is used to handle input changes in a form and update the corresponding properties in the component state.
 handleInputChange1(event){
-   
     if(event.target.name ==='Quantity'){
-     this.inputQuantity=event.target.value
+     this.intInputQuantity=event.target.value
     }
     if(event.target.name ==='SalesPrice'){
-     this.inputListPrice=event.target.value
+     this.intInputListPrice=event.target.value
     }
     if(event.target.name ==='finalise'){
-    this.finalised=event.target.value
+    this.blnFinalised=event.target.checked
       this.StrSelect=event.target.dataset.quoteid
       console.log('line 273'+this.StrSelect);
         var notselected = [...this.template.querySelectorAll('lightning-input')].filter(input => input.dataset.quoteid!=`${this.StrSelect}`)
@@ -343,44 +258,40 @@ handleInputChange1(event){
         console.log(JSON.parse(JSON.stringify(notselected)));
     }
     if(event.target.name ==='Discount'){
-        this.inputDiscount=event.target.value
+        this.intInputDiscount=event.target.value
     }
     if(event.target.name ==='Line Item Description'){
-        this.inputLineitemdescription=event.target.value
+        this.strInputLineitemdescription=event.target.value
     }
     this.StrPlaceOrderQId= event.target.dataset.quoteid;
     console.log('line 336'+this.StrPlaceOrderQId)
 }
 
+//This method is used to create Quote Line Items.
  HandleCreateQLI(event){
      console.log('method called');
-     console.log('this.PFQuoteLineItemsList',this.PFQuoteLineItemsList)
-     CreateQuotelineitems({quoteId: this.quoteID,PEY:this.PricebookEntryId ,Quantity:this.inputQuantity,salesPrice:this.inputListPrice,finalised:this.finalised,discount:this.inputDiscount,lineIemDescription:this.inputLineitemdescription}).then(result=>{
+     console.log('this.list_PFQuoteLineItemsList',this.list_PFQuoteLineItemsList)
+     CreateQuotelineitems({quoteId: this.strQuoteIDs,PEY:this.strPricebookEntryId ,Quantity:this.intInputQuantity,salesPrice:this.intInputListPrice,finalised:this.blnFinalised,discount:this.intInputDiscount,lineIemDescription:this.strInputLineitemdescription}).then(result=>{
          console.log('line 97'+JSON.stringify(result));
-         this.loading = true;
-            console.log('MailSentBro'+this.loading);
+         this.blnloading = true;
+            console.log('MailSentBro'+this.blnloading);
                 const evt = new ShowToastEvent({
                     title: 'created',
-                    message: 'Quote Line Items are created ',
+                    strMessage: 'Quote Line Items are created ',
                     variant: 'success',
                     mode: 'dismissable'
                 });
                 this.dispatchEvent(evt);
-                this.loading = false;
-
+                this.blnloading = false;
                 this.HandleRefresh();
-         
      })
      .catch(error=>{
          console.log('error handleSectionToggle'+JSON.stringify(error));
      })
+     this.blnIsShowModal=false;
+}
 
-     this.isShowModal=false;
-     
-     //this.isShowAfterQLI=true;
- }
-
-
+//This function is used to provide options for the Quote Status field in a form, where the user can select from a list of predefined values.
  get QuoteStatusOptions() {
     return [
         { label: 'Open', value: 'Open' },
@@ -390,55 +301,66 @@ handleInputChange1(event){
     ];
 }
 
+//This method is used to handle changes in the selected quote status value and get the corresponding list of supplier names based on the selected quote status, warehouse name, and product name.
 handleQuoteChange(event){
     console.log('line 249');
     if(event){
-    this.QuoteStatusValue=event.target.value;
+    this.strQuoteStatusValue=event.target.value;
     }
-    
-    console.log('line 251'+this.QuoteStatusValue);
-    this.supplierNameList=[];
-    this.supplierNameFilter = ''
-    getSupplierNames({productName:this.productChange,WarehouseName : this.warehouseChange , QuoteStatusValue : this.QuoteStatusValue}).then(result=>{
+    console.log('line 251'+this.strQuoteStatusValue);
+    this.list_SupplierNameList=[];
+    this.list_SupplierNameFilter = ''
+    getSupplierNames({productName:this.strproductChange,WarehouseName : this.strWarehouseChange , QuoteStatusValue : this.strQuoteStatusValue}).then(result=>{
         
         result.forEach(element => {
-            this.supplierNameList.push(element.Account__r.Name);
-            this.supplierNameFilter = JSON.parse(JSON.stringify(this.supplierNameList));
-            console.log('line 53'+JSON.stringify(this.supplierNameFilter));
+            this.list_SupplierNameList.push(element.Account__r.Name);
+            this.list_SupplierNameFilter = JSON.parse(JSON.stringify(this.list_SupplierNameList));
+            console.log('line 53'+JSON.stringify(this.list_SupplierNameFilter));
         });
     })
     .catch(error=>{
     console.log('error'+error);
     })
-    this.showAccordion = true;
-    if(this.QuoteStatusValue === 'Rejected'){
-        this.isShowButtons=false;
+    this.blnShowAccordion = true;
+    if(this.strQuoteStatusValue === 'Rejected'){
+        this.blnIsShowButtons=false;
     }
-   
-
 }
 
-
+//This function is used to handle the Place Order functionality, which updates the Quote Line Item and Quote Status based on the selected checkbox and Quote Id.
 HandlePlaceOrder(event){
+    console.log('line 330'+this.blnFinalised);
+    if(this.blnFinalised==null || this.blnFinalised==false ){
+            const evt = new ShowToastEvent({
+                title: 'created',
+                strMessage: 'please check the checkbox',
+                variant: 'error',
+                mode: 'dismissable'
+            });
+            this.dispatchEvent(evt);
+    }
+    else{
     this.suppliernae();
 
     console.log('strselect'+this.StrPlaceOrderQId);
-    console.log('411'+this.ListQuoteIds)
+    console.log('411'+this.list_QuoteIds)
 
-    UpdateQuoteLineItemAndQuoteStatus({QId : this.StrPlaceOrderQId,Qlist : this.ListQuoteIds }).then(result=>{
+    UpdateQuoteLineItemAndQuoteStatus({QId : this.StrPlaceOrderQId,Qlist : this.list_QuoteIds }).then(result=>{
         console.log('line 345')
-        this.QuoteStatusValue='Closed';
+        this.strQuoteStatusValue='Closed';
          this.handleSectionToggle(event);
 
     })
     .catch(error=>{
         console.log('Handle place order error'+JSON.stringify(error));
         })
+    }
 }
 
+//This function is used to call an Apex method to create order records based on selected suppliers, warehouses, and a quote ID.
 suppliernae(){
     console.log('line388'+this.supplrlist);
-    OrderRecords({supplierNamesList:this.openedSupplierList,WarehouseNamesList:this.warehouslist,quoteId:this.StrPlaceOrderQId}).then(result=>{
+    OrderRecords({supplierNamesList:this.list_openedSupplierList,list_WarehouseNamesList:this.list_warehouslist,quoteId:this.StrPlaceOrderQId}).then(result=>{
         console.log('result',result)
         
         
@@ -448,50 +370,16 @@ suppliernae(){
     
 }
 
-
-handleViewDocuments(event){
-    getRelatedFilesByRecordId({QuoteId : this.storequoteid}).then(data=>{
-        console.log('result',JSON.stringify(data));
-        console.log(data);
-        if(JSON.stringify(data)==='{}'){
-
-            console.log('type',typeof(data))
-            this.message='There are no pdfs'
-            this.showMessage=true
-            this.filesList={};
-
-            console.log('line 418',this.message);
-       
-        }else{
-            
-            
-            this.filesList = Object.keys(data).map(item=>({"label":data[item],
-            "value": item,
-            "url":`/sfc/servlet.shepherd/document/download/${item}`
-           }))
-           console.log('result if',JSON.stringify(data));
-           console.log(this.filesList)
-        }
-            
-        
-    }).catch(error=>{
-        console.log('Error at Handle view documents'+error);
-    })
-    this.isShowPDFs=true;
-
-
-    
-
-}
+//This method is used to close a modal or a popup window.
 closeModal(event){
-    this.showMessage=false
+    this.blnshowMessage=false
 }
 
-
+//This function is used to preview a file with the given record ID.
 previewHandler(event){
     console.log(event.target.dataset.id)
-    this.pdfid=event.target.dataset.id;
-    /*this[NavigationMixin.Navigate]({ 
+    this.strPdfid=event.target.dataset.id;
+    this[NavigationMixin.Navigate]({ 
         type:'standard__namedPage',
         attributes:{ 
             pageName:'filePreview'
@@ -499,40 +387,35 @@ previewHandler(event){
         state:{ 
             selectedRecordId: event.target.dataset.id
         }
-    })*/
-    this.PDFRedirect='https://absyz-1ab-dev-ed.develop.file.force.com/servlet/servlet.FileDownload?file='+ event.target.dataset.id+'&operationContext=S1';
-
-
-
-   
+    })
 }
+
+//This method is used to hide a popup or modal that displays a list of documents.
 hideDocumentsPopUp(event){
-    this.isShowPDFs=false;
-
+    this.blnIsShowPDFs=false;
 }
+
+//This method is used to update the quote status as "Rejected", update the related Quote Line Items, and refresh the supplier details.
 handlereject(event){
-    RejectedQuoteStatusUpdation({QuoteLineItemsList : this.PFQuoteLineItemsList } ).then(data=>{
+    RejectedQuoteStatusUpdation({QuoteLineItemsList : this.list_PFQuoteLineItemsList } ).then(data=>{
         console.log('line 466');
         this.getSupplierDetails();
     }).catch(error=>{
         console.log('Error at Handle view documents'+error);
     })
-    this.supplierNameList=[];
-    this.supplierNameFilter = ''
-    this.QuoteStatusValue='Open'
-    
-
-  
-
+    this.list_SupplierNameList=[];
+    this.list_SupplierNameFilter = ''
+    this.strQuoteStatusValue='Open'
 }
 
+//This method retrieves the list of supplier names based on selected product, warehouse and quote status values.
 getSupplierDetails(){
-    getSupplierNames({productName:this.productChange,WarehouseName : this.warehouseChange , QuoteStatusValue : this.QuoteStatusValue}).then(result=>{
+    getSupplierNames({productName:this.strproductChange,WarehouseName : this.strWarehouseChange , QuoteStatusValue : this.strQuoteStatusValue}).then(result=>{
         console.log('line 483'+JSON.stringify(result));
         result.forEach(element => {
-            this.supplierNameList.push(element.Account__r.Name);
-            this.supplierNameFilter = JSON.parse(JSON.stringify(this.supplierNameList));
-            console.log('line 53'+JSON.stringify(this.supplierNameFilter));
+            this.list_SupplierNameList.push(element.Account__r.Name);
+            this.list_SupplierNameFilter = JSON.parse(JSON.stringify(this.list_SupplierNameList));
+            console.log('line 53'+JSON.stringify(this.list_SupplierNameFilter));
         });
     })
     .catch(error=>{
@@ -541,144 +424,123 @@ getSupplierDetails(){
 }
 
 
-
+//This function is used to retrieve and display related files for a specific Quote record.
 handlepdfids(event){
     console.log('line 521')
-    this.filesList=[];
-    this.pdfrowid = event.target.dataset.qid;
-    console.log('pdf id : '+this.pdfrowid);
-
-    getRelatedFilesByRecordId({QuoteId :  this.pdfrowid}).then(data=>{
+    this.list_FilesList=[];
+    this.strMessage=''
+    this.blnshowMessage=false
+    this.strPdfrowid = event.target.dataset.qid;
+    console.log('pdf id : '+this.strPdfrowid);
+    getRelatedFilesByRecordId({QuoteId :  this.strPdfrowid}).then(data=>{
         console.log('result',JSON.stringify(data));
         console.log(data);
         if(JSON.stringify(data)==='{}'){
-
+            console.log('573')
             console.log('type',typeof(data))
-            this.message='There are no pdfs'
-            this.showMessage=true
-            //this.filesList={};
-
-            console.log('line 418',this.message);
-       
+            this.strMessage='There are no documents attached yet!'
+            this.blnshowMessage=true
+            console.log('line 418',this.strMessage);
         }else{
-            
-            
-            this.filesList = Object.keys(data).map(item=>({"label":data[item],
+            console.log('583')
+            this.list_FilesList = Object.keys(data).map(item=>({"label":data[item],
             "value": item,
-            "url":`/sfc/servlet.shepherd/document/download/${item}`
+            //"url":`/sfc/servlet.shepherd/document/download/${item}`
            }))
            console.log('result if',JSON.stringify(data));
-           console.log(this.filesList)
+           console.log(this.list_FilesList)
         }
-            
-        
+        this.blnIsShowPDFs=true;
     }).catch(error=>{
         console.log('Error at Handle view documents'+error);
     })
-    this.isShowPDFs=true;
-
 }
 
-
+//This function is used to revise a quote by creating a new quote with the same line items and refreshing the page.
 handlerevise(event){
-    this.pdfrowid = event.target.dataset.qid;
-
-    CreateQuoteAndQuoteLineItems({QuoteId : this.pdfrowid}).then(data=>{
+    this.strPdfrowid = event.target.dataset.qid;
+    CreateQuoteAndQuoteLineItems({QuoteId : this.strPdfrowid}).then(data=>{
         console.log('line 562');
         this.HandleRefresh();
-        
-            
-        
     }).catch(error=>{
         console.log('error lie 562'+ JSON.stringify(error));
     })
-
-
 }
 
+//This is used to handle the input value for a line item description in an event.
 handledescription(event){
-    this.inputLineitemdescription = event.target.value;
-    
+    this.strInputLineitemdescription = event.target.value;
 }
 
+//This function is used to handle the user input for a sales price and store it in a variable for later use.
 handlesalesprice(event){
-    this.inputListPrice=event.target.value;
+    this.intInputListPrice=event.target.value;
 }
 
+//This function is used to handle changes in the input quantity value and update the corresponding component variable.
 handlequantity(event){
-    this.inputQuantity = event.target.value;
-
+    this.intInputQuantity = event.target.value;
 }
 
+//This is used to update the discount property with the value entered in the discount input field by the user.
 handlediscount(event){
-    this.inputDiscount = event.target.value;
+    this.intInputDiscount = event.target.value;
 }
+
+//This is used to handle the input value of the delivery date field.
 handleDeliveryDate(event){
-    this.inputDeliveryDate = event.target.value;
+    this.strInputDeliveryDate = event.target.value;
 }
 
-
+//This function is used to update the values of a specific quote line item and create a new quote line item with updated values.
 handleupdate(event){
-
     this.quotelineid = event.target.dataset.qlid;
-    if(this.inputQuantity===''){
-        this.inputQuantity = event.target.dataset.quantity;
-
+    if(this.intInputQuantity===''){
+        this.intInputQuantity = event.target.dataset.quantity;
     }
-    if(this.inputListPrice===''){
-        this.inputListPrice = event.target.dataset.salesprice;
-
+    if(this.intInputListPrice===''){
+        this.intInputListPrice = event.target.dataset.salesprice;
     }
-    if(this.inputDiscount===''){
-        this.inputDiscount = event.target.dataset.discount;
-
+    if(this.intInputDiscount===''){
+        this.intInputDiscount = event.target.dataset.discount;
     }
-    if(this.inputLineitemdescription===''){
-        this.inputLineitemdescription = event.target.dataset.description;
-
+    if(this.strInputLineitemdescription===''){
+        this.strInputLineitemdescription = event.target.dataset.description;
     }
-    if(this.inputDeliveryDate===''){
-        this.inputDeliveryDate = event.target.dataset.deliverydate;
-
+    if(this.strInputDeliveryDate===''){
+        this.strInputDeliveryDate = event.target.dataset.deliverydate;
     }
 
-
-    
-    CreateQuotelineitems({quoteLineId: this.quotelineid ,Quantity:this.inputQuantity,salesPrice:this.inputListPrice,discount:this.inputDiscount,lineIemDescription:this.inputLineitemdescription, estimateddeliverydate : this.inputDeliveryDate}).then(result=>{
+    CreateQuotelineitems({quoteLineId: this.quotelineid ,Quantity:this.intInputQuantity,salesPrice:this.intInputListPrice,discount:this.intInputDiscount,lineIemDescription:this.strInputLineitemdescription, estimateddeliverydate : this.strInputDeliveryDate}).then(result=>{
         console.log('line 97'+JSON.stringify(result));
-        this.inputQuantity='';
-        this.inputListPrice='';
-        this.inputDiscount='';
-        this.inputLineitemdescription='';
-
-        this.loading = true;
-           console.log('MailSentBro'+this.loading);
+        this.intInputQuantity='';
+        this.intInputListPrice='';
+        this.intInputDiscount='';
+        this.strInputLineitemdescription='';
+        this.blnloading = true;
+           console.log('MailSentBro'+this.blnloading);
                const evt = new ShowToastEvent({
                    title: 'created',
-                   message: 'Quote Line Items are created ',
+                   strMessage: 'Quote Line Items are created ',
                    variant: 'success',
                    mode: 'dismissable'
                });
                this.dispatchEvent(evt);
-               this.loading = false;
-
+               this.blnloading = false;
                this.HandleRefresh();
-        
     })
     .catch(error=>{
         console.log('error line 615'+JSON.stringify(error));
     })
-
 }
 
+//This function is used to navigate to the record page of a Quote with a specific quote ID in a new tab.
 Navigatetoquotenumber(event){
     const strquoteid=event.target.dataset.strquoteid;
-    // alert('checj'+strquoteid)
-     // Navigate to a URL
      this[NavigationMixin.GenerateUrl]({
          type: 'standard__recordPage',
          attributes:{
-             recordId: strquoteid,
+            strRecordId: strquoteid,
              objectApiName: 'quote',
              actionName:'view'
          }
@@ -687,14 +549,14 @@ Navigatetoquotenumber(event){
      })
 }
 
-
+//This code is used to navigate to a quote line record in a new tab based on the quote line ID.
 Navigatetoquotelinenumber(event){
     const strquotelineid=event.target.dataset.strquotelineid;
      // Navigate to a URL
      this[NavigationMixin.GenerateUrl]({
          type: 'standard__recordPage',
          attributes:{
-             recordId: strquotelineid,
+            strRecordId: strquotelineid,
              objectApiName: 'QuoteLineItem',
              actionName:'view'
          }
@@ -703,31 +565,12 @@ Navigatetoquotelinenumber(event){
      })
 }
 
-
-// NavigatetoProduct(event){
-//     const strquoteid=event.target.dataset.strquoteid;
-//     // alert('checj'+strquoteid)
-//      // Navigate to a URL
-//      this[NavigationMixin.GenerateUrl]({
-//          type: 'standard__recordPage',
-//          attributes:{
-//              recordId: strquoteid,
-//              objectApiName: 'quote',
-//              actionName:'view'
-//          }
-//      }).then(url =>{
-//          window.open(url, "_blank");
-//      })
-// }
-
+//This method is used to navigate to the detail page of a specific product.
 NavigatetoProduct(event){
-   //const productId=event.target.dataset.productnav;
-    // alert('checj'+strquoteid)
-     // Navigate to a URL
      this[NavigationMixin.GenerateUrl]({
          type: 'standard__recordPage',
          attributes:{
-             recordId: this.productId,
+            strRecordId: this.strProductId,
              objectApiName: 'Product2',
              actionName:'view'
          }
@@ -736,9 +579,4 @@ NavigatetoProduct(event){
      })
 
 }
-
-
-
-        
-
 }

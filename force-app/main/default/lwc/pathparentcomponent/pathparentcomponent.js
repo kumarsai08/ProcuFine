@@ -1,203 +1,171 @@
 import { LightningElement ,api,track} from 'lwc';
 import opprecords from '@salesforce/apex/GetSuppleirDetails.opprecords';
-import { CurrentPageReference, NavigationMixin } from 'lightning/navigation'
-
 
 export default class Pathparentcomponent extends LightningElement {
-    @api productName;
-    @api productnamefrominvdatatable;
-    @api opentab;
+    @api strAllProductNames;
+    @api strProductnamefrominvdatatable;
+    @api blnOpenTab;
     list_Opportunities;
-    @api passproductvalue;
-    @api activeTab='Inventory Management';
-
-    @track tabs = [];
-    @api show = false;
-    @api showOppTab= false;
-
-    @track steps = [
+    @api strPassProductValue;
+    @api StrPassWarehouseValue;
+    @api blnActiveTab='Inventory Management';
+    @track list_Tabs = [];
+    @api blnShow = false;
+    @api blnShowOppTab= false;
+    @track strCurrentStep="Inventory Summary";
+    @track blnIsInvSummary =true;
+    @track blnIsOrderInv=false;
+    @track blnIsSupplierSelection=false;
+    @track blnIsOrderSummary=false;
+    blnIsShowModal=false;
+    @track list_Steps = [
         { label: 'Inventory Summary', value: 'Inventory Summary' },
         { label: 'Order Inventory', value: 'Order Inventory' },
         { label: 'Supplier Selection', value: 'Supplier Selection' },
-        { label: 'Order Summary', value: 'Order Summary' }
-    ];
-    @track currentStep="Inventory Summary";
-    @track isInvSummary =true;
-    @track isOrderInv=false;
-    @track isSupplierSelection=false;
-    @track isOrderSummary=false;
-    @track sendOrderData =[];
+        { label: 'Order Summary', value: 'Order Summary' } ];
 
-    isShowModal=false;
     connectedCallback(){
         console.log('inside connected callback');
-    //     this.isInvSummary =true;
-    //     this.isOrderInv =false;
-    //     this.isSupplierSelection=false;
-    //     this.isOrderSummary=false;
     }
+
+//This function sets certain flags to true or false based on the value of an event target.
     moveToCmp(event){
         if(event.target.value==='Inventory Summary') {
-            this.currentStep="Inventory Summary";
-            this.isInvSummary =true;
-            this.isOrderInv =false;
-            this.isSupplierSelection=false;
-            this.isOrderSummary=false;
+            this.strCurrentStep="Inventory Summary";
+            this.blnIsInvSummary =true;
+            this.blnIsOrderInv =false;
+            this.blnIsSupplierSelection=false;
+            this.blnIsOrderSummary=false;
         }
         else if(event.target.value==='Order Inventory') {
-            this.currentStep="Order Inventory";
-            this.isInvSummary =false;
-            this.isOrderInv =false;
-            this.isSupplierSelection=false;
-            this.isOrderSummary=false;
+            this.strCurrentStep="Order Inventory";
+            this.blnIsInvSummary =false;
+            this.blnIsOrderInv =false;
+            this.blnIsSupplierSelection=false;
+            this.blnIsOrderSummary=false;
         }
         else if(event.target.value==='Supplier Selection') {
-            this.currentStep="Supplier Selection";
-            this.isInvSummary =false;
-            this.isOrderInv =false;
-            this.isSupplierSelection=true;
-            this.isOrderSummary=false;
+            this.strCurrentStep="Supplier Selection";
+            this.blnIsInvSummary =false;
+            this.blnIsOrderInv =false;
+            this.blnIsSupplierSelection=true;
+            this.blnIsOrderSummary=false;
         }
         else if(event.target.value==='Order Summary'){
-            this.currentStep="Order Summary";
-            this.isInvSummary =false;
-            this.isOrderInv =false;
-            this.isSupplierSelection=false;
-            this.isOrderSummary=true;
+            this.strCurrentStep="Order Summary";
+            this.blnIsInvSummary =false;
+            this.blnIsOrderInv =false;
+            this.blnIsSupplierSelection=false;
+            this.blnIsOrderSummary=true;
         }
     }
 
+    //This method is used to handle an event and update the state of certain variables change in the displayed content.
     handleAnswer(event){
-        this.currentStep="Order Inventory";
-        this.isInvSummary =false;
-        this.isOrderInv =true;
-        this.isSupplierSelection=false;
-        this.isOrderSummary=false;
+        this.strCurrentStep="Order Inventory";
+        this.blnIsInvSummary =false;
+        this.blnIsOrderInv =true;
+        this.blnIsSupplierSelection=false;
+        this.blnIsOrderSummary=false;
         this.selectedRow=event.detail.row;
     } 
+
+    //This function is used to set the current step to "Supplier Selection" and show the corresponding UI components while hiding others.
     moveToSupplierSelection(event){
-             this.currentStep="Supplier Selection";
-        this.isInvSummary =false;
-        this.isOrderInv =false;
-        this.isSupplierSelection=true;
-        this.isOrderSummary=false;
-              }
+         this.strCurrentStep="Supplier Selection";
+        this.blnIsInvSummary =false;
+        this.blnIsOrderInv =false;
+        this.blnIsSupplierSelection=true;
+        this.blnIsOrderSummary=false;
+         }
 
+    //This function is used to handle the product name selected by the user.
     handleproductname(event){
-        this.productName=event.detail.product;
+        this.strAllProductNames=event.detail.product;
     }
-
+    //This method is used to handle the product details and create an opportunity tab based on the selected product from the inventory data table.
     Handleproductdetails(event){
         console.log('line 72');
-        this.productnamefrominvdatatable=event.detail.product;
-        console.log('line 74'+ this.productnamefrominvdatatable);
-        this.opentab=event.detail.createtaboption;
-        console.log('line 75'+this.opentab);
-        // this.opentab=true;
-        this.getOpportunities(this.productnamefrominvdatatable);
-        
-        //console.log('producttable'+producttable);
-        this.show=true;
-        this.showOppTab=true;
-        console.log('line 98'+this.productnamefrominvdatatable);
-        //this.activeTab=this.productnamefrominvdatatable+' Opportunity Information ';
-        console.log('100:'+this.activeTab);
-        //this.activeTab=1;
-       // this.activeTab = activeTab.toString();
-
+        this.strProductnamefrominvdatatable=event.detail.product;
+        console.log('line 74'+ this.strProductnamefrominvdatatable);
+        this.blnOpenTab=event.detail.createtaboption;
+        console.log('line 75'+this.blnOpenTab);
+        this.getOpportunities(this.strProductnamefrominvdatatable);
+        this.blnShow=true;
+        this.blnShowOppTab=true;
+        console.log('line 98'+this.strProductnamefrominvdatatable);
+        console.log('100:'+this.blnActiveTab);
     } 
 
+    //This function is used to handle and update the values passed from the child component and update the current step and other related boolean values accordingly.
     handlepassproductdetails(event){
         console.log('line 91');
-        this.passproductvalue=event.detail.passproduct;
-        console.log('line 94'+ this.passproductvalue);
+        this.strPassProductValue=event.detail.passproduct;
+        this.StrPassWarehouseValue = event.detail.passwarehouse;
+        console.log('parentwarehousename'+this.StrPassWarehouseValue)
+        console.log('line 94'+ this.strPassProductValue);
+        this.strCurrentStep="Order Inventory";
+        this.blnIsInvSummary =false;
+        this.blnIsOrderInv =true;
+        this.blnIsSupplierSelection=false;
+        this.blnIsOrderSummary=false;
+    } 
 
-
-
-        this.currentStep="Order Inventory";
-        this.isInvSummary =false;
-        this.isOrderInv =true;
-        this.isSupplierSelection=false;
-        this.isOrderSummary=false;
-
-    }
-
+    //This method is used to handle the selection of an active tab and load data for a specific tab here it is ('Delivery Information') if it is selected.
     handleActive(event){
         console.log('121:'+event.target.value);
-        this.activeTab = event.target.value;
+        this.blnActiveTab = event.target.value;
         try{
-            if(this.activeTab ==='Receiving Manger'){
+            if(this.blnActiveTab ==='Delivery Information'){
+                console.log('132')
                 this.template.querySelector('c-delivery-information').loadData();
             }
         }
-
         catch (error) {
             console.log('Check'+error);
-         }
-       
-        
+         } 
     }
+   
+   //This method is used to refresh the data in QA Manager component when called by the parent component.
+   handleqarefresh(){
+    console.log('qa refresh : ')
+    this.template.querySelector("c-p-f-q-a-manager-component").handlerefresh(); 
+   }
 
-
+//This method retrieves opportunity records for a selected product and displays data in the UI.
     getOpportunities(strProductName) {
         this.productnamevalueselected = strProductName;
-        //console.log('product name :: '+this.productnamevalueselected);
         opprecords({productname : strProductName })
         .then(result=>{
-            
             this.OppquantityList=result;
-
-            
             let templist=[];
-           
             var newData = JSON.parse(JSON.stringify(result));
-    
-            
             newData.forEach(record => {
                let tempRecs = Object.assign({},record);
-               
-              // tempRecs.NameUrl = '/'+tempRecs.Product__c;
-               //tempRecs.ProdName = record.Product__r.Name;
-            //    console.log('line 67'+ JSON.stringify(record));
                tempRecs.OppnameUrl= '/'+record.OpportunityId;
                console.log('OppName:'+record.Opportunity.Name);
                if(record.Opportunity.Name){tempRecs.opporName=record.Opportunity.Name};
-            //    console.log('line 63'+ JSON.stringify(tempRecs));
               tempRecs.Cdate=record.Opportunity.CloseDate;
               tempRecs.quantityvalue=record.Opportunity.TotalOpportunityQuantity;
               if(record.Opportunity.OrderNumber__c){tempRecs.Onumber=record.Opportunity.OrderNumber__c};
-              if(record.Opportunity.StageName){tempRecs.Sname=record.Opportunity.StageName};
-             // console.log('line 68'+ JSON.stringify(tempRecs));
-               
+              if(record.Opportunity.StageName){tempRecs.Sname=record.Opportunity.StageName};               
                templist.push(tempRecs);
             });
-    
             this.list_Opportunities = templist;
            this.oppTab=strProductName;
            this.tabContent=this.list_Opportunities;
-           this.isShowModal=true;
-        //    this.activeTab=strProductName;
-        // this.tabs.push({ label: strProductName, content: this.list_Opportunities ,value:strProductName}); 
-      
-
-        
-        console.log('line 159'+JSON.stringify(this.activeTab));
-
-           // console.log('this.OppquantityList1 :: '+JSON.stringify(templist));
-            //return templist;
+           this.blnIsShowModal=true;
+        console.log('line 159'+JSON.stringify(this.blnActiveTab));
         })
         .catch(error=>{
             console.log('error in Oppquantityurl_Records'+JSON.stringify(error));
         });
     }
-    @api handleRemoveTab(event){
-        console.log('inside handle remove tab');
-        this.tabs.pop(event.detail.tabtitle);
-    }
 
+    //This function is used to close a popup.
     closeThePopup(event){
         console.log('line 318');
-        this.isShowModal=false;
+        this.blnIsShowModal=false;
     
     }
 }

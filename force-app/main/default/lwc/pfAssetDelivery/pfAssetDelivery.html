@@ -1,0 +1,95 @@
+<template>
+    <lightning-card>
+        <div class="slds-box slds-theme_default">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Batch Number"></div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Batch Number">Batch Number</div>
+                        </th>
+                        
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Child Asset Count">Child Asset Count</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={BatchNumber} for:item="Batchno">
+                        <tr key={Batchno.Id}>
+                            <td><lightning-input type="checkbox" name='finalise' class="slds-p-left_xx-large" ></lightning-input></td>
+                            <td><a  name={Batchno.Id} data-strbatchid= {Batchno.Id}  onclick={Navigatetobatchnumber}  target="_blank">{Batchno.Name}</a></td>
+                            <!-- <td> onclick={getProductName}{Batchno.Child_Assets_Count__c}</td> -->
+                            <td><a onclick={getassestdetails} >{Batchno.Child_Assets_Count__c}</a></td>
+                        </tr>
+                    </template>
+                    <template if:true={isShowModal}>
+
+                        <!--
+                            I Used SLDS for this code
+                            Here is link https://www.lightningdesignsystem.com/components/modals/
+                        --> 
+            
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                   <div class="slds-modal__container">
+                    <!-- modal header start -->
+                      <header class="slds-modal__header">
+                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                            <lightning-icon icon-name="utility:close"
+                               alternative-text="close"
+                               variant="inverse"
+                               size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                         </button>
+                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Asset Details</h2>
+                      </header>
+                  
+                      <!-- modal body start -->
+                      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning-card>
+                            <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
+                                cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
+      
+                                <thead>
+                                    <tr class="slds-table-height_reset">
+                                      
+                                      <th class="" scope="col">
+                                          <div class="slds-truncate" title="Product Name">Serial Number</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                          <div class="slds-truncate" title="Product Name">SKU-Id</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Batch Number">Product</div>
+                                          </th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={Asset} for:item="Assetno">
+                                        <tr key={Assetno.Id}>
+                                            <td>{Serial_number__c}</td>
+                                            <td>{Batch_Number__c}</td>
+                                            <td>{Product2.name}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </lightning-card>
+                      </div>
+            
+                      <!-- modal footer start-->
+                      <footer class="slds-modal__footer">
+                         <button class="slds-button slds-button_neutral" onclick={hideModalBox}>Save</button>
+                      </footer>
+                   
+                   </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+             </template>
+                </tbody>
+            </table>
+        </div> 
+    </lightning-card>
+</template>

@@ -1,6 +1,19 @@
+<!--
+* 
+* @ Name    :   pFQAManagerComponent
+* @ Purpose :   The table displays information on a list of orders with their related product information.
+*               The table allows searching by order ID and filtering by product name, and includes a button to open a modal popup for performing a quality check on a selected order.
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
-   <!-- <lightning-button variant="Brand" label="Refresh" title="Refresh" onclick={handleRefresh} class="slds-var-m-right_x-smallmall"></lightning-button> -->
-
     <div class="slds-box slds-theme_default">
         <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
             <thead>
@@ -13,7 +26,7 @@
                         name="Product Name"
                         label="Product Name"
                         value={value}
-                        options={productNameFilterInQA}
+                        options={list_ProductNameFilterInQA}
                         onchange={handleProductFilterInQA} >
                         </lightning-combobox>
                       </th>
@@ -38,27 +51,24 @@
                 </tr>
             </thead>
             <tbody>
-                <template for:each={QATableList} for:item="ordPro">
+                <template for:each={list_QATableList} for:item="ordPro">
                     <tr key={ordPro.Id}>
                       <td><a  name={ordPro.Id} data-strorderid= {ordPro.Order.Id}  onclick={Navigatetoorder}  target="_blank">{ordPro.Order.OrderNumber}</a></td> 
-                      <td><a  name={ordPro.Id} data-strproducturl= {ordPro.Product2Id}  onclick={Navigatetoproduct}  target="_blank">{ordPro.Product2.Name}</a></td> 
-                      <!-- <td onclick={navigateToOrder} data-orderurl={ordPro.Order.Id}><a href={recordPage} target="_blank">{ordPro.Order.OrderNumber}</a></td>
-                      <td onclick={navigateToProduct} data-orderproducturl={ordPro.Product2.Id}><a href={productRecordPage} target="_blank">{ordPro.Product2.Name}</a></td> -->
+                      <td><a  name={ordPro.Id} data-strproducturl= {ordPro.Product2Id}  onclick={Navigatetoproduct}  target="_blank">{ordPro.Product2.Name}</a></td>
                         <td>{ordPro.Order.Pending_Quantityy1__c}</td>
                         <td>{ordPro.Order.On_Hand_Recieved__c}</td>
                         <td> {ordPro.Order.Under_QA__c} </td>
                         <td>{ordPro.Order.Approved_Quantity__c}</td>
                         <td>{ordPro.Order.Reject_Quantity__c}</td>
                         <td> 
-                          <lightning-button variant="brand" label="Inspect" title="Inspect" data-set={ordPro.Order.Id} data-proid={ordPro.Product2.Id} onclick={handleClick} class="slds-m-left_x-small">Inspect</lightning-button>
+                          <lightning-button variant="brand" label="Inspect"  data-set={ordPro.Order.Id} data-proid={ordPro.Product2.Id} onclick={handleClick} class="slds-m-left_x-small">Inspect</lightning-button>
                         </td>
-                        
                     </tr>
                 </template>
             </tbody>
         </table>
     </div> 
-    <template if:true={isShowModal}>
+    <template if:true={blnIsShowModal}>
       <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
           aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
           <div class="slds-modal__container">
@@ -78,85 +88,57 @@
                   <lightning-card>
                       <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
                           cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
-  
                           <thead>
                               <tr class="slds-table-height_reset">
                                 <th class="" scope="col">
                                   <div class="slds-truncate" title="Product Name">Product Name</div>
                                 </th>
                                 <th class="" scope="col">
+                                  <div class="slds-truncate" title="Product Name">Delivery Date</div>
+                                </th>
+                                <th class="" scope="col">
                                   <div class="slds-truncate" title="Product Name">Batch Number</div>
                                 </th>
-
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Product Name">SKU-Ids</div>
                                   </th>
-                                  
                                   <th class="" scope="col">
                                       <div class="slds-truncate" title="Batch Number">Status</div>
                                     </th> 
                               </tr>
                           </thead>
                           <tbody>
-                              <template for:each={aslist} for:item="asset">
+                              <template for:each={list_Asset} for:item="asset">
                                   <tr key={asset.Id}>
                                     <td>{asset.Product2.Name}</td>
-                                    <td>{asset.Batch_Number_lookup__r.Name}</td>
-                                      <td>{asset.Batch_Number__c}</td>
-                                      <!-- <td> <input type="radio" id="html" name="fav_language" value="HTML" options={options}></td> -->
-                                      <!-- <td >
-                                        <lightning-layout horizontal-align="space">
-                                          <lightning-layout-item padding="around-small">
-                                            <lightning-button variant="success" label="QA Pass" title="Successful action" onclick={handlestatusupdation} data-assetid={asset.Id} class="slds-m-left_x-small"></lightning-button>
-                                            <input type="radio"  name="fav_language" value="HTML">
-                                              <label for="html">HTML</label>
-                                           </lightning-layout-item>
-                                          <lightning-layout-item padding="around-small"> -->
-                                            <!-- <lightning-button variant="destructive" label="QA Fail" title="Successful action" onclick={handlestatusupdation} data-assetid={asset.Id} class="slds-m-left_x-small"></lightning-button> -->
-                                            <!-- <input type="radio"  name="fav_language" value="HTML"> -->
-<!--   <label for="html">HTML</label> -->
-                                          <!-- </lightning-layout-item>
-                                        </lightning-layout>
-                                      </td> --> 
-                                        
-
-                                        
-                                        
-                                      <!-- <td > 
-                                         <lightning-radio-group name="radioGroup"
-                                        label=""
-                                        options={options}
-                                        value={selectedValues.assetId}
-                                        type="button"
-                                        onchange={handlestatusupdation}
-                                        data-assetid={asset.Id}></lightning-radio-group> </td> -->
-                                
-                                        
+                                    <td> {asset.Batch_Number_lookup__r.Delivery_date__c}</td>
+                                    <td><a   data-batchid= {asset.Batch_Number_lookup__c}  onclick={NavigatetoBatchnumber}  target="_blank">{asset.Batch_Number_lookup__r.Name}</a></td>
+                                      <td>{asset.SKU_Id__c}</td>
                                         <td>
-                                        <lightning-combobox
-                                        name="  Status"
+                                         <lightning-combobox
+                                        name="Status"
                                         label="Status"
                                         value={value}
                                         placeholder="Select Progress"
                                         options={options}
                                         onchange={handlestatusupdation} data-assetid={asset.Id} ></lightning-combobox></td>
-                                      <!--<td> <lightning-button variant="Neutral" label="select" onclick={handleVerify}
-                                              class="slds-m-left_x-large"></lightning-button>
-                                      </td>-->
                                   </tr>
                               </template>
                           </tbody>
                       </table>
                   </lightning-card>
-              </div>
-              
-         <!-- modal footer start-->
+              </div>              
          <footer class="slds-modal__footer">
-            <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
-            
+            <lightning-button variant="success" label="Save"  onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
          </footer>
       </div>
    </section>
    <div class="slds-backdrop slds-backdrop_open"></div>
-   </template>   
+   </template>  
+   <template if:true={blnLoading}>
+    <div class="spinner">
+        please wait....
+        <lightning-spinner alternative-text="Loading"  size="large"></lightning-spinner>
+    </div>
+  </template> 
 </template>

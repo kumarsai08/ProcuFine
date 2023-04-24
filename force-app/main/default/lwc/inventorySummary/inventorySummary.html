@@ -1,0 +1,96 @@
+<!--
+* 
+* @ Name    :   inventorySummary
+* @ Purpose :   This component is used for displaying the Inventory listview.
+* @ Author  :   Shameel Ahmed
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
+<template>
+    <lightning-card>
+<div class="slds-box slds-theme_default">
+  <lightning-button label = "Refresh" onclick={handleRefresh} variant="brand" class="slds-float_right" ></lightning-button>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <thead>
+            <tr>
+                <th class="" scope="col">
+                  <lightning-combobox
+                  name="Product Name"
+                  label="Product Name"
+                  value={value}
+                  options={list_ProductNameFilter}
+                  onchange={handleProductFilter} >
+                  </lightning-combobox>
+                </th>
+                  <th class="" scope="col">
+                    <lightning-combobox
+                        name="Warehouse"
+                        label="Warehouse"
+                        value={value}
+                        options={list_WarehouseNameOptions}
+                        onchange={handleWarehouseChange} ></lightning-combobox>
+                  </th>
+                  <th class="" scope="col">
+                      <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div>
+                    </th>
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="On Order">On Order</div>
+                    </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Order Received">Order Received</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Under QA">Under QA</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Stock On Hand">Stock On Hand</div>
+                      </th>
+                        <th class="" scope="col">
+                          <div class="slds-truncate" title="Defective Quantity">Defective Quantity</div>
+                        </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="To Be Ordered">To Be Ordered</div>
+                      </th>
+                      <th class="" scope="col">
+                        <div class="slds-truncate" title="Threshold">Threshold</div>
+                      </th>
+                    <th class="" scope="col">
+                      <div class="slds-truncate" title="Preorder"></div>
+                    </th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={list_Inventory} for:item="inv">
+                <tr key={inv.Id}>
+                  <td><a  name={inv.Id} data-strproductid= {inv.Product__c}  onclick={RecordPage}  target="_blank">{inv.Product__r.Name}</a></td>
+                  <td><a  name={inv.Id} data-strwarehouseid= {inv.Warehouse__c}  onclick={NavigatetowarehousePage}  target="_blank">{inv.Warehouse__r.Name}</a></td>
+                  <td><a onclick={getProductName} data-prod={inv.Product__r.Name}>{inv.Quantity__c}</a></td>  
+                  <td>{inv.On_Order__c}</td>
+                    <td>{inv.Order__c}</td>
+                    <td>{inv.Real_Under_Qa__c}</td>
+                    <td>{inv.Exsisting_Stock_On_Hand__c}</td>
+                    <td>{inv.defective_quantity__c}</td>
+                    <td>{inv.Shortfall__c}</td>
+                    <td>{inv.Threshold__c}</td>
+                    <td><template if:true={inv.check} >
+                         <lightning-button variant="brand" label="Pre-Order" onclick={handlepassproductname} data-strproductname={inv.Product__r.Name} data-strwarenames={inv.Warehouse__r.Name} style="width: max-content;display: flex" class="slds-m-left_x-small"></lightning-button>
+                      </template></td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</div> 
+</lightning-card>
+<template if:true={blnLoading}>
+  <div class="spinner">
+      please wait....
+      <lightning-spinner alternative-text="Loading"  size="large"></lightning-spinner>
+  </div>
+</template>
+</template>

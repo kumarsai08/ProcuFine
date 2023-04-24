@@ -12,8 +12,7 @@ global class GetQuoteDetails implements Messaging.InboundEmailHandler {
        
         string reg='>';
         Boolean blnRepliedEmail=false;
-        //system.debug(stremailbody.replaceAll(reg, ''));
-        //strEmailBody=stremailbody.replaceAll(reg, '');
+        
         system.debug('13'+strEmailSubject);
         system.debug('14'+strHtmlBOdy);
         system.debug('15'+strEmailSentFromEmail);
@@ -23,7 +22,7 @@ global class GetQuoteDetails implements Messaging.InboundEmailHandler {
             system.debug('line 7');
            
             String plaintext= '';
-            // Add the email plain text into the local variable
+            
             plaintext = email.plainTextBody;
             string quoteidd= strHtmlBOdy.substringBetween('quoteid:','.');
             system.debug('quote id:'+quoteidd);
@@ -36,14 +35,34 @@ global class GetQuoteDetails implements Messaging.InboundEmailHandler {
             for(quote q:quote_records){
                 if(q.id==quoteidd){
                     Supplier_email.add(q.Email);
-                    if(email.binaryAttachments != null && email.binaryAttachments.size()>0){
-                        for(integer i=0;i<email.binaryAttachments.size();i++){
-                            attachment atc=new attachment();
+                    if(email.binaryAttachments!=null){
+                for (Messaging.Inboundemail.BinaryAttachment file : email.binaryAttachments)
+                {
+                    ContentVersion cVersion = new ContentVersion();
+                    cVersion.ContentLocation = 'S';
+                    cVersion.PathOnClient = file.fileName;//File name with extension
+                    cVersion.Title =file.fileName;//Name of the file
+                    cVersion.VersionData = file.body;//File content
+                    insert cVersion;
+                   
+                    ContentDocumentLink cdl = new ContentDocumentLink();
+                    cdl.ContentDocumentId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id =: cVersion.Id].ContentDocumentId;
+                    cdl.LinkedEntityId = q.Id;
+                    cdl.Visibility = 'AllUsers';
+                    cdl.ShareType = 'I';
+                    insert cdl;
+                }
+            }
+                  
+                    else if (email.textAttachments!=null && email.textAttachments.size()>0) {
+                        for(integer i=0;i<email.textAttachments.size();i++){
+                        attachment atc=new attachment();
                             atc.ParentId=q.id;
-                            atc.Name=email.binaryAttachments[i].filename;
-                            atc.Body=email.binaryAttachments[i].body;
+                            atc.Name=email.textAttachments[i].filename;
+                           atc.body=Blob.valueOf(email.textAttachments[i].body);
                             atment.add(atc);
                         }
+                        
                     }
                 }
             }
@@ -82,8 +101,11 @@ global class GetQuoteDetails implements Messaging.InboundEmailHandler {
            
             result.success=true;
         }
-        catch(exception e){
-            result.success=false;
+        catch(exception ex)
+        {
+            new CustomLogException().Log(ex);
+               
+                
         }
         return result;
     }

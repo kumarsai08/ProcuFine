@@ -1,7 +1,7 @@
 import { LightningElement, api , track} from 'lwc';
-import QAManagerOrderPro from '@salesforce/apex/assetRecords.QAManagerOrderPro';
-import producttoassestrecords from '@salesforce/apex/assetRecords.producttoassestrecords';
-import CreateAssetRecords from '@salesforce/apex/assetRecords.CreateAssetRecords';
+import QAManagerOrderPro from '@salesforce/apex/PF_AssetRecords.QAManagerOrderPro';
+import producttoassestrecords from '@salesforce/apex/PF_AssetRecords.producttoassestrecords';
+import CreateAssetRecords from '@salesforce/apex/PF_AssetRecords.CreateAssetRecords';
 export default class Pf_QA_Manager extends LightningElement {
 
     @api QATableList=[];
@@ -71,7 +71,7 @@ value = 'QA In Progress';
     hideModalBox(event){
         //this.updatedvalue=this.statusvalue;
         CreateAssetRecords({assetRecordIds:this.assestid, statusValues  : this.asseststatus}).then(result=>{
-            console.log('LINE 74'+JSON.stringify(result));
+            console.log('LINE 744'+JSON.stringify(result));
         })
         .catch(error=>{
             console.log('error'+JSON.stringify(error));

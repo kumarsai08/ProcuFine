@@ -2,7 +2,9 @@ public  class AssetWrapperClass {
     public static list<AssetReturnObject> ReturnAssetList = new list<AssetReturnObject>();
     
     @AuraEnabled
-    public static void AssetValuesQA() { //list<AssetReturnObject>
+    public static void AssetValuesQA() { 
+        
+        try{//list<AssetReturnObject>
         Set<Id> orderidList=(new Map<Id,SObject>([SELECT Order.Id from OrderItem WHERE Order.Status='Partial Quantity Under QA' or Order.Status='Fully Received Under QA' ])).keySet();
         system.debug('orderidList :: ' + orderidList);
         AssetReturnObject assetReturn= new AssetReturnObject();
@@ -19,6 +21,13 @@ public  class AssetWrapperClass {
 		//ReturnAssetList.add(assetReturn);
         //list<Asset> AssetList=[SELECT Count(Id),Order_Id__c from Asset Where Order_Id__c IN : orderidList AND status = 'QA In Progress' GROUP BY Order_Id__c];    
         //return ReturnAssetList;
+    }
+    catch(exception ex)
+    {
+        new CustomLogException().Log(ex);
+           
+            
+    }
     }
  
     public class AssetReturnObject {

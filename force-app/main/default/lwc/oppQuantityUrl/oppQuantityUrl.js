@@ -27,13 +27,13 @@ export default class OppQuantityUrl extends LightningElement {
             type: 'Number',
             sortable: true
         },
-        {
-            label: 'Order Number',
-            fieldName: 'Onumber',
-            type: 'Text',
-            sortable: true
+        // {
+        //     label: 'Order Number',
+        //     fieldName: 'Onumber',
+        //     type: 'Text',
+        //     sortable: true
     
-        },
+        // },
         {
             label: 'Stage',
             fieldName: 'Sname',

@@ -1,3 +1,18 @@
+<!--
+* 
+* @ Name    :   deliveryInformation
+* @ Purpose :   This code includes columns for different fields.We have a combobox for selecting a product name and a search input for filtering orders by order ID.
+*               The table contains a loop that iterates over a list of order items and displays the relevant information for each item in a row.Each row also includes a button for adding details to the order item.            
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
 <div class="slds-box slds-theme_default">
@@ -5,25 +20,13 @@
         <thead>
             <tr>
                   <th class="" scope="col">
-                    
                         <lightning-combobox
                         name="Product Name"
                         label="Product Name"
                         value={value}
-                        options={productNameOptions}
+                        options={list_ProductNameOptions}
                         onchange={handleProductChange} ></lightning-combobox>
-                    
                   </th>
-                  <!-- <th class="" scope="col">
-                      <div class="slds-truncate" title="Order ID">
-                        <lightning-combobox
-                        name="Order ID"
-                        label="Order ID"
-                        value={value}
-                        options={supplieroptions}
-                        onchange={handleChange} ></lightning-combobox>
-                      </div>
-                    </th> -->
                     <th><lightning-input type="search" onchange={handleKeyChange} class="slds-m-bottom_small" label="Order ID" value={searchKey}></lightning-input></th>
                     <th class="" scope="col">
                       <div class="slds-truncate" title="Total Quantity">Total Quantity</div>
@@ -40,53 +43,32 @@
                       <th class="" scope="col">
                         <div class="slds-truncate" title="On Hand Quantity">Under QA</div>
                       </th>
-                      <!-- <th class="" scope="col">
-                        <div class="slds-truncate" title="On Hand Quantity">Stock on Hand</div>
-                      </th>
                       <th class="" scope="col">
-                        <div class="slds-truncate" title="On Hand Quantity">Defective Quantity</div>
-                      </th> -->
-                      <th class="" scope="col">
-                        
-                            <lightning-combobox
+                      <lightning-combobox
                         name="Status"
                         label="Status"
                         value={value}
-                        options={orderOptions}
+                        options={list_OrderOptions}
                         onchange={handleStatusChange} ></lightning-combobox>
-                        
                       </th>
-
-                    
             </tr>
         </thead>
         <tbody>
-            <template for:each={OrderItem} for:item="ordproduct">
+            <template for:each={list_OrderItem} for:item="ordproduct">
                 <tr key={ordproduct.Id}>
                   <td><a  name={ordproduct.Id} data-produrl= {ordproduct.Product2Id}  onclick={Navigatetoproduct}  target="_blank">{ordproduct.Product2.Name}</a></td> 
                   <td><a  name={ordproduct.Id} data-orderid= {ordproduct.Order.Id}  onclick={Navigatetoorder}  target="_blank">{ordproduct.Order.OrderNumber}</a></td>
-
-                    <!-- <td><a  name={ordproduct.Id} data-strorderid= {ordproduct.Id}  onclick={RecordPage}  target="_blank">{ordproduct.Product2.Name}</a></td>
-                    <td onclick={getOrderId} data-orderurl={ordproduct.Order.Id}><a href={recordPageUrl} target="_blank">{ordproduct.Order.OrderNumber}</a></td> -->
                     <td>{ordproduct.Order.Quantity__c}</td>
                     <td><input type="number" class="pt-3-half" onchange={handleonchange} contenteditable="true" value={ordproduct.Order.Received_Quantity__c}></td> 
                     <td>{ordproduct.Order.On_Hand_Recieved__c}</td>
                     <td>{ordproduct.Order.Pending_Quantityy1__c}</td>
                     <td>{ordproduct.Order.Under_QA__c}</td>
-                    <!-- <td>{ordproduct.Order.Stock_On_Hand__c}</td>
-                     <td>{ordproduct.Product2.Rejected_Quantity__c}</td> -->
-
                     <td>{ordproduct.Order.Status}</td>
-                    <td>
-                      
-                        <button  class="editbtn" onclick={handleSave} data-suppliername={ordproduct.Order.Account.Name} data-proid={ordproduct.Product2Id} data-proname={ordproduct.Product2.Name} data-idname={ordproduct.OrderId} data-recquantity= {quantityvalue}  >Add Details</button> 
-                      
-                    </td>
-                      
+                    <td><button  class="editbtn" onclick={handleSave} data-pend={ordproduct.Order.Pending_Quantityy1__c}  data-suppliername={ordproduct.Order.Account.Name} data-proid={ordproduct.Product2Id} data-proname={ordproduct.Product2.Name} data-idname={ordproduct.OrderId} data-recquantity= {intQuantityValue}  >Add Details</button></td>
                 </tr>
             </template>
  
-            <template if:true={isShowModal}>
+            <template if:true={blnIsShowModal}>
               <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                   aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                   <div class="slds-modal__container">
@@ -105,17 +87,14 @@
                       <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
                           <lightning-card>
                             <div>
-                              
-                               <lightning-input type="date" name="input1" onchange={handledeliverydate} label="Enter the delivery date" ></lightning-input>
-
+                              <lightning-card>
+                                <lightning-input type="date" required name="Date" onchange={handledeliverydate} class="slds-align_absolute-center"  max={curDate} label="Enter the delivery date"  style="width: 300px"></lightning-input>
+                              </lightning-card>
                            </div>
-
                               <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
                                   cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
-        
                                   <thead>
                                       <tr class="slds-table-height_reset">
-                                        
                                         <th class="" scope="col">
                                             <div class="slds-truncate" title="Product Name">Product Name</div>
                                           </th>
@@ -128,38 +107,32 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                      <template for:each={dat} for:item="con">
+                                      <template for:each={list_Dat} for:item="con">
                                           <tr key={con}>
-                                              <td>{productName}</td>
+                                              <td>{strProductName}</td>
                                               <td>{StrSupplierName}</td>
                                               <td><lightning-input type="text" class="batchNo" required=true ></lightning-input></td>
-                                              <!--<td> <lightning-button variant="Neutral" label="select" onclick={handleVerify}
-                                                      class="slds-m-left_x-large"></lightning-button>
-                                              </td>-->
                                           </tr>
                                       </template>
                                   </tbody>
                               </table>
                           </lightning-card>
                       </div>
-                      
-                 <!-- modal footer start-->
                  <footer class="slds-modal__footer">
                     <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
                  </footer>
-              
               </div>
            </section>
            <div class="slds-backdrop slds-backdrop_open"></div>
            </template>
-
-
-
-
-
-
         </tbody>
     </table>
 </div> 
 </lightning-card>
+<template if:true={blnLoading}>
+  <div class="spinner">
+      please wait....
+      <lightning-spinner alternative-text="Loading"  size="large"></lightning-spinner>
+  </div>
+</template>
 </template>

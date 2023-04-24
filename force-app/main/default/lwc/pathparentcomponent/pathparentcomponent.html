@@ -1,52 +1,49 @@
+<!--
+* 
+* @ Name    :   pathparentcomponent
+* @ Purpose :   This is Component displays a tab set with different tabs for inventory management, receiving information, and quality assurance, and also includes a modal popup to show information about opportunities.
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
-        <p>{activetab}</p> 
-        <lightning-tabset   active-tab-value={activeTab} >
-            
+        <p>{blnActivetab}</p> 
+        <lightning-tabset   active-tab-value={blnActiveTab} >
                 <lightning-tab label="Inventory Management" value="Inventory Management" onactive={handleActive}> <lightning-card>
-                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
-                        <template for:each={steps} for:item="step">
+                    <lightning-progress-indicator current-step={strCurrentStep} type="path" variant="base">
+                        <template for:each={list_Steps} for:item="step">
                             <lightning-progress-step label={step.label} value={step.value} key={step.label} onclick={moveToCmp} ></lightning-progress-step>
                         </template>
                     </lightning-progress-indicator>
                 </lightning-card>
-            
-                <template if:true={isInvSummary}>
-                 <c-test-_-table-_-tag  onproductdetails={Handleproductdetails}   onrefreshinventory={pagerefresh} onpassproductdetails={handlepassproductdetails}   ></c-test-_-table-_-tag>
-                     
+                <template if:true={blnIsInvSummary}>
+                 <c-inventory-summary  onproductdetails={Handleproductdetails} onpassproductdetails={handlepassproductdetails}   ></c-inventory-summary>
                 </template>
-                <template  if:true={isOrderInv}>
-                    <c-supplier-details-table    productnamee={passproductvalue} onsupplierselection={moveToSupplierSelection}> </c-supplier-details-table>
+                <template  if:true={blnIsOrderInv}>
+                     <c-supplier-details-table    strproductnamee={strPassProductValue} strwarehousename={StrPassWarehouseValue} onsupplierselection={moveToSupplierSelection}> </c-supplier-details-table> 
                 </template>
-                <template if:true={isSupplierSelection}>
-                    <c-supplier-datatable  > </c-supplier-datatable>
+                <template if:true={blnIsSupplierSelection}>
+                     <c-supplier-datatable  > </c-supplier-datatable>
                 </template>
-                <template if:true={isOrderSummary}>
+                <template if:true={blnIsOrderSummary}>
                     <c-orders-datatable  > </c-orders-datatable>
                 </template>
              </lightning-tab>
-            
-                
-
-                <!-- <template if:true={opentab}>
-                    <lightning-tab label="Opportunity Information"> 
-                        <c-opp-quantity-url > </c-opp-quantity-url> 
-                    </lightning-tab>
-                </template> -->
-                <lightning-tab  label="Receiving Manager" value="Receiving Manger"  onactive={handleActive}>
-                    <c-delivery-information> </c-delivery-information>
+                <lightning-tab  label="Receiving Information" value="Delivery Information"  onactive={handleActive}>
+                    <c-delivery-information >  </c-delivery-information>
+                </lightning-tab>
+                <lightning-tab  label="Quality Assurance" value="Quality Assurance"  >
+                    <c-p-f-q-a-manager-component> </c-p-f-q-a-manager-component>
                 </lightning-tab>
 
-
-                <lightning-tab  label="Quality Assurance" value="QUALITY ASSURANCE"  >
-                    <!-- <c-p-f-q-a-manager-component> </c-p-f-q-a-manager-component> -->
-                    <c-p-f-q-a-manager-component  ></c-p-f-q-a-manager-component>
-                </lightning-tab>
-
-
-
-
-                <template if:true={isShowModal}>
+                <template if:true={blnIsShowModal}>
                     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                         aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                         <div class="slds-modal__container">
@@ -67,43 +64,10 @@
                                     <c-opp-quantity-url listopportunities={tabContent} tabname={oppTab}  > </c-opp-quantity-url> 
                                 </lightning-card>
                             </div>
-                            
-                       <!-- modal footer start-->
-                       <!-- <footer class="slds-modal__footer"> -->
-                          <!-- <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button> -->
-                       <!-- </footer> -->
-                    
                     </div>
                  </section>
                  <div class="slds-backdrop slds-backdrop_open"></div>
-                 </template>
-
-                
-                
-                        <!-- <template for:each={tabs} for:item="tab"> -->
-                            <!-- <template if:true={tab.label}> -->
-                                <!-- <lightning-tab key={tab.label} label={tab.label} value={tab.label}  onactive={handleActive}>
-                                    <c-opp-quantity-url listopportunities={tab.content} tabname={tab.label}  onremovetab={handleRemoveTab}> </c-opp-quantity-url> 
-                                </lightning-tab> -->
-                            <!-- </template> -->
-                            
-                        <!-- </template> -->
-                        <!-- <lightning-tab  label={oppTab} value={oppTab}  onactive={handleActive}>
-                            <c-opp-quantity-url listopportunities={tabContent} tabname={oppTab}  onremovetab={handleRemoveTab}> </c-opp-quantity-url> 
-                        </lightning-tab> -->
-
-                
-
-
-
-    
-            
-            
-            
+                 </template>            
         </lightning-tabset>
     </lightning-card>
-    
-    
-
-    
 </template>

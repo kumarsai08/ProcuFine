@@ -1,3 +1,17 @@
+<!--
+* 
+* @ Name    :   supplierDetailsTable
+* @ Purpose :   The component allows users to select warehouse, a product, and a quote status respectively,helps to create quotes and quote lines and also displays information related to the uploaded file with the associated quote and helps to place an order.    
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
   <lightning-card>
     <!-- <div class="slds-m-around_left"> -->
@@ -6,19 +20,19 @@
         name="Warehouse"
         label="Warehouse"
         value={Value}
-        options={warehouseNameOptions}
+        options={list_WarehouseNameOptions}
         onchange={handleWarehouseChange}
         field-level-help="Select a Warehouse from which you want to check the product"
         style="width:200px;" 
         class="slds-align_absolute-center"></lightning-combobox>
         
         
-        <template  if:true={isShowProductCombobox} > 
+        <template  if:true={blnIsShowProductCombobox} > 
           <lightning-combobox
           name="Product Name"
           label="Product Name"
           value={Value}
-          options={productNameFilter}
+          options={list_ProductNameFilter}
           onchange={handleProductChange}
           field-level-help="Select a Product in this particular Warehouse"
           style="width:200px;"
@@ -41,12 +55,12 @@
         <!-- </div> -->
         
         
-        <template  if:true={showAccordion} >
+        <template  if:true={blnShowAccordion} >
           <lightning-accordion
           allow-multiple-sections-open
-          active-section-name={section}
+          active-section-name={strSection}
           onsectiontoggle={handleSectionToggle}>
-          <template for:each={supplierNameFilter} for:item="suppliername" for:index="index">
+          <template for:each={list_SupplierNameFilter} for:item="suppliername" for:index="index">
             <div class="slds-p-left_small" key={suppliername}>  
               <lightning-accordion-section name={suppliername} label={suppliername}>
                 <div class="c-container">
@@ -57,12 +71,12 @@
                       
                     <!-- </lightning-layout-item> -->
                     <lightning-layout-item flexibility="auto" padding="around-small">
-                      Product : <a     onclick={NavigatetoProduct}  target="_blank">{productChange}</a>
+                      Product : <a     onclick={NavigatetoProduct}  target="_blank">{strproductChange}</a>
                        
                     </lightning-layout-item>
-                    <lightning-layout-item flexibility="auto" padding="around-small">
-                      Warehouse : {warehouseChange}
-                    </lightning-layout-item>
+                    <!-- <lightning-layout-item flexibility="auto" padding="around-small">
+                      Warehouse :<a onclick={NavigateToWarehouse} target="_blank"> {warehouseChange}</a>
+                    </lightning-layout-item> -->
                     <!-- <template  if:true={isShowButtons} > -->
                       <!-- <lightning-layout-item flexibility="auto" padding="around-small"> -->
                         <!-- <lightning-button variant="Brand" label="Add Quote Line items" title="Successful action" onclick={HandleCreateButton} class="slds-m-left_x-small" ></lightning-button> -->
@@ -92,7 +106,7 @@
                     <template  if:true={isShowButtons} >
                     
                     <lightning-layout-item flexibility="auto" padding="around-small">
-                      <lightning-button variant="destructive" label="Reject" title="Destructive action" onclick={handlereject} class="slds-m-left_x-small" ></lightning-button>
+                      <lightning-button variant="destructive" label="Reject"  onclick={handlereject} class="slds-m-left_x-small" ></lightning-button>
                       
                     </lightning-layout-item>
 
@@ -101,7 +115,7 @@
                   </lightning-layout>
                 </div>
                 <!-- <template if:true={isShowAfterQLI}>  -->
-                <template if:true={IsShowQuoteLineItems}> 
+                <template if:true={blnIsShowQuoteLineItems}> 
                   <lightning-card>
                     
                     <div class="slds-box slds-theme_default">
@@ -116,33 +130,33 @@
                               <div class="slds-truncate" title="Product Name">Quote Line Number</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Stock On Hand">List price</div>
+                              <div class="slds-truncate" title="">List price</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Threshold">Sales price</div>
+                              <div class="slds-truncate" title="">Sales price</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Warehouse">Quantity</div>
+                              <div class="slds-truncate" title="">Quantity</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Warehouse">Discount</div>
+                              <div class="slds-truncate" title="">Discount</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Warehouse">Delivery Date</div>
+                              <div class="slds-truncate" title="">Delivery Date</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Warehouse">Description</div>
+                              <div class="slds-truncate" title="">Description</div>
                             </th>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Warehouse">Total Price</div>
+                              <div class="slds-truncate" title="">Total Price</div>
                             </th>
                             <template  if:true={isShowButtons} >
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="Update"></div>
+                              <div class="slds-truncate" title=""></div>
                             </th>
                           </template>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="ViewDocuments">  View Documents</div>
+                              <div class="slds-truncate" title="">  View Documents</div>
                             </th>
                             <template  if:true={isShowButtons} >
                             <th class="" scope="col">
@@ -150,7 +164,7 @@
                             </th>
                           </template>
                             <th class="" scope="col">
-                              <div class="slds-truncate" title="FinalisedPrice">Finalised Price</div>
+                              <div class="slds-truncate" title="">Finalised Price</div>
                             </th>
                             <!-- <th class="" scope="col"> -->
                               <!-- <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div> -->
@@ -161,37 +175,36 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <template for:each={PFQuoteLineItemsList} for:item="PFQL">
+                            <template for:each={list_PFQuoteLineItemsList} for:item="PFQL">
                               <tr key={PFQL.Id}>
                                 <!-- <td>{PFQL.Quote.QuoteNumber}</td> -->
                                 <td><a  name={PFQL.Id}  data-strquoteid={PFQL.Quote.Id} onclick={Navigatetoquotenumber}  target="_blank">{PFQL.Quote.QuoteNumber}</a></td>
                                 <td><a  name={PFQL.Id}  data-strquotelineid={PFQL.Id} onclick={Navigatetoquotelinenumber}  target="_blank">{PFQL.LineNumber}</a></td>
                                 <!-- <td>{PFQL.LineNumber}</td> -->
                                 <td>{PFQL.ListPrice}</td>
-                                <td>            <lightning-input type="text"  value={PFQL.UnitPrice} onchange={handlesalesprice} disabled={disabled}></lightning-input>
+                                <td>            <lightning-input type="text"  value={PFQL.UnitPrice} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlesalesprice} ></lightning-input>
                                 </td>
-                                <!-- <td></td>-->
-                                <!-- <td></td>  -->
-                                <td>            <lightning-input type="text" label="" value={PFQL.Quantity}  onchange={handlequantity} disabled={disabled}></lightning-input>
+                            
+                                <td>            <lightning-input type="text" label="" value={PFQL.Quantity} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlequantity} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="text" label="" value={PFQL.Discount} onchange={handlediscount} disabled={disabled}></lightning-input>
+                                <td>            <lightning-input type="text" label="" value={PFQL.Discount} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlediscount} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="date" label="" value={PFQL.Quote.Expected_delivery_date__c} onchange={handleDeliveryDate} disabled={disabled}></lightning-input>
+                                <td>            <lightning-input type="date" label="" value={PFQL.Quote.Expected_delivery_date__c} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handleDeliveryDate} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="text" label="" value={PFQL.Description} onchange={handledescription} disabled={disabled}></lightning-input>
+                                <td>            <lightning-input type="text" label="" value={PFQL.Description} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handledescription} ></lightning-input>
                                 </td>
                                 <td>{PFQL.TotalPrice}</td>
                                 <template  if:true={isShowButtons} >
-                                <td><lightning-button variant="brand" label="Update" title="Primary action" data-qlid={PFQL.Id} data-quantity={PFQL.Quantity} data-discount={PFQL.Discount} data-description={PFQL.Description} data-deliverydate={PFQL.Quote.Expected_delivery_date__c}  data-salesprice={PFQL.UnitPrice}  onclick={handleupdate} data-qid={PFQL.QuoteId} class="slds-m-left_x-small"></lightning-button> </td>
+                                <td><lightning-button variant="brand" label="Update"  data-qlid={PFQL.Id} data-revisecheck={PFQL.Quote.Previous_Quote__c} disabled={PFQL.disabled} data-quantity={PFQL.Quantity} data-discount={PFQL.Discount} data-description={PFQL.Description} data-deliverydate={PFQL.Quote.Expected_delivery_date__c}  data-salesprice={PFQL.UnitPrice}  onclick={handleupdate} data-qid={PFQL.QuoteId} class="slds-m-left_x-small"></lightning-button> </td>
                               </template>
-                                <td> <lightning-icon icon-name="utility:preview" alternative-text="Preview" title="Preview" onclick={handlepdfids} data-qid={PFQL.QuoteId}></lightning-icon>  </td>
+                                <td> <lightning-icon icon-name="utility:preview" alternative-text="Preview"  onclick={handlepdfids} data-qid={PFQL.QuoteId}></lightning-icon>  </td>
 
                                   <!-- <lightning-button-icon icon-name="utility:save"      alternative-text="Save"   onclick={handlepdfids} data-qid={PFQL.QuoteId}   class="slds-m-left_xx-small" title="Save"></lightning-button-icon>  </td> -->
 
                                   
                                   <!-- <lightning-button variant="brand" label="View Documents" title="Primary action" onclick={handlepdfids} data-qid={PFQL.QuoteId} class="slds-m-left_x-small slds-button-"></lightning-button> </td> -->
                                   <template  if:true={isShowButtons} >
-                                  <td><lightning-button variant="destructive-text" label="Revise" title="Destructive action with a lighter look"  data-qid={PFQL.QuoteId} onclick={handlerevise} class="slds-m-left_x-small"></lightning-button> </td>
+                                  <td><lightning-button variant="destructive-text" label="Revise" data-strquoteid={PFQL.Quote.Id} disabled={PFQL.disabled} data-revisecheck={PFQL.Quote.Previous_Quote__c} data-qid={PFQL.QuoteId} onclick={handlerevise} class="slds-m-left_x-small"></lightning-button> </td>
                                 </template>
                                 <template  if:true={isShowButtons}>
                                   
@@ -210,7 +223,7 @@
                     </lightning-card>
                   <!-- </template> -->
                   <template  if:true={isShowButtons} >
-                    <lightning-button variant="Brand" label="Place Order" title="Successful action" onclick={HandlePlaceOrder} class="slds-align_absolute-center" ></lightning-button>
+                    <lightning-button variant="Brand" label="Place Order"  onclick={HandlePlaceOrder} class="slds-align_absolute-center" ></lightning-button>
                   </template>
                 </template>
                 </lightning-accordion-section> 
@@ -225,7 +238,7 @@
         
         
       </lightning-card>  
-      <template if:true={isShowModal}>
+      <template if:true={blnIsShowModal}>
         
         
         
@@ -248,8 +261,8 @@
               <lightning-layout>
                 <lightning-layout-item padding="around-small">
                   <p class="slds-p-around_small">Quote Number : <a  name={storequoteid}   onclick={RecordPage}  target="_blank"> {StrQuoteId}</a></p>
-                  <p class="slds-p-around_small">Product : {productChange}</p> 
-                  <p class="slds-p-around_small">Warehouse : {warehouseChange}</p> 
+                  <p class="slds-p-around_small">Product : {strproductChange}</p> 
+                  <p class="slds-p-around_small">Warehouse : {strWarehouseChange}</p> 
                   <lightning-input type="text" name='Quantity' label="Enter Quantity"  class="slds-p-around_x-small" onchange={handleInputChange1}></lightning-input>
                   <lightning-input type="text" name='SalesPrice' label="Enter Sales Price" class="slds-p-around_x-small" onchange={handleInputChange1}></lightning-input>
                   <!-- <lightning-input type="checkbox" name='finalise'  field-level-help=" This is the final Price Bro" label="Finalised Price" class="slds-p-around_x-small" onchange={handleInputChange1} ></lightning-input>      -->
@@ -274,7 +287,7 @@
         </template> 
         
         
-        <template if:true={isShowPDFs}>
+        <template if:true={blnIsShowPDFs}>
         
         
         
@@ -289,17 +302,17 @@
                   size="small" onclick={closeModal}></lightning-icon>
                   <span class="slds-assistive-text">Close</span>
                 </button>
-                <h2 id="modal-heading-001" class="slds-text-heading_medium slds-hyphenate"></h2>
+                <h2 id="modal-heading-001" class="slds-text-heading_medium slds-hyphenate">Quote PDFs Preview</h2>
               </header>
               
               <!-- modal body start -->
               <div style="height:25px;">
-                <lightning-card title="Quote PDFs Preview">
-                  <template if:true={showMessage}> 
-                    <div class="slds-align_absolute-center" style="height:5rem">{message}</div>
+                <lightning-card >
+                  <template if:true={blnshowMessage}> 
+                    <div class="slds-align_absolute-center" style="height:5rem">{strMessage}</div>
                     <!-- <p>{message}</p> -->
                   </template>
-                  <template for:each={filesList} for:item="file">
+                  <template for:each={list_FilesList} for:item="file">
                       <div key={file.value} class="slds-box">
                         <lightning-layout>
                           <lightning-layout-item size="4"> 
@@ -309,14 +322,14 @@
                           <!-- </div> -->
                          </lightning-layout-item>
                           <lightning-layout-item size="8">
-                            <!-- <div class="slds-col slds-large-size_4-of-12 slds-medium-size_4-of-12 slds-size_12-of-12"> -->
-                            <a href={PDFRedirect} target="_blank"><lightning-button label="Preview" 
+                            <lightning-button label="Preview" 
                             variant="brand"
                            data-id={file.value}
                            onclick={previewHandler}
                            class="slds-float_right"
-                            ></lightning-button> </a>
+                            ></lightning-button> 
                           <!-- </div>  -->
+                        <!-- </a> -->
                         </lightning-layout-item>
                       </lightning-layout>
                           <!-- <div class="slds-grid slds-wrap"> -->
