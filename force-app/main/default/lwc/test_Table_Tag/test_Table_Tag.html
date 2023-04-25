@@ -70,7 +70,8 @@
                 <tr key={inv.Id}>
                   <td><a  name={inv.Id} data-strproductid= {inv.Product__c}  onclick={RecordPage}  target="_blank">{inv.Product__r.Name}</a></td>
                   <td><a  name={inv.Id} data-strwarehouseid= {inv.Warehouse__c}  onclick={NavigatetowarehousePage}  target="_blank">{inv.Warehouse__r.Name}</a></td>
-                    <td>{inv.On_Order__c}</td>
+                  <td><a onclick={getProductName} data-prod={inv.Product__r.Name}>{inv.Quantity__c}</a></td>    
+                  <td>{inv.On_Order__c}</td>
                     <td>{inv.Order__c}</td>
                     <td>{inv.Real_Under_Qa__c}</td>
                     <td>{inv.Exsisting_Stock_On_Hand__c}</td>

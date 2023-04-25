@@ -1,6 +1,6 @@
 <!--
 * 
-* @ Name    :   supplierDetailsTable
+* @ Name    :   supplierDatatable
 * @ Purpose :   The component allows users to select warehouse, a product, and a quote status respectively,helps to create quotes and quote lines and also displays information related to the uploaded file with the associated quote and helps to place an order.    
 * @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
 *
@@ -39,21 +39,17 @@
           class="slds-align_absolute-center"></lightning-combobox>
         </template>
         
-        <template  if:true={isShowQuoteStatus} > 
+        <template  if:true={blnIsShowQuoteStatus} > 
           <lightning-combobox
           name="Select Quote Status"
           label="Select Quote Status"
-          value={QuoteStatusValue}
+          value={strQuoteStatusValue}
           options={QuoteStatusOptions}
           onchange={handleQuoteChange}
           field-level-help="Select the quote status"
           style="width:200px;"
           class="slds-align_absolute-center"></lightning-combobox>
         </template>
-        
-        <!-- </lightning-layout>                -->
-        <!-- </div> -->
-        
         
         <template  if:true={blnShowAccordion} >
           <lightning-accordion
@@ -103,7 +99,7 @@
 
 
 
-                    <template  if:true={isShowButtons} >
+                    <template  if:true={blnIsShowButtons} >
                     
                     <lightning-layout-item flexibility="auto" padding="around-small">
                       <lightning-button variant="destructive" label="Reject"  onclick={handlereject} class="slds-m-left_x-small" ></lightning-button>
@@ -150,7 +146,7 @@
                             <th class="" scope="col">
                               <div class="slds-truncate" title="">Total Price</div>
                             </th>
-                            <template  if:true={isShowButtons} >
+                            <template  if:true={blnIsShowButtons} >
                             <th class="" scope="col">
                               <div class="slds-truncate" title=""></div>
                             </th>
@@ -158,7 +154,7 @@
                             <th class="" scope="col">
                               <div class="slds-truncate" title="">  View Documents</div>
                             </th>
-                            <template  if:true={isShowButtons} >
+                            <template  if:true={blnIsShowButtons} >
                             <th class="" scope="col">
                               <div class="slds-truncate" title="Revise"></div>
                             </th>
@@ -182,20 +178,20 @@
                                 <td><a  name={PFQL.Id}  data-strquotelineid={PFQL.Id} onclick={Navigatetoquotelinenumber}  target="_blank">{PFQL.LineNumber}</a></td>
                                 <!-- <td>{PFQL.LineNumber}</td> -->
                                 <td>{PFQL.ListPrice}</td>
-                                <td>            <lightning-input type="text"  value={PFQL.UnitPrice} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlesalesprice} ></lightning-input>
+                                <td>            <lightning-input type="text"  value={PFQL.UnitPrice} class="lgtinput slds-p-bottom_medium" disabled={PFQL.blnDisabled} onchange={handlesalesprice} ></lightning-input>
                                 </td>
                             
-                                <td>            <lightning-input type="text" label="" value={PFQL.Quantity} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlequantity} ></lightning-input>
+                                <td>            <lightning-input type="text" label="" value={PFQL.Quantity} class="lgtinput slds-p-bottom_medium" disabled={PFQL.blnDisabled} onchange={handlequantity} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="text" label="" value={PFQL.Discount} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handlediscount} ></lightning-input>
+                                <td>            <lightning-input type="text" label="" value={PFQL.Discount} class="lgtinput slds-p-bottom_medium" disabled={PFQL.blnDisabled} onchange={handlediscount} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="date" label="" value={PFQL.Quote.Expected_delivery_date__c} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handleDeliveryDate} ></lightning-input>
+                                <td>            <lightning-input type="date" label="" value={PFQL.Quote.Expected_delivery_date__c} class="lgtinput slds-p-bottom_medium" disabled={PFQL.blnDisabled} onchange={handleDeliveryDate} ></lightning-input>
                                 </td>
-                                <td>            <lightning-input type="text" label="" value={PFQL.Description} class="lgtinput slds-p-bottom_medium" disabled={PFQL.disabled} onchange={handledescription} ></lightning-input>
+                                <td>            <lightning-input type="text" label="" value={PFQL.Description} class="lgtinput slds-p-bottom_medium" disabled={PFQL.blnDisabled} onchange={handledescription} ></lightning-input>
                                 </td>
                                 <td>{PFQL.TotalPrice}</td>
-                                <template  if:true={isShowButtons} >
-                                <td><lightning-button variant="brand" label="Update"  data-qlid={PFQL.Id} data-revisecheck={PFQL.Quote.Previous_Quote__c} disabled={PFQL.disabled} data-quantity={PFQL.Quantity} data-discount={PFQL.Discount} data-description={PFQL.Description} data-deliverydate={PFQL.Quote.Expected_delivery_date__c}  data-salesprice={PFQL.UnitPrice}  onclick={handleupdate} data-qid={PFQL.QuoteId} class="slds-m-left_x-small"></lightning-button> </td>
+                                <template  if:true={blnIsShowButtons} >
+                                <td><lightning-button variant="brand" label="Update"  data-qlid={PFQL.Id} data-revisecheck={PFQL.Quote.Previous_Quote__c} disabled={PFQL.blnDisabled} data-quantity={PFQL.Quantity} data-discount={PFQL.Discount} data-description={PFQL.Description} data-deliverydate={PFQL.Quote.Expected_delivery_date__c}  data-salesprice={PFQL.UnitPrice}  onclick={handleupdate} data-qid={PFQL.QuoteId} class="slds-m-left_x-small"></lightning-button> </td>
                               </template>
                                 <td> <lightning-icon icon-name="utility:preview" alternative-text="Preview"  onclick={handlepdfids} data-qid={PFQL.QuoteId}></lightning-icon>  </td>
 
@@ -203,14 +199,14 @@
 
                                   
                                   <!-- <lightning-button variant="brand" label="View Documents" title="Primary action" onclick={handlepdfids} data-qid={PFQL.QuoteId} class="slds-m-left_x-small slds-button-"></lightning-button> </td> -->
-                                  <template  if:true={isShowButtons} >
-                                  <td><lightning-button variant="destructive-text" label="Revise" data-strquoteid={PFQL.Quote.Id} disabled={PFQL.disabled} data-revisecheck={PFQL.Quote.Previous_Quote__c} data-qid={PFQL.QuoteId} onclick={handlerevise} class="slds-m-left_x-small"></lightning-button> </td>
+                                  <template  if:true={blnIsShowButtons} >
+                                  <td><lightning-button variant="destructive-text" label="Revise" data-strquoteid={PFQL.Quote.Id} disabled={PFQL.blnDisabled} data-revisecheck={PFQL.Quote.Previous_Quote__c} data-qid={PFQL.QuoteId} onclick={handlerevise} class="slds-m-left_x-small"></lightning-button> </td>
                                 </template>
-                                <template  if:true={isShowButtons}>
+                                <template  if:true={blnIsShowButtons}>
                                   
                                   <td><lightning-input type="checkbox" name='finalise' class="slds-p-left_xx-large" data-quoteid={PFQL.QuoteId} onchange={handleInputChange1} ></lightning-input> </td>
                                 </template>
-                                <template  if:true={showFinalisedColumn}>
+                                <template  if:true={blnshowFinalisedColumn}>
                                   <td>{PFQL.FinalisedValue}</td> 
                                 </template>
                                 
@@ -222,7 +218,7 @@
                       </div>   
                     </lightning-card>
                   <!-- </template> -->
-                  <template  if:true={isShowButtons} >
+                  <template  if:true={blnIsShowButtons} >
                     <lightning-button variant="Brand" label="Place Order"  onclick={HandlePlaceOrder} class="slds-align_absolute-center" ></lightning-button>
                   </template>
                 </template>

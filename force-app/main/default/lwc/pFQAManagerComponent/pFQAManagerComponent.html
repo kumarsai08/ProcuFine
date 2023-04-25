@@ -61,7 +61,9 @@
                         <td>{ordPro.Order.Approved_Quantity__c}</td>
                         <td>{ordPro.Order.Reject_Quantity__c}</td>
                         <td> 
+                          <template if:true={ordPro.Order.Under_QA__c}>
                           <lightning-button variant="brand" label="Inspect"  data-set={ordPro.Order.Id} data-proid={ordPro.Product2.Id} onclick={handleClick} class="slds-m-left_x-small">Inspect</lightning-button>
+                        </template>
                         </td>
                     </tr>
                 </template>
