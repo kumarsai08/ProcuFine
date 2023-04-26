@@ -92,9 +92,13 @@ public class PF_TestClassFor_AssetRecords {
     }   
     @istest static void createassetrecords_test1(){
         list<Asset> List_createassetreturnrecords=new list<Asset>();     
-        list<Asset>  List_assetrecordss=[select id,name from asset ];
+        list<Asset>  List_assetrecordss=[select id,
+        name 
+        from asset ];
         list<string> List_assetids=new list<string>();
-        order Record_orderupdate=[select id,Approved_Quantity__c from order];       
+        order Record_orderupdate=[select id,
+        Approved_Quantity__c
+             from order];       
         for(Asset Record_asse : List_assetrecordss){
             List_assetids.add(Record_asse.id);          
         }        
@@ -126,7 +130,10 @@ public class PF_TestClassFor_AssetRecords {
         list<Asset> List_createassetreturnrecords=new list<Asset>();       
         list<Asset>  List_assetrecordss=[select id,name from asset ];
         list<string> List_assetids=new list<string>();
-        order Record_orderupdate=[select id,Approved_Quantity__c,Reject_Quantity__c from order];        
+        order Record_orderupdate=[select id,
+        Approved_Quantity__c,
+        Reject_Quantity__c 
+        from order];        
         for(Asset Record_asse : list_assetrecordss){
             List_assetids.add(Record_asse.id);          
         }        
@@ -154,7 +161,10 @@ public class PF_TestClassFor_AssetRecords {
     
     @istest static void testQAManagerOrderPro(){
         
-        order Record_order=[select id,name,status from order where name='test order'];
+        order Record_order=[select id,
+        name,
+        status 
+        from order where name='test order'];
         Record_order.Status='Fully Received Under QA';
         update Record_order;
         
@@ -166,7 +176,9 @@ public class PF_TestClassFor_AssetRecords {
     @istest static void test_retrieveProductNameRecordsInQA(){
         
         //test.startTest();
-        string String_proIdInQA=[select id,name from Product2 ].name;
+        string String_proIdInQA=[select id,
+        name from 
+        Product2 ].name;
         test.startTest();
         PF_AssetRecords.retrieveProductNameRecordsInQA(String_proIdInQA);
         

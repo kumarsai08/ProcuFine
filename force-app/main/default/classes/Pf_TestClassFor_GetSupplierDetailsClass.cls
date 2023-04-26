@@ -119,7 +119,9 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
     }
     
     @istest static void test_productsuppliers(){
-        id ID_prid=[select id,name from Product2].id;
+        id ID_prid=[select id,
+        name 
+        from Product2].id;
         string String_Productid=(string)ID_prid;
         test.startTest();
         GetSuppleirDetails.productsuppliers(String_Productid);       
@@ -130,7 +132,9 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         list<string> List_productsupplierid=new list<string>();
         List_productsupplierid.add((string)ID_psid);
         list<string> List_Orderquantity=new list<string>{'1'};
-            string String_psname=[select id,name from Product_Supplier__c].name;
+            string String_psname=[select id,
+            name 
+            from Product_Supplier__c].name;
         list<string> List_supplierNamesList=new list<string>();
         List_supplierNamesList.add(String_psname);            
         test.startTest();
@@ -144,9 +148,14 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();      
     }
     @istest static void test_OrderRecords(){    
-        string String_suppname=[select id,name from account].name;
-        string String_warname=[select id,name from Location].name;
-        id ID_quoteid=[select id from quote].id;
+        string String_suppname=[select id,
+        name 
+        from account].name;
+        string String_warname=[select id,
+        name 
+        from Location].name;
+        id ID_quoteid=[select id 
+        from quote].id;
         string String_quoteidvalue=(string)ID_quoteid;
         list<string> List_suppliername=new list<string>();
         List_suppliername.add(String_suppname);
@@ -165,7 +174,9 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();
     }
     @istest static void test_sendemailtosuppliers(){
-        string String_suppname=[select id,name from account].name;
+        string String_suppname=[select id,
+        name 
+        from account].name;
         list<string> List_suppliername=new list<string>();
         List_suppliername.add(String_suppname);        
         test.startTest();
@@ -175,7 +186,9 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
     }
     
     @istest static void test_searchOrders(){
-        string String_suppname=[select id,name from account].name;
+        string String_suppname=[select id,
+        name 
+        from account].name;
         string String_ordertypename='Procured';       
         test.startTest();
         GetSuppleirDetails.searchOrders(String_suppname,String_ordertypename);      
@@ -227,7 +240,8 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();
     }
      @istest static void test_CreateQuotelineitems(){
-         id ID_quotelineitemid=[select id from QuoteLineItem].id;
+         id ID_quotelineitemid=[select id 
+         from QuoteLineItem].id;
          string String_quotelineitemvalue=(string)ID_quotelineitemid;
          date Date_datevalue=system.today();
         
@@ -236,12 +250,16 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();
     }
      @istest static void test_UpdateQuoteLineItemAndQuoteStatus(){
-         id ID_quoteid=[select id from quote].id;
+         id ID_quoteid=[select id 
+         from quote].id;
          string String_quoteidvalue=(string)ID_quoteid;
-         list<quote> List_quote=[select id,status from quote];
+         list<quote> List_quote=[select id,
+         status 
+         from quote];
          List_quote[0].Status='closed';
          update List_quote;         
-         id ID_opportunityid=[select id from opportunity].id;
+         id ID_opportunityid=[select id 
+         from opportunity].id;
          list<string> List_oppids=new list<string>();
          List_oppids.add(ID_opportunityid);                
         test.startTest();
@@ -249,7 +267,8 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();
     }
     @istest static void test_getRelatedFilesByRecordId(){
-        id ID_quoteid=[select id from quote].id;
+        id ID_quoteid=[select id 
+        from quote].id;
          string String_quoteidvalue=(string)ID_quoteid;
         
         test.startTest();
@@ -257,27 +276,32 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         test.stopTest();
     }
      @istest static void test_RejectedQuoteStatusUpdation(){
-        list<QuoteLineItem> List_QuoteLineItemid=[select id,QuoteId from QuoteLineItem];        
+        list<QuoteLineItem> List_QuoteLineItemid=[select id,
+        QuoteId 
+        from QuoteLineItem];        
         test.startTest();
         GetSuppleirDetails.RejectedQuoteStatusUpdation(List_QuoteLineItemid);
         test.stopTest();
     }
     @istest static void test_CreateQuoteAndQuoteLineItems(){
-         id ID_quoteid=[select id from quote].id;
+         id ID_quoteid=[select id
+          from quote].id;
          string String_quoteidvalue=(string)ID_quoteid;       
         test.startTest();
         GetSuppleirDetails.CreateQuoteAndQuoteLineItems(String_quoteidvalue);
         test.stopTest();
     }
         @istest static void test_get(){
-         id ID_quoteid=[select id from quote].id;
+         id ID_quoteid=[select id
+          from quote].id;
          string String_quoteidvalue=(string)ID_quoteid;       
         test.startTest();
         GetSuppleirDetails.get(String_quoteidvalue);
         test.stopTest();
         }
     @istest static void test_GetAssetRecordsFromProduct(){
-         id ID_productid=[select id from product2].id;
+         id ID_productid=[select id
+          from product2].id;
          string String_productidvalue=(string)ID_productid;       
         test.startTest();
         GetSuppleirDetails.GetAssetRecordsFromProduct(String_productidvalue);
@@ -285,7 +309,8 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         }
     
     @istest static void test_GetProductIdFromOppProductUsingOpportunity(){
-         id ID_oppid=[select id from opportunity].id;
+         id ID_oppid=[select id 
+         from opportunity].id;
          string Stringoppidvalue=(string)ID_oppid;       
         test.startTest();
         GetSuppleirDetails.GetProductIdFromOppProductUsingOpportunity(Stringoppidvalue);

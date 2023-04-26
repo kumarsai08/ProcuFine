@@ -92,7 +92,8 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     @istest static void test_updateOrder(){
         //list<order> orderid=[select id from order];
-        id ID_orderid=[select id from order].id;
+        id ID_orderid=[select id 
+        from order].id;
         string String_orderalue=(string)ID_orderid;
         integer Integer_valueRquantity=15;
         test.startTest();
@@ -101,10 +102,12 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     
     @istest static void test_createAsset(){
-        id ID_prodid=[select id from Product2 ].id;
+        id ID_prodid=[select id 
+        from Product2 ].id;
         string String_prodidvalue=(string)ID_prodid;
         list<object> List_batchNumbers=new list<object>{'1','2'};
-            id ID_orderid=[select id from order].id;
+            id ID_orderid=[select id 
+            from order].id;
         string String_orderalue=(string)ID_orderid;
         date Date_deliverydate=system.today();
         
@@ -119,21 +122,27 @@ public class Pf_TestClassFor_OrderDetailsClass {
         test.stopTest();
     }
     @istest static void test_retrieveProductRecords(){
-        string String_searchsname=[select id,name from Product2 ].name;
+        string String_searchsname=[select id,
+        name 
+        from Product2 ].name;
         test.startTest();
         List < OrderItem > gettingretrieveProductRecords=orderdetails.retrieveProductRecords(String_searchsname);
         test.stopTest();
         
     }
     @istest static void test_retrieveProductNameRecords(){
-        string String_searchsname=[select id,name from Product2 ].name;
+        string String_searchsname=[select id,
+        name 
+        from Product2 ].name;
         test.startTest();
         List < Inventory__c > List_gettingretrieveProductNameRecords=orderdetails.retrieveProductNameRecords(String_searchsname);
         test.stopTest();
         
     }
     @istest static void test_getSupplierDetails(){
-        string String_searchsname=[select id,name from account].name;
+        string String_searchsname=[select id,
+        name 
+        from account].name;
         test.startTest();
         List < order > List_gettinggetSupplierDetails=orderdetails.getSupplierDetails(String_searchsname);
         test.stopTest();
@@ -149,7 +158,9 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     @istest static void test_orderStatusRecords(){
         string String_searchstatus='All';
-        string String_searchsname=[select id,name from Product2 ].name;
+        string String_searchsname=[select id,
+        name 
+        from Product2 ].name;
         test.startTest();
         orderdetails.orderStatusRecords('All',Null);
         orderdetails.orderStatusRecords('Order Placed',Null);
@@ -159,7 +170,9 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     @istest static void test_orderProductNameFilter(){
         
-        string String_searchsname=[select id,name from Product2 ].name;
+        string String_searchsname=[select id,
+        name 
+        from Product2 ].name;
         test.startTest();
         orderdetails.orderProductNameFilter(String_searchsname);
         
@@ -168,7 +181,9 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     @istest static void test_statusRecords(){
         
-        string String_searchsname=[select id,name from Product2 ].name;
+        string String_searchsname=[select id,
+        name 
+        from Product2 ].name;
         test.startTest();
         orderdetails.statusRecords('',String_searchsname);
         orderdetails.statusRecords('',Null);
@@ -177,7 +192,9 @@ public class Pf_TestClassFor_OrderDetailsClass {
         
     }
     @istest static void test_getOrderIds(){
-        string String_ordernumbervalue=[select id,ordernumber from order ].ordernumber;
+        string String_ordernumbervalue=[select id,
+        ordernumber 
+        from order ].ordernumber;
         test.startTest();
         orderdetails.getOrderId(String_ordernumbervalue);               
         test.stopTest();
@@ -193,7 +210,8 @@ public class Pf_TestClassFor_OrderDetailsClass {
         
     }
     @istest static void test_getAssetRecords(){
-        id ID_orderid=[select id from order].id;
+        id ID_orderid=[select id 
+        from order].id;
         string String_orderidvalue=(string)ID_orderid;       
         test.startTest();
         orderdetails.getAssetRecords(String_orderidvalue);              
@@ -208,10 +226,15 @@ public class Pf_TestClassFor_OrderDetailsClass {
         
     }
     @istest static void test_getOrderIdQA(){
-        order Record_order=[select id,name,status from order];
+        order Record_order=[select id,
+        name,
+        status 
+        from order];
         Record_order.Status='Partial Quantity Under QA';
         update Record_order;
-        string String_ordernumbervalue=[select id,ordernumber from order].ordernumber;
+        string String_ordernumbervalue=[select id,
+        ordernumber 
+        from order].ordernumber;
         test.startTest();
         orderdetails.getOrderIdQA(String_ordernumbervalue);              
         test.stopTest();
@@ -219,7 +242,9 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     @istest static void test_fetchSearchResultsDeliveryInfo(){
         
-        string String_ordernumbervalue=[select id,ordernumber from order].ordernumber;
+        string String_ordernumbervalue=[select id,
+        ordernumber 
+        from order].ordernumber;
         test.startTest();
         orderdetails.fetchSearchResultsDeliveryInfo(String_ordernumbervalue);              
         test.stopTest();
@@ -227,11 +252,14 @@ public class Pf_TestClassFor_OrderDetailsClass {
     }
     
     @istest static void test_Assetvalues(){
-        asset Record_updateasset=[select id,Status from asset];
+        asset Record_updateasset=[select id,
+        Status 
+        from asset];
         Record_updateasset.Status='QA Pass';
         update Record_updateasset;
         
-        id ID_batchname=[select id from Batch_Number__c].id;
+        id ID_batchname=[select id 
+        from Batch_Number__c].id;
         string String_batchnamevalue=(string)ID_batchname;
         test.startTest();
         orderdetails.Assetvalues(String_batchnamevalue);              

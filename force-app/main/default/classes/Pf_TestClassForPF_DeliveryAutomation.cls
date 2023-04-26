@@ -31,9 +31,14 @@ public class Pf_TestClassForPF_DeliveryAutomation {
         insert objasset;       
     }
     @IsTest static void testdeliveryAutomationmethod(){
-        order Record_orderrecord=[select id,name from order where name='test order'];
+        order Record_orderrecord=[select id,
+        name 
+        from order
+         where name='test order'];
         system.debug(Record_orderrecord);
-        Batch_Number__c Record_batchnumberid=[select id,name from Batch_Number__c];        
+        Batch_Number__c Record_batchnumberid=[select id,
+        name 
+        from Batch_Number__c];        
         list<string> List_batchnumber=new list<string>{Record_batchnumberid.id};
             list<integer> List_inputquantity=new list<integer>{1};
          test.startTest();
