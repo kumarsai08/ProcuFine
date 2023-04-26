@@ -1,4 +1,4 @@
-public class triggeronassetrecords {
+public class PF_triggeronassetrecords {
     public static void getassetrecords(list<asset> asrecords,map<id,asset> getasrecords){
         set<id> productname=new set<id>();
         set<id> warehouse=new set<id>();
