@@ -1,6 +1,17 @@
-<template>
-    <lightning-button variant="Brand" label="Refresh" title="Refresh" onclick={handleRefresh} class="slds-m-left_x-small"></lightning-button>
- 
+<!--
+* 
+* @ Name    :   pFQAManagerComponent
+* @ Purpose :   The table displays information on a list of orders with their related product information.
+*               The table allows searching by order ID and filtering by product name, and includes a button to open a modal popup for performing a quality check on a selected order.
+* @ Author  :   Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
+<template> 
      <div class="slds-box slds-theme_default">
          <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
              <thead>
@@ -13,7 +24,7 @@
                          name="Product Name"
                          label="Product Name"
                          value={value}
-                         options={productNameOptions}
+                         options={list_ProductNameOptions}
                          onchange={handleProductChange} >
                          </lightning-combobox>
                        </th>
@@ -22,7 +33,7 @@
                          <!-- </th> -->
                          <th class="" scope="col">
                            <div class="slds-truncate" title="Orders Received">Orders Received</div>
-                         </th>
+                         </th>  
                          <th class="" scope="col">
                              <div class="slds-truncate" title="Under QA">Under QA</div>
                            </th>
@@ -32,13 +43,13 @@
                            <th class="" scope="col">
                              <div class="slds-truncate" title="Rejected Quantity">Rejected Quantity</div>
                            </th>
-                            <!-- <th class="" scope="col">
+                            <th class="" scope="col">
                              <div class="slds-truncate" title="QA Check">QA Check</div>
-                           </th> -->
+                           </th>
                  </tr>
              </thead>
              <tbody>
-                 <template for:each={QATableList} for:item="ord">
+                 <template for:each={list_QATableList} for:item="ord">
                      <tr key={ord.Id}>
                        <!-- <td onclick={navigateToOrder} data-orderurl={ord.Id}><a href={recordPage} target="_blank">{ord.OrderNumber}</a></td> -->
                        <td><a name={ord.Id} data-orderredirection= {ord.Id} onclick={navigateToOrder} target="_blank">{ord.OrderNumber}</a></td>
@@ -51,7 +62,9 @@
                          <td>{ord.PF_Approved_Quantity__c}</td>
                          <td>{ord.PF_Reject_Quantity__c}</td>
                          <td> 
-                           <lightning-button variant="brand" label="Inspect" title="Inspect" data-set={ord.Id} data-proid={ord.PF_Product__c} onclick={handleClick} class="slds-m-left_x-small">Inspect</lightning-button>
+                          <template if:true={ord.PF_Under_QA__c}>
+                            <lightning-button variant="brand" label="Inspect" title="Inspect" data-set={ord.Id} data-proid={ord.PF_Product__c} onclick={handleClick} class="slds-m-left_x-small">Inspect</lightning-button>
+                          </template>
                          </td>
                          
                      </tr>
@@ -59,7 +72,7 @@
              </tbody>
          </table>
      </div> 
-     <template if:true={isShowModal}>
+     <template if:true={blnIsShowModal}>
        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
            <div class="slds-modal__container">
@@ -92,7 +105,7 @@
                                </tr>
                            </thead>
                            <tbody>
-                               <template for:each={aslist} for:item="asset">
+                               <template for:each={list_Asset} for:item="asset">
                                    <tr key={asset.Id}>
                                        <td>{asset.PF_Batch_Name__c}</td>
                                        <td ><lightning-combobox
@@ -101,11 +114,7 @@
                                          value={value}
                                          placeholder="Select Progress"
                                          options={options}
-                                         onchange={handlestatusupdation} data-assetid={asset.Id} ></lightning-combobox></td>
-                                       <!--<td> <lightning-button variant="Neutral" label="select" onclick={handleVerify}
-                                               class="slds-m-left_x-large"></lightning-button>
-                                       </td>-->
-                                   </tr>
+                                         onchange={handlestatusupdation} data-assetid={asset.Id} ></lightning-combobox></td>                                  </tr>
                                </template>
                            </tbody>
                        </table>
@@ -114,7 +123,7 @@
                
           <!-- modal footer start-->
           <footer class="slds-modal__footer">
-             <lightning-button variant="success" label="Save" title="Successful action" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
+             <lightning-button variant="success" label="Save" onclick={hideModalBox} class="slds-m-left_x-small"></lightning-button>
              
           </footer>
        

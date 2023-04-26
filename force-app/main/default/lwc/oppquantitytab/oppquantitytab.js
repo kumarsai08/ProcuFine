@@ -1,12 +1,13 @@
 import { LightningElement,track,api } from 'lwc';
 import opprecords from '@salesforce/apex/pf_Opportunitysummary.opprecords';
+
 export default class OppQuantityUrl extends LightningElement {
-    productnamevalueselected;
+
+    list_ProductNameValueSelected;
     @api listopportunities;
     blnIsRendered = false;
-    @api tabname;
-    @track columns = [
-   
+    @api strTabName;
+    @track list_Columns = [
         {
             label: 'Opportunity Name',
             fieldName: 'OppnameUrl',
@@ -14,7 +15,6 @@ export default class OppQuantityUrl extends LightningElement {
             typeAttributes: {label: { fieldName: 'opporName'}, target: '_blank'},
             sortable: true
         },
-       
         {
             label: 'Close Date',
             fieldName: 'Cdate',
@@ -27,7 +27,6 @@ export default class OppQuantityUrl extends LightningElement {
             type: 'Number',
             sortable: true
         },
-        
         {
             label: 'Stage',
             fieldName: 'Sname',
@@ -35,33 +34,20 @@ export default class OppQuantityUrl extends LightningElement {
             sortable: true
    
         }
-       
     ];
-   
-    @track OppquantityList ;
+    @track list_OppQuantityList ;
     
-
-
+    //This method is used to retrieve opportunity records related to a specified product name and adds additional fields before updating the component's data.
     @api getOpportunities(strProductName) {
-        this.productnamevalueselected = strProductName;
-        console.log('product name :: '+this.productnamevalueselected);
-        opprecords({productname : this.productnamevalueselected })
+        this.list_ProductNameValueSelected = strProductName;
+        console.log('product name :: '+this.list_ProductNameValueSelected);
+        opprecords({productname : this.list_ProductNameValueSelected })
         .then(result=>{
-           
-            this.OppquantityList=result;
-
-
-           
+            this.list_OppQuantityList=result;
             let templist=[];
-           
             var newData = JSON.parse(JSON.stringify(result));
-   
-           
             newData.forEach(record => {
                let tempRecs = Object.assign({},record);
-               
-              // tempRecs.NameUrl = '/'+tempRecs.Product__c;
-               //tempRecs.ProdName = record.Product__r.Name;
                console.log('line 67'+ JSON.stringify(record));
                tempRecs.OppnameUrl= '/'+record.OpportunityId;
                console.log('OppName:'+record.Opportunity.Name);
@@ -72,23 +58,20 @@ export default class OppQuantityUrl extends LightningElement {
               if(record.Opportunity.OrderNumber__c){tempRecs.Onumber=record.Opportunity.OrderNumber__c};
               if(record.Opportunity.StageName){tempRecs.Sname=record.Opportunity.StageName};
               console.log('line 68'+ JSON.stringify(tempRecs));
-               
                templist.push(tempRecs);
             });
-   
-            this.OppquantityList=templist;
-            console.log('this.OppquantityList1'+JSON.stringify(this.OppquantityList));
-            //return this.OppquantityList;
+            this.list_OppQuantityList=templist;
+            console.log('this.list_OppQuantityList'+JSON.stringify(this.list_OppQuantityList));
         })
         .catch(error=>{
             console.log('error in Oppquantityurl_Records'+JSON.stringify(error));
         });
     }
+
+    //This function is used to dispatch a custom event 'removetab' to indicate that the tab needs to be closed.
     closeTab(event){
-        console.log('Closed:'+JSON.stringify(this.tabname));
-        // this.OppquantityList.pop(this.tabName);
-        const selectedEvent =new CustomEvent('removetab', {detail:{tabtitle : this.tabname }});
+        console.log('Closed:'+JSON.stringify(this.strTabName));
+        const selectedEvent =new CustomEvent('removetab', {detail:{tabtitle : this.strTabName }});
         this.dispatchEvent(selectedEvent);
-       
     }
 }

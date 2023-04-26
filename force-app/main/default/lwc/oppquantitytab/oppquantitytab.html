@@ -1,3 +1,15 @@
+<!--
+* 
+* @ Name    :   Oppquantitytab
+* @ Purpose :   This Component displays a data table of opportunities and handles row actions based on user interaction.
+* @ Author  :   Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
         <template if:true={listopportunities}>
                 <lightning-datatable data={listopportunities} columns={columns} key-field="Id" onrowaction={handleClick}>

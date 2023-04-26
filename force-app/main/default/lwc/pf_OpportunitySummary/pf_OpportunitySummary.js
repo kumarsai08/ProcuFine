@@ -5,32 +5,28 @@ import ProductNameFilterInOpp from '@salesforce/apex/pf_Opportunitysummary.Produ
 import {NavigationMixin} from 'lightning/navigation';
 
 export default class Pf_OpportunitySummary extends NavigationMixin(LightningElement) {
-    @api Product=[];
-    @api productname;
-    @api productNameFilter;
-    @api productNamesList=[];
-    @api productNameOptions;
-    @api productOptions;
-    @api AllProductList;
-    @api passproductname;
-    @api ChangedString;
-    @api currentopportunityname;
-    @api opportunityId;
+    @api List_Product=[];
+    @api list_AllProductList;
+    @api list_ProductNameOptions;
+    @api list_ProductNamesList=[];
+    @api strProductName;
+    @api strPassProductName;
+    @api strChangedString;
 
-
+    //This method is used to reload the inventory data on clicking of a button.
     handleRefresh(){
-       
-        this.Product=[];
+        this.List_Product=[];
         console.log('line 18');
         this.loadInventorySummary();
-
     }
+
+    //This method is used to retrieve and load options for the 'Product' dropdown menu in the UI. 
     connectedCallback(){
         this.loadInventorySummary();
         pf_ProductSummary({}).then(result=>{
             console.log('line 10');
             //this.Product=result;
-            this.AllProductList=result;
+            this.list_AllProductList=result;
            console.log('Line 12'+JSON.stringify(result));
            var newData = JSON.parse(JSON.stringify(result));
             let templist=[];
@@ -42,19 +38,18 @@ export default class Pf_OpportunitySummary extends NavigationMixin(LightningElem
            }  
            templist.push(tempRecs);
         });
-       // this.allWarehouseList=templist;
-        this.Product=templist;
-           this.AllProductList=templist;
+        this.List_Product=templist;
+           this.list_AllProductList=templist;
          })
     .catch(error=>{
         console.log('error'+error);
     })  
     getproductnamerecords({}).then(result=>{
-        this.productNamesList.push({label:'All',value:'All'});
+        this.list_ProductNamesList.push({label:'All',value:'All'});
         result.forEach(element => {
-            this.productNamesList.push({label:element,value:element});
-            this.productNameOptions = JSON.parse(JSON.stringify(this.productNamesList));
-            console.log('line 53'+JSON.stringify(this.productNameOptions));
+            this.list_ProductNamesList.push({label:element,value:element});
+            this.list_ProductNameOptions = JSON.parse(JSON.stringify(this.list_ProductNamesList));
+            console.log('line 53'+JSON.stringify(this.list_ProductNameOptions));
         });
     })
     .catch(error=>{
@@ -62,14 +57,14 @@ export default class Pf_OpportunitySummary extends NavigationMixin(LightningElem
     })
 }
 
+//This method is used to navigate to product with a specific ID and opens it in a new tab.
 navigateToProduct(event){
     const ProductRecordPage=event.target.dataset.orderproducturl;
-     // Navigate to a URL
      this[NavigationMixin.GenerateUrl]({
          type: 'standard__recordPage',
          attributes:{
              recordId: ProductRecordPage,
-             objectApiName: 'order',
+             objectApiName: 'Product2',
              actionName:'view'
          }
      }).then(url =>{
@@ -77,24 +72,11 @@ navigateToProduct(event){
      })
 }
 
-// handleRefresh(){
-       
-//     this.Product;
-//     console.log('line 18');
-//     pf_ProductSummary({}).then(result=>{
-//         console.log('line 10');
-       
-//        console.log('Line 12'+JSON.stringify(result));
-
-//        var newData = JSON.parse(JSON.stringify(result));
-       
-//         let templist=[];
-
-
+//This function fetches inventory data,checks for records with opportunity quantity and assigns the updated data to different list variables.   
 loadInventorySummary(){
     pf_ProductSummary().then(result=>{
-        this.Product=result;
-        this.AllProductList=result;
+        //this.Product=result;
+        this.list_AllProductList=result;
         var newData = JSON.parse(JSON.stringify(result));
         let templist=[];
     newData.forEach(record => {
@@ -104,95 +86,66 @@ loadInventorySummary(){
        }  
        templist.push(tempRecs);
     });
-    this.AllProductList=templist;
-    this.Product=templist;
-    console.log('line 15'+JSON.stringify(this.Product));
+    this.list_AllProductList=templist;
+    this.List_Product=templist;
+    console.log('line 15'+JSON.stringify(this.List_Product));
     })
 .catch(error=>{
     console.log('Error at pf_ProductSummary:'+JSON.stringify(error));
 }) 
 }
 
-// getproductnamerecords({}).then(result=>{
-//     this.productNamesList.push({label:'All',value:'All'});
-//     result.forEach(element => {
-//         this.productNamesList.push({label:element,value:element});
-//         this.productNameOptions = JSON.parse(JSON.stringify(this.productNamesList));
-//         console.log('line 53'+JSON.stringify(this.productNameOptions));
-//     });
-// })
-// .catch(error=>{
-//     console.log('error'+error);
-// })
-
-
-
-
- /*loadInventorySummary(){
-        
-    }*/
-
-
-    
-
+//The code is handles a click event on product name, stores the selected product's name in a variable, and creats a tab. Then it's dispatching a custom event, and calls a function with the same event object.
 getProductName(event){
        console.log('line 42');
-       this.productname=event.currentTarget.dataset.prod;
-       //this.currentopportunityname=event.currentTarget.dataset.opportunityname;
-
-       console.log('line 44'+this.productname);
+       this.strProductName=event.currentTarget.dataset.prod;
+       console.log('line 44'+this.strProductName);
         this.createtab=true;
         console.log('line 46'+this.createtab);
-        this.dispatchEvent(new CustomEvent('productdetails', {detail:{product : this.productname, createtaboption : this.createtab }}));
+        this.dispatchEvent(new CustomEvent('productdetails', {detail:{product : this.strProductName, createtaboption : this.createtab }}));
         console.log('line 48');
-    
-        
        Handleproductdetails(event);
 }
     
 
-    
+//This method filters product options and updates the Inventory based on the selected product option.
     handleProductChange(event){
         console.log('line 95');
-        this.ChangedString=event.detail.value;
-        console.log('line 95'+ this.ChangedString);
-        //if(this.statusChange==null || this.statusChange=='All'){
-            if (this.ChangedString==='All') {
+        this.strChangedString=event.detail.value;
+        console.log('line 95'+ this.strChangedString);
+            if (this.strChangedString==='All') {
                 console.log('line 104');
-                this.Product=this.AllProductList;
-            } else {
-                
-                ProductNameFilterInOpp({searchsname: this.ChangedString}).then(result=>{
+                this.List_Product=this.list_AllProductList;
+            } else {                
+                ProductNameFilterInOpp({searchsname: this.strChangedString}).then(result=>{
                     console.log('line 13');
-                    var newData = JSON.parse(JSON.stringify(result));
-           
-            let templist=[];
-
-
-       
+                    let newData = JSON.parse(JSON.stringify(result));
+                    console.log('line 15');
+                    let templist=[];
+                    console.log('line 17');
         newData.forEach(record => {
            let tempRecs = Object.assign({},record);
+           console.log('line 19'+tempRecs);
+           console.log('line 20'+JSON.stringify(tempRecs));
            if (record.Quantity__c > 0) {
             tempRecs.check = true;
            }  
            templist.push(tempRecs);
         });
-       // this.allWarehouseList=templist;
-        this.Product=templist;
-                   // this.Product=result;
-                   // console.log('line 15'+JSON.stringify(this.Product));
+        this.List_Product=templist;
+                console.log('line 15'+JSON.stringify(this.List_Product));
                 })
                 .catch(error=>{
                     console.log('103 error'+error);
                 })
             }
         }
+//This function handles a click event on product names, saves them and dispatches a custom event with the data.
     handlepassproductname(event){
         console.log('line 51');
-        this.passproductname= event.currentTarget.dataset.productname;
-       // this.opportunityId=event.currentTarget.dataset.oppid;
-        console.log('line 53'+ this.passproductname);
-        this.dispatchEvent(new CustomEvent('passproductdetails', {detail:{passproduct : this.passproductname}}));
+        this.strPassProductName= event.currentTarget.dataset.productname;
+        console.log('line 53'+ this.strPassProductName);
+        this.dispatchEvent(new CustomEvent('passproductdetails', {detail:{passproduct : this.strPassProductName}}));
         console.log('line 55');
 
 

@@ -1,31 +1,41 @@
+<!--
+* 
+* @ Name    :   pathparentcomponent
+* @ Purpose :   This is Component displays a tab set with different tabs for inventory management, receiving information, and quality assurance, and also includes a modal popup to show information about opportunities.
+* @ Author  :   Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
         <p>{activetab}</p> 
-        <lightning-tabset   active-tab-value={activeTab} >
-            
+        <lightning-tabset   active-tab-value={blnActiveTab} >
                 <lightning-tab label="Inventory Management" value="Inventory Management" onactive={handleActive}> <lightning-card>
-                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
-                        <template for:each={steps} for:item="step">
+                    <lightning-progress-indicator current-step={strCurrentStep} type="path" variant="base">
+                        <template for:each={list_Steps} for:item="step">
                             <lightning-progress-step label={step.label} value={step.value} key={step.label} onclick={moveToCmp} ></lightning-progress-step>
                         </template>
                     </lightning-progress-indicator>
                 </lightning-card>
             
-                <template if:true={isInvSummary}>
+                <template if:true={blnIsInvSummary}>
                  <c-pf_-opportunity-summary  onproductdetails={Handleproductdetails}    onpassproductdetails={handlepassproductdetails}   ></c-pf_-opportunity-summary>
                 </template>
-                <template  if:true={isOrderInv}>
+                <template  if:true={blnIsOrderInv}>
                     <c-supplier-details-table    productnamee={passproductvalue}  onsupplierselection={moveToSupplierSelection}> </c-supplier-details-table>
                 </template>
-                <template if:true={isSupplierSelection}>
+                <template if:true={blnIsSupplierSelection}>
                   <c-supplier-data-table  > </c-supplier-data-table>
               </template>
-              <template if:true={isOrderSummary}>
+              <template if:true={blnIsOrderSummary}>
                 <c-pf_-order-datable  > </c-pf_-order-datable>
             </template>
-         <!-- </lightning-tab> -->
 
-                <template if:true={isShowModal}>
+                <template if:true={blnIsShowModal}>
                     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
@@ -51,15 +61,12 @@
                   <div class="slds-backdrop slds-backdrop_open"></div>
                 </template>
              </lightning-tab>
-        
-                <lightning-tab  label="Receiving Manger" value="Receiving Manger"  onactive={handleActive}>
+                <lightning-tab  label="Receiving Manager" value="Receiving Manager"  onactive={handleActive}>
                     <c-pf_-delivery-information> </c-pf_-delivery-information>
                 </lightning-tab>
                 <lightning-tab  label="Quality Assurance" value="Quality Assurance"  >
                     <c-pf_-q-a-manager> </c-pf_-q-a-manager>
-                </lightning-tab>
-
-                
+                </lightning-tab>  
         </lightning-tabset>
     </lightning-card>   
 </template>

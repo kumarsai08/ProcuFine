@@ -1,3 +1,15 @@
+<!--
+* 
+* @ Name    :   supplierDetailsTable
+* @ Purpose :   This component is used for displaying the Product Supplier details with grades of that particular product and warehouse and sends an email to the selected suppliers.
+* @ Author  :   Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
         <div class="slds-text-heading_medium">Product Inventory Information </div>
@@ -5,23 +17,20 @@
             <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                 <thead>
                     <tr>
-                       
                         <th class="" scope="col">
                             <div class="slds-truncate" title="Product Name">Product Name</div>
                         </th>
                         <th class="" scope="col">
                             <div class="slds-truncate" title="Uom">Uom</div>
                         </th>
-                        
                         <th class="" scope="col">
                             <div class="slds-truncate" title="Opportunity Quantity">Opportunity Quantity</div>
                         </th>                      
                     </tr>
                 </thead>
                 <tbody>
-                    <template for:each={OpportunityList} for:item="opplist">
+                    <template for:each={list_Opportunity} for:item="opplist">
                         <tr key={opplist.Id}>
-                           
                             <td>{opplist.Name}</td>
                             <td>{opplist.PF_UOM__c}</td>
                             <td>{opplist.Quantity__c}</td>
@@ -31,9 +40,6 @@
             </table>
         </div>  
     </lightning-card>
-   
-   
-   
     <lightning-card>
         <div class="slds-text-heading_medium">Product Suppliers Details </div>
         <div class="slds-box slds-theme_default">
@@ -46,12 +52,11 @@
                             </div>
                         </th>
                         <th class="" scope="col">
-                           
                             <lightning-combobox
                             name="progress"
                             label="Supplier Name"
                             value={value}
-                            options={supplieroptions}
+                            options={list_SupplierOptions}
                             placeholder="Select Supplier"
                             onchange={handleChange} ></lightning-combobox>  
                         </th>
@@ -67,9 +72,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template for:each={pslist} for:item="ps" for:index="index">
+                    <template for:each={list_ProductSuppliers} for:item="ps" for:index="index">
                         <tr key={ps.Id}>
-                            <!-- <td>  <lightning-input type="checkbox-button"  label="Input One" name="input1" value='hello' onchange={Handlecheckbox} data-transfer={ps} checked={ischeckvalue} ></lightning-input>  </td> -->
                             <td><div>
                                 <lightning-input type="checkbox" data-quantity={ps.Quantity__c} data-id={ps.Id} data-pos={index} data-sname={ps.Supplier_Name__r.Name}  onchange={handleOrderQuantity}></lightning-input>
                             </div></td>
@@ -82,30 +86,17 @@
                 </tbody>
             </table>
             <p align="center"> Total Quantity Ordering :    {IntMaxOrderingQuantity} </p>
-            <p align="center"  > Maximum Quantity that can be Ordered : {differenceValue} </p>
+            <p align="center"  > Maximum Quantity that can be Ordered : {intDifferenceValue} </p>
         </div>  
     </lightning-card>
    
     <lightning-card>
-       
         <lightning-button variant="brand" label="Request for Quotes" title="Primary action" onclick={handleSendMail} class="slds-align_absolute-center"></lightning-button>  
-        <template if:true={loading}>
+        <template if:true={blnLoading}>
             <div class="spinner">
                 please wait....
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </div>
         </template>
-       
     </lightning-card>
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
 </template>

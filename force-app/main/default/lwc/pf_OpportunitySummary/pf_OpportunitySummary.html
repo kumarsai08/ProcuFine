@@ -1,7 +1,18 @@
+<!--
+* 
+* @ Name    :   OpportunitySummary
+* @ Purpose :   This component is used for displaying the Inventory listview.
+* @ Author  :   Manogna and Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
 <div class="slds-box slds-theme_default">
-  <!-- <lightning-button label = "Refresh" onclick={handleRefresh} variant="brand" class="slds-float_right" ></lightning-button> -->
     <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
         <thead>
             <tr>
@@ -10,7 +21,7 @@
                 name="Product Name"
                 label="Product Name"
                 value={value}
-                options={productNameOptions}
+                options={list_ProductNameOptions}
                 onchange={handleProductChange} >
                 </lightning-combobox>
                 </th>             
@@ -38,8 +49,7 @@
             </tr>
         </thead>
         <tbody>
-
-            <template for:each={Product} for:item="prdct">
+            <template for:each={List_Product} for:item="prdct">
                 <tr key={prdct.Id}>
                     <!-- <td>{prdct.Name}</td> -->
                     <td><a name={prdct.Id} data-orderproducturl= {prdct.Id} onclick={navigateToProduct} target="_blank">{prdct.Name}</a></td>

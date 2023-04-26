@@ -13,8 +13,7 @@ public with sharing class pf_Opportunitysummary {
     }
     @AuraEnabled
     public static List < Order > fetchOrderProduct() {  
-        // return[select id,OrderNumber,Status,Account.Name,EffectiveDate,PF_Product__r.Name from Order];    
-        return[select id,PF_Product__r.Name,PF_Product__c,OrderNumber,Account.Name,EffectiveDate,Quantity__c,Received_Quantity__c,PF_Pending_Quantity__c,PF_Under_QA__c,Status FROM Order WHERE Order.Status!='Fully Received Under QA' order by OrderNumber ASC];
+        return[select id,PF_Product__r.Name,PF_Product__c,OrderNumber,Account.Name,EffectiveDate,Quantity__c,Received_Quantity__c,PF_Pending_Quantity__c,PF_Under_QA__c,Status,RecordType.Name FROM Order WHERE Order.Status!='Fully Received Under QA' order by OrderNumber ASC];
     }
     @AuraEnabled
     public static List < Opportunity > pf_OpportunityQuantity() {
@@ -324,7 +323,7 @@ public with sharing class pf_Opportunitysummary {
     @AuraEnabled
     public static List<string> getproductnamerecords() {
          List<string> productlist=new List<string>();
-         List<Product2> returnlist=[Select Id, Name From Product2];
+         List<Product2> returnlist=[Select Id, Name, ISActive From Product2 WHERE ISActive=true];
         for (Product2 product : returnlist) {
             productlist.add(product.Name);  
         }
@@ -344,8 +343,14 @@ public with sharing class pf_Opportunitysummary {
     @AuraEnabled
     public static List < PF_Product_Supplier__c > getSupplierNames(String productName,string QuoteStatusValue ) {
         system.debug('prod'+productName);
-        //system.debug('ware'+WarehouseName);
-        list<Quote> OpenQuoteSupplierList = [SELECT Id,Name,AccountId,PF_Supplier_Account__r.Name,Account.name,PF_Product__r.Name,Status FROM Quote WHERE PF_Product__r.Name =:productName AND Status = :QuoteStatusValue];
+        list<Quote> OpenQuoteSupplierList = new list<Quote>();
+        if(QuoteStatusValue=='Open'){
+        OpenQuoteSupplierList = [SELECT Id,Name,AccountId,QuoteNumber,PF_Supplier_Account__c,PF_Product__r.Name,Status FROM Quote WHERE PF_Product__r.Name =:productName AND Status = :QuoteStatusValue]; //PF_Supplier_Account__r.Name,Account.name,
+        }else if(QuoteStatusValue== 'Closed'){
+            OpenQuoteSupplierList = [SELECT Id,Name,AccountId,QuoteNumber,PF_Supplier_Account__c,PF_Product__r.Name,Status,Opportunity.StageName FROM Quote WHERE PF_Product__r.Name =:productName AND Status = :QuoteStatusValue AND Opportunity.StageName='Closed Won'];
+        }else{
+            OpenQuoteSupplierList = [SELECT Id,Name,AccountId,QuoteNumber,PF_Supplier_Account__c,PF_Product__r.Name,Status,Opportunity.StageName FROM Quote WHERE PF_Product__r.Name =:productName AND Status = :QuoteStatusValue AND Opportunity.StageName='Closed Lost'];
+        }
         system.debug('line 67'+OpenQuoteSupplierList);
         list<string> SupplierIdsList = new list<string>();
         for (Quote q : OpenQuoteSupplierList) {
@@ -364,13 +369,11 @@ public with sharing class pf_Opportunitysummary {
     public static list<QuoteLineItem> PFGetQuoteLineItems(string productname, string suppliername,string QuoteStatusValue){
         if(QuoteStatusValue=='Open'){
             List<String> QuoteIdsList = new List<String>();
-
             list<QuoteLineItem> QLinelist =[select id,Quantity,LineNumber,UnitPrice,ListPrice,Quote.PF_Product__r.name ,QuoteId,Finalised__c,PricebookEntryId,Quote.PF_Supplier_Account__r.name,Quote.Status,Quote.QuoteNumber,Quote.Opportunity.StageName from QuoteLineItem where Quote.PF_Product__r.name=:productname and Quote.PF_Supplier_Account__r.name=:suppliername and Quote.Status =: QuoteStatusValue  ];
             for (QuoteLineItem QLI : QLinelist) {
                 QuoteIdsList.add(QLI.QuoteId);
                 
             }
-
             return [select id,Quantity,LineNumber,Quote.PF_Estimated_Delivery_Date__c,Quote.PF_Product__c,UnitPrice,Description,ListPrice,Discount,TotalPrice,Quote.PF_Product__r.name ,QuoteId,Finalised__c,PricebookEntryId,Quote.PF_Supplier_Account__r.name,Quote.Status,Quote.QuoteNumber from QuoteLineItem where QuoteId  IN : QuoteIdsList order by Quote.QuoteNumber asc ];        }
             else if(QuoteStatusValue=='Closed'){
                 List<String> QuoteIdsList = new List<String>();
@@ -388,7 +391,6 @@ public with sharing class pf_Opportunitysummary {
             QuoteIdsList.add(QLI.QuoteId);
             
         }
-
             return [select id,Quantity,LineNumber,UnitPrice,Quote.PF_Estimated_Delivery_Date__c,Quote.PF_Product__c,ListPrice,TotalPrice,Description,Discount,Quote.PF_Product__r.name ,QuoteId,Finalised__c,PricebookEntryId,Quote.PF_Supplier_Account__r.name,Quote.Status,Quote.QuoteNumber from QuoteLineItem where QuoteId in : QuoteIdsList order by LineNumber asc];
         }
     }
@@ -730,24 +732,27 @@ public with sharing class pf_Opportunitysummary {
     }
 
 @AuraEnabled
-public static void createAsset(String prodId,List<object> batchNumbers,string orderid) {
+public static void createAsset(String prodId,List<object> batchNumbers,string orderid,date deliverydate) {
         System.debug('Returmnmed cdata'+prodId+''+batchNumbers);
         OrderItem ordObj =[select id,Product2Id,Order.AccountId,Order.Id from OrderItem  where Product2Id=:prodId LIMIT 1];
-        PF_Batch_Number__c SKUObj = new PF_Batch_Number__c();
-        SKUObj.PF_Order__c = Id.valueOf(orderid);
-        insert SKUObj;
+        PF_Batch_Number__c BNObj = new PF_Batch_Number__c();
+        BNObj.PF_Order__c = Id.valueOf(orderid);
+        BNObj.Delivery_Date__c = deliverydate;
+        insert BNObj;
         List<Asset> assetObjList = new List<asset>();
         integer len = batchNumbers.size();
+        //len=len-1;
+        list<Product2> pd=[select id,name from Product2 where id=:prodId];
         for(integer i=0;i<len;i++){
             Asset astObj = new Asset();
+            astObj.InstallDate = deliverydate;
             astObj.Product2Id = prodId;
-            astObj.Name = 'Asset Delivery'+i;
+            astObj.Name = pd[0].name +' '+ 'Asset Delivery'+' '+i;
             astObj.AccountId=ordObj.Order.AccountId;
             astObj.Quantity=1.00;
-
             astObj.PF_OrderId__c=Id.valueOf(orderid);
             astObj.PF_SKU_Id__c = (string)batchNumbers[i];
-            astObj.PF_Batch_Number__c = SKUObj.Id;
+            astObj.PF_Batch_Number__c = BNObj.Id;
             assetObjList.add(astObj);
         }
         System.debug('list'+assetObjList);

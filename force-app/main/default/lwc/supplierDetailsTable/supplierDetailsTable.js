@@ -1,7 +1,6 @@
 import { LightningElement, wire,track,api} from 'lwc';
 import GetSupplierrDetailsfornewtable from '@salesforce/apex/pf_Opportunitysummary.GetSupplierrDetailsfornewtable';
 import supplierSection from '@salesforce/apex/pf_Opportunitysummary.supplierSection';
-import supplierSearchFilter from '@salesforce/apex/pf_Opportunitysummary.supplierSearchFilter';
 import supplierNamesList from '@salesforce/apex/pf_Opportunitysummary.supplierNamesList';
 import retrieveRecords from '@salesforce/apex/pf_Opportunitysummary.retrieveRecords';
 import SendAnEmail from '@salesforce/apex/pf_Opportunitysummary.SendAnEmail';
@@ -9,91 +8,65 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class SupplierDetailsTable extends LightningElement {
 
-
-    @track OpportunityList=[];
-    @api pslist;
-    @track supplieroptions= [];
-    @api supplierlist=[];
-    @api productnamee;
-    @api value='';
-    @api ChangedString;
-    @api AllList;
-    @api checkboxlist=[];
-    @api changevalue;
-    @api options;
-    @api ischeckvalue;
-    @api warehousename;
-    @track selectedSupp;
-    @api orderQuantity;
-    @api orderQuantityList;
-    @api inptValue ="";
-    @api supplierNamesList = [];
-    @api inptq =[];
-    @track loading = false;
-    @api totalquantity;
-    @api opportunityQuantity;
+    @track list_Opportunity=[];
+    @api list_ProductSuppliers;
+    @track list_SupplierOptions= [];
+    @api list_Supplierlist=[];
+    @api strProductNamee;
+    @api strChangedString;
+    @api list_AllList;
+    @track list_SelectedSupp;
+    @api list_SupplierNamesList = [];
+    @api list_inptq =[];
+    @track blnLoading = false;
     @api strChangedInpQuantity='';
     @api IntTotalInputQuantity;
-    @api showtotalQuantity;
-    @api opp;
-    @api differenceValue;
+    @api intShowTotalQuantity;
+    @api intDifferenceValue;
     @api IntMaxOrderingQuantity;
 
+//This method is used for fetching and updating inventory and supplier data for a particular product.
     connectedCallback(){
-        GetSupplierrDetailsfornewtable({pname: this.productnamee})
+        GetSupplierrDetailsfornewtable({pname: this.strProductNamee})
             .then(result=>{
                 console.log('line 13');
             console.log('34:'+JSON.stringify(result));
-                this.OpportunityList=JSON.parse(JSON.stringify(result));
-                console.log('line 15'+JSON.stringify(this.OpportunityList));
+                this.list_Opportunity=JSON.parse(JSON.stringify(result));
+                console.log('line 15'+JSON.stringify(this.list_Opportunity));
                 this.IntMaxOrderingQuantity=result[0].Quantity__c - result[0].PF_On_Order__c;
-                this.differenceValue= result[0].Quantity__c - result[0].PF_On_Order__c;
-               // this.opportunityQuantity=this.OpportunityList[0].Opportunity.PF_Opportunity_Quantity__c;
-                 console.log('line 48'+this.opportunityQuantity);
-               
+                this.intDifferenceValue= result[0].Quantity__c - result[0].PF_On_Order__c;
             })
             .catch(error=>{
                 console.log('error'+error);
             })
-           
-           supplierSection({pnamee : this.productnamee}).then(result=>{
-                console.log('line 24'+ this.productnamee);
-                this.pslist=result;
-                this.AllList=result;
-                
-               
-                console.log('line 26'+  JSON.stringify(this.pslist));
-                this.pslist.forEach(element => {
+           supplierSection({pnamee : this.strProductNamee}).then(result=>{
+                console.log('line 24'+ this.strProductNamee);
+                this.list_ProductSuppliers=result;
+                this.list_AllList=result;
+                console.log('line 26'+  JSON.stringify(this.list_ProductSuppliers));
+                this.list_ProductSuppliers.forEach(element => {
                     console.log('line 32'+  typeof element.Supplier_Name__r.Name);
-
-                   
-                   
                 });
-           
-               
             })
             .catch(error=>{
                 console.log('error'+error);
             })
-           
-            supplierNamesList({pnamee : this.productnamee}).then(result=>{
-                this.supplierlist.push({label:'All',value:'All'});
+            supplierNamesList({pnamee : this.strProductNamee}).then(result=>{
+                this.list_Supplierlist.push({label:'All',value:'All'});
                 result.forEach(element => {
-                    this.supplierlist.push({label:element,value:element});
-                    this.supplieroptions = JSON.parse(JSON.stringify(this.supplierlist));
-                    console.log('line 53'+JSON.stringify(this.supplieroptions));
+                    this.list_Supplierlist.push({label:element,value:element});
+                    this.list_SupplierOptions = JSON.parse(JSON.stringify(this.list_Supplierlist));
+                    console.log('line 53'+JSON.stringify(this.list_SupplierOptions));
                 });
         })
         .catch(error=>{
             console.log('error'+error);
         })
-
     }
-    getQuantity(event){
-       
-    }
+    
 
-
+    //This function is used to handle the quantity of orders placed by a user for a particular supplier selected from a list of suppliers. 
+    //It also stores the supplier name and the quantity ordered by the user for each supplier.
     handleOrderQuantity(event){
         let inputId =[];
         let selectedRows = event.target.checked;
@@ -102,39 +75,39 @@ export default class SupplierDetailsTable extends LightningElement {
         inputId.push(event.currentTarget.dataset.pos);
         if(selectedRows)
         {
-            this.inptq.push(this.template.querySelector(`input[data-index="${inputId[0]}"]`).value);
-            this.supplierNamesList.push(this.template.querySelector(`input[data-index="${inputId[0]}"]`).dataset.sname);}
+            this.list_inptq.push(this.template.querySelector(`input[data-index="${inputId[0]}"]`).value);
+            this.list_SupplierNamesList.push(this.template.querySelector(`input[data-index="${inputId[0]}"]`).dataset.sname);}
         else {
-       this.inptq=this.inptq.filter(value=>value !==this.template.querySelector(`input[data-index="${inputId[0]}"]`).value);
-       this.supplierNamesList=this.supplierNamesList.filter(value=>value !==this.template.querySelector(`input[data-index="${inputId[0]}"]`).dataset.sname);
+       this.list_inptq=this.list_inptq.filter(value=>value !==this.template.querySelector(`input[data-index="${inputId[0]}"]`).value);
+       this.list_SupplierNamesList=this.list_SupplierNamesList.filter(value=>value !==this.template.querySelector(`input[data-index="${inputId[0]}"]`).dataset.sname);
      }
      let totalq=0;
-     this.inptq.forEach(element => {
+     this.list_inptq.forEach(element => {
          
          console.log('line 230');
          totalq=totalq +parseInt(element);
-         this.showtotalQuantity=totalq;
-         console.log('line 232'+this.showtotalQuantity);
+         this.intShowTotalQuantity=totalq;
+         console.log('line 232'+this.intShowTotalQuantity);
      });
-        console.log('inptq',this.inptq)
+        console.log('inptq',this.list_inptq)
         console.log('id:'+inputId);
-        console.log('snames list : '+this.supplierNamesList);
+        console.log('snames list : '+this.list_SupplierNamesList);
     }
 
-
+//This function is used to handle changes in a picklist selection.It sets a variable to the new selected value and displays all records or retrieves new records based on the new value selected from the picklist.
     handleChange(event){
         console.log('line 95');
-        this.ChangedString=event.detail.value;
-        console.log('line 95'+ this.ChangedString);
-        if (this.ChangedString==='All') {
+        this.strChangedString=event.detail.value;
+        console.log('line 95'+ this.strChangedString);
+        if (this.strChangedString==='All') {
             console.log('line 104');
-            this.pslist=this.AllList;
+            this.list_ProductSuppliers=this.list_AllList;
            
         } else {
-            retrieveRecords({pnamee: this.productnamee,searchsname: this.ChangedString}).then(result=>{
+            retrieveRecords({pnamee: this.strProductNamee,searchsname: this.strChangedString}).then(result=>{
                 console.log('line 13');
-                this.pslist=result;
-                console.log('line 15'+JSON.stringify(this.pslist));             
+                this.list_ProductSuppliers=result;
+                console.log('line 15'+JSON.stringify(this.list_ProductSuppliers));             
             })
             .catch(error=>{
                 console.log('103 error'+error);
@@ -145,7 +118,7 @@ export default class SupplierDetailsTable extends LightningElement {
        
     }
 
-
+    //This function handles a checkbox event and selects/deselects all the checkboxes based on whether the "Select All" checkbox is checked or unchecked.
     Handlecheckbox(event){
        
         let selectedRows = this.template.querySelectorAll('lightning-input');
@@ -155,51 +128,25 @@ export default class SupplierDetailsTable extends LightningElement {
             }
         }
     }
-   
+
+   //This code is used to handle the event of sending an email for a request for quotation.It retrieves the suppliers selected based on the checkboxes.
+    //Then it displays a toast message to confirm that the email has been sent.
     handleSendMail(event){
-            this.selectedSupp = [];
-            //this.orderQuantity='55';
-   
-            let selectedRows = this.template.querySelectorAll('lightning-input');
-   
-            // based on selected row getting values of the contact
+            this.list_SelectedSupp = [];
+            let selectedRows = this.template.querySelectorAll('lightning-input');   
             for(let i = 0; i < selectedRows.length; i++) {
                 if(selectedRows[i].checked && selectedRows[i].type === 'checkbox') {
-                    this.selectedSupp.push(
-                        // record: selectedRows[i].value,
+                    this.list_SelectedSupp.push(
                          selectedRows[i].dataset.id
-
-
                     );
                 }
             }
-            console.log('Line 171:'+JSON.stringify(this.selectedSupp));
+            console.log('Line 171:'+JSON.stringify(this.list_SelectedSupp));
             console.log('192');
-            /*this.totalquantity=0;
-            this.inptq.forEach(element => {
-                console.log('line 230');
-                this.totalquantity=this.totalquantity+parseInt(element);
-                console.log('line 232'+this.totalquantity);
-            });
-            //console.log('193:'+document.getElementById(this.selectedSupp[0]).value);
-            if(this.totalquantity>this.differenceValue){
-                const evt = new ShowToastEvent({
-                    title: 'Recheck Quantity',
-                    message: 'Please Recheck the sum of input quanity',
-                    variant: 'error',
-                    mode: 'dismissable'
-                });
-                this.dispatchEvent(evt);
-
-
-            }else{*/
-            SendAnEmail({supplierids : this.selectedSupp,Orderquantity : this.inptq,supplierNamesList : this.supplierNamesList}).then(result=>{
+            SendAnEmail({supplierids : this.list_SelectedSupp,Orderquantity : this.list_inptq,supplierNamesList : this.list_SupplierNamesList}).then(result=>{
                 console.log('line 24');
-               
-
-
                 console.log('line 26'+ JSON.stringify(result));
-                this.loading = true;
+                this.blnLoading = true;
                 const evt = new ShowToastEvent({
                     title: 'Email',
                     message: 'Request for Quotation',
@@ -207,30 +154,28 @@ export default class SupplierDetailsTable extends LightningElement {
                     mode: 'dismissable'
                 });
                 this.dispatchEvent(evt);
-                this.loading = false;    
-               
+                this.blnLoading = false;    
         this.dispatchEvent(new CustomEvent('supplierselection', {detail:{value:"3", label:'Supplier Selection'}}));
-               
             })
             .catch(error=>{
                 console.log('send an email error'+JSON.stringify(error));
-                this.loading = false;
+                this.blnLoading = false;
             })
-            
-        //}
 }
+
+//This method is used to handle changes made in the input field for quantity. 
 handleInputQuantity(event){
     console.log('258')
     this.strChangedInpQuantity=event.target.value;
     this.strSupplierNameRelated=event.currentTarget.dataset.sname;
     console.log('line 259'+this.strChangedInpQuantity);
-    if (this.supplierNamesList.includes(this.strSupplierNameRelated)) {
+    if (this.list_SupplierNamesList.includes(this.strSupplierNameRelated)) {
         let indexvalue=0;
-        indexvalue=this.supplierNamesList.indexOf(this.strSupplierNameRelated);
-        this.inptq[indexvalue]=this.strChangedInpQuantity;
+        indexvalue=this.list_SupplierNamesList.indexOf(this.strSupplierNameRelated);
+        this.list_inptq[indexvalue]=this.strChangedInpQuantity;
     }
-    console.log('line 268'+this.inptq);
-    console.log('line 269'+this.supplierNamesList);
+    console.log('line 268'+this.list_inptq);
+    console.log('line 269'+this.list_SupplierNamesList);
 }
 
 }

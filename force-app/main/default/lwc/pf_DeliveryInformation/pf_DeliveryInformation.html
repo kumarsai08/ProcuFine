@@ -1,3 +1,16 @@
+<!--
+* 
+* @ Name    :   deliveryInformation
+* @ Purpose :   This code includes columns for different fields.We have a combobox for selecting a product name and a search input for filtering orders by order ID.
+*               The table contains a loop that iterates over a list of order items and displays the relevant information for each item in a row.Each row also includes a button for adding details to the order item.            
+* @ Author  :   Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
         <div class="slds-box slds-theme_default">
@@ -9,7 +22,7 @@
                             name="Product Name"
                             label="Product Name"
                             value={value}
-                            options={productNameOptions}
+                            options={list_ProductNameOptions}
                             onchange={handleProductChange} ></lightning-combobox>
                         </th>
                         <th><lightning-input type="search" onchange={handleKeyChange} class="slds-m-bottom_small" label="Order ID" value={searchKey}></lightning-input></th>
@@ -36,7 +49,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template for:each={OrderItem} for:item="ord">
+                    <template for:each={list_OrderItem} for:item="ord">
                         <tr key={ord.Id}>
                             <!-- <td>{ord.PF_Product__r.Name}</td> -->
                             <td><a name={ord.PF_Product__c} data-orderproducturl= {ord.PF_Product__c} onclick={navigateToProduct} target="_blank">{ord.PF_Product__r.Name}</a></td>
@@ -47,11 +60,11 @@
                             <td>{ord.PF_Under_QA__c}</td>
                             <td>{ord.Status}</td>
                             <td>
-                                <button  class="editbtn" onclick={handleSave} data-suppliername={ord.Account.Name} data-proid={ord.PF_Product__c} data-proname={ord.PF_Product__r.Name} data-idname={ord.Id} data-recquantity= {quantityvalue}  >Add Details</button> 
+                                <button  class="editbtn" onclick={handleSave} data-pend= {ord.PF_Pending_Quantity__c} data-suppliername={ord.Account.Name} data-proid={ord.PF_Product__c} data-proname={ord.PF_Product__r.Name} data-idname={ord.Id} data-recquantity= {quantityvalue}  >Add Details</button> 
                             </td>
                         </tr>
                     </template>
-                    <template if:true={isShowModal}>
+                    <template if:true={blnIsShowModal}>
                         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                         aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                         <div class="slds-modal__container">
@@ -69,6 +82,9 @@
                         </header>
                         <div class="slds-modal__content slds-p-horizontal_xx-small " id="modal-content-id-5">
                             <lightning-card>
+                                    <div>
+                                       <lightning-input type="date" name="input1" onchange={handledeliverydate} label="Enter the delivery date" ></lightning-input>
+                                   </div>
                                 <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
                                 cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
                                 <thead>
@@ -85,9 +101,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template for:each={dat} for:item="con">
+                                    <template for:each={list_Dat} for:item="con">
                                         <tr key={con}>
-                                            <td>{productName}</td>
+                                            <td>{strProductName}</td>
                                             <td>{StrSupplierName}</td>
                                             <td><lightning-input type="text" class="batchNo" required=true ></lightning-input></td>
                                             <!--<td> <lightning-button variant="Neutral" label="select" onclick={handleVerify}
