@@ -1,5 +1,5 @@
 import { LightningElement,api, } from 'lwc';
-import Supplierquantity from '@salesforce/apex/GetSuppleirDetails.Supplierquantity'; 
+import Supplierquantity from '@salesforce/apex/PF_GetSuppleirDetails.Supplierquantity'; 
 export default class Redirecttosupplier extends LightningElement {
     @api Quote;
     @api records;

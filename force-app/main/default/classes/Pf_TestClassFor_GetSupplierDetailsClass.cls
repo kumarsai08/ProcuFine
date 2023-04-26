@@ -90,8 +90,6 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
         objAsset.Status='QA In Progress'; 
         objAsset.SKU_Id__c='1';
         insert objAsset;
-         // OpportunityLineItem    oli = new OpportunityLineItem(OpportunityId = opp.id, Quantity = 1, PricebookEntryId = pbe.id, totalPrice = 200);
-       //insert oli;
 
         Product_Supplier__c objProduct_Supplier=new Product_Supplier__c();
         objProduct_Supplier.Product__c=objProduct2.id;

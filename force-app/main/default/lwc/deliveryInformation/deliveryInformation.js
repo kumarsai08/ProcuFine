@@ -1,16 +1,16 @@
 import { LightningElement, wire, track, api } from 'lwc';
-import fetchOrderProduct from '@salesforce/apex/orderdetails.fetchOrderProduct';
-import updateOrder from '@salesforce/apex/orderdetails.updateOrder';
-import createAsset from '@salesforce/apex/orderdetails.createAsset';
+import fetchOrderProduct from '@salesforce/apex/PF_orderdetails.fetchOrderProduct';
+import updateOrder from '@salesforce/apex/PF_orderdetails.updateOrder';
+import createAsset from '@salesforce/apex/PF_orderdetails.createAsset';
 //import updatePendingQuantity from '@salesforce/apex/orderdetails.updatePendingQuantity';
 import getassetrecords from '@salesforce/apex/Assetdetails.getassetrecords';
-import getproductnamerecords from '@salesforce/apex/orderdetails.getproductnamerecords';
-import retrieveProductRecords from '@salesforce/apex/orderdetails.retrieveProductRecords';
+import getproductnamerecords from '@salesforce/apex/PF_orderdetails.getproductnamerecords';
+import retrieveProductRecords from '@salesforce/apex/PF_orderdetails.retrieveProductRecords';
 //import getStatusRecords from '@salesforce/apex/orderdetails.getStatusRecords';
-import statusRecords from '@salesforce/apex/orderdetails.statusRecords';
-import getOrderId from '@salesforce/apex/orderdetails.getOrderId';
-import statusRecordsWithoutProduct from '@salesforce/apex/orderdetails.statusRecordsWithoutProduct';  
-import fetchSearchResultsDeliveryInfo from '@salesforce/apex/orderdetails.fetchSearchResultsDeliveryInfo';
+import statusRecords from '@salesforce/apex/PF_orderdetails.statusRecords';
+import getOrderId from '@salesforce/apex/PF_orderdetails.getOrderId';
+import statusRecordsWithoutProduct from '@salesforce/apex/PF_orderdetails.statusRecordsWithoutProduct';  
+import fetchSearchResultsDeliveryInfo from '@salesforce/apex/PF_orderdetails.fetchSearchResultsDeliveryInfo';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 

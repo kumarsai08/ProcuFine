@@ -1,5 +1,5 @@
 import { LightningElement,track,api } from 'lwc';
-import Assetvalues from '@salesforce/apex/GetSuppleirDetails.Assetvalues';
+import Assetvalues from '@salesforce/apex/PF_GetSuppleirDetails.Assetvalues';
 
 export default class ChildAssetUrl extends LightningElement {
 

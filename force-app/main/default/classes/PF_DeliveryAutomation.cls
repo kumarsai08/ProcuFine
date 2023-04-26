@@ -1,10 +1,17 @@
-/**
-* @description       : 
-* @author            : ChangeMeIn@UserSettingsUnder.SFDoc
-* @group             : 
-* @last modified on  : 04-25-2023
-* @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
-**/
+/*******************************************************************************************************
+* 
+* @ Name            :   PF_DeliveryAutomation
+* @ Purpose         :   It is used in the pFAssetDeliverySR Component.
+* @ Test Class Name :   Pf_TestClassForPF_DeliveryAutomation
+*
+*   Date            |  Developer Name               |  Version      
+* ======================================================================================================
+* 16-02-2023     |  himabindu.vanaparthi@absyz.com   |  1.0         
+*                |  manogna.koppula@absyz.com        |          
+*                |  kumarsaiVadapalli@absyz.com      |         
+*                |  srikanth.halavath@absyz.com      |         
+*******************************************************************************************************/
+
 public class PF_DeliveryAutomation {
     @Auraenabled
     public static void DeliveryAutomation(list<string> list_batchnumber,list<integer> list_inputqunatity,string strorderid){

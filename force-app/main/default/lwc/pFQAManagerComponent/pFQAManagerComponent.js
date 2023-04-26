@@ -1,10 +1,10 @@
 import { LightningElement, api , track,wire} from 'lwc';
 import QAManagerOrderPro from '@salesforce/apex/PF_AssetRecords.QAManagerOrderPro';
 import producttoassestrecords from '@salesforce/apex/PF_AssetRecords.producttoassestrecords';
-import getproductnamerecords from '@salesforce/apex/orderdetails.getproductnamerecords';
+import getproductnamerecords from '@salesforce/apex/PF_orderdetails.getproductnamerecords';
 import CreateAssetRecords from '@salesforce/apex/PF_AssetRecords.CreateAssetRecords';
 import retrieveProductNameRecordsInQA from '@salesforce/apex/PF_AssetRecords.retrieveProductNameRecordsInQA';
-import getOrderIdQA from '@salesforce/apex/orderdetails.getOrderIdQA';
+import getOrderIdQA from '@salesforce/apex/PF_orderdetails.getOrderIdQA';
 import { refreshApex } from '@salesforce/apex';
 import { NavigationMixin } from 'lightning/navigation';
 import UpdateFailedAssetRecords from '@salesforce/apex/PF_AssetRecords.UpdateFailedAssetRecords';

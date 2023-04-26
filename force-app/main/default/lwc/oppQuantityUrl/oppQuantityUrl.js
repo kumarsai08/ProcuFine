@@ -1,5 +1,5 @@
 import { LightningElement,track,api } from 'lwc';
-import opprecords from '@salesforce/apex/GetSuppleirDetails.opprecords';
+import opprecords from '@salesforce/apex/PF_GetSuppleirDetails.opprecords';
 export default class OppQuantityUrl extends LightningElement {
     productnamevalueselected;
     @api listopportunities;

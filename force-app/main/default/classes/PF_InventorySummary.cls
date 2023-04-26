@@ -1,22 +1,23 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   PF_WorkflowListviewController
-* @ Purpose         :   This class is used for displaying data in inventorySummary componenet. 
-* @ Author          :   Shammel Ahmed 
-* @ Usage           :   1) For displaying workflow list on the workflow page according to the user
-*                       2) For creating a request from the workflow page onclick of execute
-* @ Test Class Name :   PF_WorkflowListviewControllerTest
-*
-*   Date            |  Developer Name               |  Version      |  Changes
+* @ Name            :   PF_InventorySummary
+* @ Purpose         :   This class is used for displaying data in inventory Summary componenet. 
+* @ Author          :   Manogna.Koppula 
+* @ Test Class Name :   Pf_TestClassFor_Pf_Inventory_Summary
+*   Date            |  Developer Name               |  Version      
 * ======================================================================================================
-*   30-10-2018      |  shameel.ahmed@absyz.com      |  1.0          |  Initial Version
-*   05-11-2018      |  deeksha.suvarna@absyz.com    |  1.1          |  Added Profile Categorization Logic.
-*
+* 26-12-2022     |  himabindu.vanaparthi@absyz.com   |  1.0         
+*                |  manogna.koppula@absyz.com        |          
+*                |  kumarsaiVadapalli@absyz.com      |         
+*                |  srikanth.halavath@absyz.com      |         
 *******************************************************************************************************/
 
 
 
 public  class PF_InventorySummary {
+    /**
+    * @ description  : This method is used in the inventorysummary componenet returns a list of "Inventory__c" records which executes a SOQL query to retrieve specific fields of the "Inventory__c" object where the "Product__c" and "Warehouse__c" fields are not null.
+    **/
     @AuraEnabled
     public static List < Inventory__c > fetchInventory() {
         return [SELECT
@@ -38,7 +39,9 @@ public  class PF_InventorySummary {
         AND  Warehouse__c != null];
         
     }
-    
+    /**
+    * @ description   :  This method is used to show data in the inventory summary componenet and returns a list of "Opportunity" records without any filtering criteria.
+    **/
     @AuraEnabled
     public static List < Opportunity > fetchOpportunity() {
         return [SELECT
@@ -46,7 +49,9 @@ public  class PF_InventorySummary {
         (select Product2Id FROM Opportunitylineitems) 
         FROM opportunity];   
     }
-    
+    /**
+    * @ description  :   This method is used to show data in the inventory summary component and  returns the list of warehouse names.
+    **/
     @AuraEnabled
     public static List<string> getwarehousenamerecords() {
         List<string> list_warehouselist=new List<string>();
@@ -60,7 +65,10 @@ public  class PF_InventorySummary {
         return list_warehouselist;     
         
     }
-    
+    /**
+    * @ description  :  This method is used to setup data for so and so purpose.
+    *  @params        :   strsearchsname - To search for supplier Name. 
+    **/
     @AuraEnabled
     public static List < Inventory__c > retrieveProductNameRecords(String strsearchsname) {
         return [ SELECT id, 
@@ -77,7 +85,10 @@ public  class PF_InventorySummary {
         where Product__r.name 
         LIKE:strsearchsname];
     }
-    
+    /**
+    * @ description  :  This method is used to show data in the inventory summary component and returns  a list of "Inventory__c" records based on the provided search string.
+    *  @params       :   strsearchsname - Its used To search for warehouse Name in inventory summary component. 
+    **/
     @AuraEnabled
     public static List < Inventory__c > retrieveWarehouseRecords(String strsearchsname) {
         
@@ -96,7 +107,11 @@ public  class PF_InventorySummary {
         LIKE:strsearchsname];
     }
     
-    
+    /**
+    * @ description  :  This method is used to show data in the inventory summary component and retrieves a list of Inventory__c records based on optional search parameters for warehouse name and product name.
+    *  @params        :   strsearchstatus - Its used To search for Product Name in inventory summary component.
+    *  @params        :   strsearchsname - Its used To search for warehouse Name in inventory summary component. 
+    **/
     @AuraEnabled   
     public static List <Inventory__c> productsRecords(String strsearchstatus, String strsearchsname) {
         if(strsearchstatus=='All' && strsearchsname == NULL){
@@ -164,8 +179,11 @@ public  class PF_InventorySummary {
             
         }
     }
-
     
+    /**
+    * @ description  :  This method is used to show data in the Supplier Datatable component and returns a list of Inventory__c records whose associated Warehouse__c record has a name that contains the input string strwareHouseName
+    *  @params        :   strwareHouseName - To search for warehouse Name. 
+    **/
     @AuraEnabled
     public static List <Inventory__c> getProductNames(String strwareHouseName) {
         
@@ -178,7 +196,10 @@ public  class PF_InventorySummary {
         LIKE:strwareHouseName];
         
     }
-    
+    /**
+    * @ description  :  This method is used to setup data for so and so purpose.
+    *  @params        :   strsearchsname - To search for supplier Name. 
+    **/
     @AuraEnabled
     public static List < Product_Supplier__c > getSupplierNames(String strproductName,string strWarehouseName,string strQuoteStatusValue ) {
         system.debug('prod'+strproductName);

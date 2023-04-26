@@ -1,9 +1,9 @@
 import { LightningElement,api,track,wire } from 'lwc';
 import { getRecord , getFieldValue } from 'lightning/uiRecordApi';
-import GetAssetRecordsFromProduct from '@salesforce/apex/GetSuppleirDetails.GetAssetRecordsFromProduct';
+import GetAssetRecordsFromProduct from '@salesforce/apex/PF_GetSuppleirDetails.GetAssetRecordsFromProduct';
 import DeliveryAutomation from '@salesforce/apex/PF_DeliveryAutomation.DeliveryAutomation';
 import { NavigationMixin } from 'lightning/navigation';
-import Assetvalues from '@salesforce/apex/orderdetails.Assetvalues';
+import Assetvalues from '@salesforce/apex/PF_orderdetails.Assetvalues';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningAlert from 'lightning/alert';
 

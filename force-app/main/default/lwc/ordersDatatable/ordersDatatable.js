@@ -1,11 +1,11 @@
 import { LightningElement ,api, track, wire} from 'lwc';
-import OrderRecordsDatatable from '@salesforce/apex/orderdetails.OrderRecordsDatatable';
-import orderStatusFilter from '@salesforce/apex/orderdetails.orderStatusFilter';
-import orderStatusRecords from '@salesforce/apex/orderdetails.orderStatusRecords';
-import orderProductNameFilter from '@salesforce/apex/orderdetails.orderProductNameFilter';
-import getproductnamerecords from '@salesforce/apex/orderdetails.getproductnamerecords';
-import getOrderId from '@salesforce/apex/orderdetails.getOrderId';
-import getSupplierDetails from '@salesforce/apex/orderdetails.getSupplierDetails';
+import OrderRecordsDatatable from '@salesforce/apex/PF_orderdetails.OrderRecordsDatatable';
+import orderStatusFilter from '@salesforce/apex/PF_orderdetails.orderStatusFilter';
+import orderStatusRecords from '@salesforce/apex/PF_orderdetails.orderStatusRecords';
+import orderProductNameFilter from '@salesforce/apex/PF_orderdetails.orderProductNameFilter';
+import getproductnamerecords from '@salesforce/apex/PF_orderdetails.getproductnamerecords';
+import getOrderId from '@salesforce/apex/PF_orderdetails.getOrderId';
+import getSupplierDetails from '@salesforce/apex/PF_orderdetails.getSupplierDetails';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class OrdersDatatable extends NavigationMixin (LightningElement) {

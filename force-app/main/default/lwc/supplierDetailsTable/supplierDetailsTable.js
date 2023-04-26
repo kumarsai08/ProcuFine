@@ -1,10 +1,10 @@
 import { LightningElement, wire,track,api} from 'lwc';
-import GetSupplierrDetailsfornewtable from '@salesforce/apex/GetSuppleirDetails.GetSupplierrDetailsfornewtable';
-import supplierSection from '@salesforce/apex/GetSuppleirDetails.supplierSection';
-import supplierSearchFilter from '@salesforce/apex/GetSuppleirDetails.supplierSearchFilter';
-import supplierNamesList from '@salesforce/apex/GetSuppleirDetails.supplierNamesList';
-import retrieveRecords from '@salesforce/apex/GetSuppleirDetails.retrieveRecords';
-import SendAnEmail from '@salesforce/apex/GetSuppleirDetails.SendAnEmail';
+import GetSupplierrDetailsfornewtable from '@salesforce/apex/PF_GetSuppleirDetails.GetSupplierrDetailsfornewtable';
+import supplierSection from '@salesforce/apex/PF_GetSuppleirDetails.supplierSection';
+import supplierSearchFilter from '@salesforce/apex/PF_GetSuppleirDetails.supplierSearchFilter';
+import supplierNamesList from '@salesforce/apex/PF_GetSuppleirDetails.supplierNamesList';
+import retrieveRecords from '@salesforce/apex/PF_GetSuppleirDetails.retrieveRecords';
+import SendAnEmail from '@salesforce/apex/PF_GetSuppleirDetails.SendAnEmail';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
 //import sendEmailtoUser from '@salesforce/apex/GetSuppleirDetails.sendEmailtoUser';

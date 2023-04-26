@@ -1,5 +1,5 @@
 import { LightningElement,api,wire } from 'lwc';
-import OrdertoAssests from '@salesforce/apex/orderdetails.OrdertoAssests';
+import OrdertoAssests from '@salesforce/apex/PF_orderdetails.OrdertoAssests';
 import { NavigationMixin } from 'lightning/navigation';
 import { getRecord , getFieldValue } from 'lightning/uiRecordApi';
 

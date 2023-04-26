@@ -1,5 +1,5 @@
 import { LightningElement ,api,track} from 'lwc';
-import opprecords from '@salesforce/apex/GetSuppleirDetails.opprecords';
+import opprecords from '@salesforce/apex/PF_GetSuppleirDetails.opprecords';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation'
 
 

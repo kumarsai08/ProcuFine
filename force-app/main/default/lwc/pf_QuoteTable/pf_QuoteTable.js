@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import getQuoteLineItems from '@salesforce/apex/GetSuppleirDetails.getQuoteLineItems';
+import getQuoteLineItems from '@salesforce/apex/PF_GetSuppleirDetails.getQuoteLineItems';
 
 export default class Pf_QuoteTable extends LightningElement {
     @api QuoteItem=[];

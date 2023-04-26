@@ -1,17 +1,16 @@
 /*******************************************************************************************************
 * 
-* @ Name            :   PF_WorkflowListviewController
-* @ Purpose         :   Controller for Workflow Listview
-* @ Author          :   Deeksha Suvarna
-* @ Usage           :   1) For displaying workflow list on the workflow page according to the user
-*                       2) For creating a request from the workflow page onclick of execute
+* @ Name            :   PF_AssetRecords
+* @ Purpose         :    This class is used for displaying data in PFQAManager component. 
+* @ Author          :   Hima Bindu Vanaparthi Santhoshi.
 * @ Test Class Name :   PF_TestClassFor_AssetRecords
 *
-*   Date            |  Developer Name               |  Version      |  Changes
+*   Date            |  Developer Name               |  Version      
 * ======================================================================================================
-*   30-10-2018      |  shameel.ahmed@absyz.com      |  1.0          |  Initial Version
-*   05-11-2018      |  deeksha.suvarna@absyz.com    |  1.1          |  Added Profile Categorization Logic.
-*
+* 26-12-2022     |  himabindu.vanaparthi@absyz.com   |  1.0         
+*                |  manogna.koppula@absyz.com        |          
+*                |  kumarsaiVadapalli@absyz.com      |         
+*                |  srikanth.halavath@absyz.com      |         
 *******************************************************************************************************/
 
 public with sharing class PF_AssetRecords {
@@ -127,25 +126,25 @@ public with sharing class PF_AssetRecords {
     public static List<Asset> UpdateFailedAssetRecords(list<string> strFailedAssetIds ){
         system.debug(strFailedAssetIds);
         list<Asset> list_GetAssetRecords = [SELECT 
-                                            Id, 
-                                            Batch_Number__c,
-                                            Batch_Number_lookup__c,
-                                            Order_Id__c, 
-                                            Product2.Id,
-                                            Status 
-                                            FROM Asset
-                                            WHERE  Id in : strFailedAssetIds];
+        Id, 
+        Batch_Number__c,
+        Batch_Number_lookup__c,
+        Order_Id__c, 
+        Product2.Id,
+        Status 
+        FROM Asset
+        WHERE  Id in : strFailedAssetIds];
         system.debug(list_GetAssetRecords);
         List<String> list_BatchNumberIds = new List<String>();
         for (Asset objAsset : list_GetAssetRecords) {
             list_BatchNumberIds.add(objAsset.Batch_Number_lookup__c);
         }
         list<Batch_Number__c> list_GetBatchNumberRecords = [SELECT Id,
-                                                              Defective_Batch__c ,
-                                                              Order__c,
-                                                              Delivery_date__c
-                                                               FROM Batch_Number__c 
-                                                               WHERE Id IN : list_BatchNumberIds];
+        Defective_Batch__c ,
+        Order__c,
+        Delivery_date__c
+        FROM Batch_Number__c 
+        WHERE Id IN : list_BatchNumberIds];
         system.debug(list_GetBatchNumberRecords);
         List<Asset> list_UpdateAssetList = new List<Asset>();
         List<Batch_Number__c> list_CreateBatchesList = new List<Batch_Number__c>();
@@ -182,20 +181,20 @@ public with sharing class PF_AssetRecords {
         system.debug('112 '+map_MapParentBatchIdtoChild);
         for (Asset objAssetRecord : list_GetAssetRecords) {
             objAssetRecord.Batch_Number_lookup__c = map_MapParentBatchIdtoChild.get(objAssetRecord.Batch_Number_lookup__c);
-                list_UpdateAssetList.add(objAssetRecord);   
-                    
-                }
-                for (Batch_Number__c objbatch : list_GetBatchNumberRecords) {
-                    if(objbatch.Defective_Batch__c==null){
-                        objbatch.Defective_Batch__c = map_MapParentBatchIdtoChild.get(objbatch.Id);
-                    }
-                    list_UpdateBatchNumberList.add(objbatch);
-                    
-                }
-                update list_UpdateAssetList;
-                update list_UpdateBatchNumberList;
-                return list_UpdateAssetList;    
-                
-            }
+            list_UpdateAssetList.add(objAssetRecord);   
             
         }
+        for (Batch_Number__c objbatch : list_GetBatchNumberRecords) {
+            if(objbatch.Defective_Batch__c==null){
+                objbatch.Defective_Batch__c = map_MapParentBatchIdtoChild.get(objbatch.Id);
+            }
+            list_UpdateBatchNumberList.add(objbatch);
+            
+        }
+        update list_UpdateAssetList;
+        update list_UpdateBatchNumberList;
+        return list_UpdateAssetList;    
+        
+    }
+    
+}

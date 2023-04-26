@@ -1,9 +1,9 @@
 import { LightningElement,api,track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import GetQuoteDetails from '@salesforce/apex/GetSuppleirDetails.GetQuoteDetails';
-import OrderRecords from '@salesforce/apex/GetSuppleirDetails.OrderRecords';
-import sendemailtosuppliers from '@salesforce/apex/GetSuppleirDetails.sendemailtosuppliers';
-import GetQuoteDetailsdummy from '@salesforce/apex/GetSuppleirDetails.GetQuoteDetailsdummy';
+import GetQuoteDetails from '@salesforce/apex/PF_GetSuppleirDetails.GetQuoteDetails';
+import OrderRecords from '@salesforce/apex/PF_GetSuppleirDetails.OrderRecords';
+import sendemailtosuppliers from '@salesforce/apex/PF_GetSuppleirDetails.sendemailtosuppliers';
+import GetQuoteDetailsdummy from '@salesforce/apex/PF_GetSuppleirDetails.GetQuoteDetailsdummy';
 //import {LightningElement} from 'lwc';
 import {loadScript} from "lightning/platformResourceLoader";
 import JSPDF from '@salesforce/resourceUrl/jspdf';

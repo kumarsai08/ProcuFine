@@ -2,8 +2,8 @@ import { LightningElement, wire, track,api } from 'lwc';
 import fetchInventory from '@salesforce/apex/Pf_Inventory_Summary.fetchInventory';
 import getwarehousenamerecords from '@salesforce/apex/Pf_Inventory_Summary.getwarehousenamerecords';
 import retrieveWarehouseRecords from '@salesforce/apex/Pf_Inventory_Summary.retrieveWarehouseRecords';
-import getproductnamerecords from '@salesforce/apex/orderdetails.getproductnamerecords';
-import retrieveProductNameRecords from '@salesforce/apex/orderdetails.retrieveProductNameRecords';
+import getproductnamerecords from '@salesforce/apex/PF_orderdetails.getproductnamerecords';
+import retrieveProductNameRecords from '@salesforce/apex/PF_orderdetails.retrieveProductNameRecords';
 import productsRecords from '@salesforce/apex/Pf_Inventory_Summary.productsRecords';
 import { NavigationMixin } from 'lightning/navigation';
 
