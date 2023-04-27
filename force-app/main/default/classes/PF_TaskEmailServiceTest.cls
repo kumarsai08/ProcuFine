@@ -1,5 +1,5 @@
 @istest
-public class PF_TestClassFor_PF_TaskEmailService {
+public class PF_TaskEmailServiceTest {
      @isTest
     static void OutboundEmailHandler(){
         opportunity objopportunity = new opportunity();
