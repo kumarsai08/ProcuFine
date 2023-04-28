@@ -7,502 +7,239 @@ import Assetvalues from '@salesforce/apex/PF_orderdetails.Assetvalues';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningAlert from 'lightning/alert';
 
-import { refreshApex } from '@salesforce/apex';
-
-
-
-
-//const fs = ['Order.Id','Order.OrderNumber'];
 export default class PFAssetDeliverySR extends NavigationMixin (LightningElement) {
-    @api recordData=[];
-    @api recordId;
-    @api Product;
-    @api DisplayRelatedRecords=[];
-    @api checkboxValue;
-    @api BatchNumbersList = [];
-    @api InputIntegersList = [];
-    @api IntInputNumber;
-    @api idVariable;
-    @api inputvalue2;
-    @api inputvalue1;
-    @api checkedList=[];
-    @api ordervalue;
-    @api loaded=false;
-   
-    @api checkboxvalue;
-    @api showErrorMessage = false;
-    @track errorMessage;
-    @api batchnumberid;
-    @api Asset=[];
-    @track isShowModal = false;
-    @api selectedRows;
-    @api wiredTableData;
-    @api IntGetRelatedDataInputChange;
-    @api IntAssignBatchValue;
-    @api GetInputValue={};
-    @api ListStockValues=[];
-    @api booleanvalue;
-   
-    @api assetIdValue;
-    @api showtoast=[];
-    @api showMsg;
-    @api BooleanValue;
-    
-    @api MapAsset = new Map();
+    @api strProduct;
+    @api strShowMsg;
+    @api strIdVariable;
+    @api strOrdervalue;
+    @api strAssetIdValue;
+    @api strBatchNumberId;
+    @api blnValue1;
+    @api blnValue2;
+    @api blnLoaded=false;
+    @api blnSelectedRows;
+    @api blnCheckboxValue;
+    @track blnIsShowModal = false;
+    @api blnShowErrorMessage = false;
     @api IntAssetCount;
+    @api IntInputNumber;
+    @api intInputvalue2;
+    @api intInputvalue1;
     @api IntOrderQuantity;
+    @api IntAssignBatchValue;
     @api IntSelectedQuantity;
+    @api IntGetRelatedDataInputChange;
+    @api list_Asset=[];
+    @api list_Showtoast=[];
+    @api list_StockValues=[];
+    @api list_BatchNumbersList = [];
+    @api list_InputIntegersList = [];
+    @api list_DisplayRelatedRecords=[];    
+    @api MapAsset = new Map();
     mapAssests =new Map();
     mapAssestsSOHValues =new Map();
 
 
-    connectedCallback() {
-       // this.fetchRecordData();
-       console.log('line 15');
-
-       
-    }
-    /*@wire(getRecord, { recordId: '$recordId', fields: ['OrderNumber', 'Account.Name'] })
-    record;
-
-
-    @api
-fetchRecordData() {
-    getRecord(this.recordId, { fields: ['OrderNumber', 'Product__c'] })
-        .then(result => {
-            this.recordData = result;
-            console.log('line 19 asset'+this.recordData)
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}*/
-
+//This code is used to retrieve specific fields of a Salesforce record and assign their values to variables.
 @wire(getRecord, { recordId: '$recordId', fields: ['Order.Id', 'Order.Product__c','Order.OpportunityId','Order.Asset_Count__c','Order.Order_Quantity__c']  })
 wiredRecord({ error, data }) {
-    //this.wiredTableData = data;
     if (data) {
         console.log('line 34');
         console.log('asset 1 '+ data);
         console.log('asset '+ JSON.stringify(data));
-        this.loaded=true;
-        // this.mapAssests= 
-
-       // this.record = getFieldValue(data, 'Id');
-        this.Product = getFieldValue(data, 'Order.Product__c');
-        this.ordervalue = getFieldValue(data, 'Order.Id');
+        this.blnLoaded=true;
+        this.strProduct = getFieldValue(data, 'Order.Product__c');
+        this.strOrdervalue = getFieldValue(data, 'Order.Id');
         this.IntAssetCount = getFieldValue(data, 'Order.Asset_Count__c');
         this.IntOrderQuantity = getFieldValue(data, 'Order.Order_Quantity__c');
         console.log('ac '+this.IntAssetCount + ' oq '+this.IntOrderQuantity)
-
-        console.log('39 '+this.Product);
+        console.log('39 '+this.strProduct);
         this.AssetMethods();
-        //this.accountName = getFieldValue(data, 'Account.Name');
     } else if (error) {
         console.error(error);
     }
 }
 
-// GetProductIdFromOppProduct(){
-
-// }
-
-
-
-
-
-
-
+//This function retrieves asset records related to a specific product, filters them based on batch number, and sets them to be displayed in the UI.
 AssetMethods(){
-    console.log('76:'+this.Product)
-    GetAssetRecordsFromProduct({ productid : this.Product }).then(result=>{
+    console.log('76:'+this.strProduct)
+    GetAssetRecordsFromProduct({ productid : this.strProduct }).then(result=>{
         console.log('LINE 174'+JSON.stringify(result));
         const batchNames = new Set();
         let templist=[];
-       
         var newData = JSON.parse(JSON.stringify(result));
-    
-        
         newData.forEach(record => {
             let tempRecs = Object.assign({},record);
             if(batchNames.has(record.Batch_Number_lookup__r.Name)){
-                
             }
             else{
                 templist.push(tempRecs);
             }
-
             batchNames.add(record.Batch_Number_lookup__r.Name);
     })
-   
     console.log('old :: '+JSON.stringify(templist))
-    console.log('128 ' +this.showMsg)
-    //console.log('sorted ' +templist.sort(Batch_Number_lookup__r.Name))
-   /* for (let i = 0; i < (templist.length)-1; i++) {
-        if(templist[i].Batch_Number_lookup__r.Name < templist[i+1].Batch_Number_lookup__r.Name){
-            this.DisplayRelatedRecords.push(templist[i])
-        }
-        else{
-            this.DisplayRelatedRecords.push(templist[i+1])
-
-        }
-        
-    }
-    console.log('sorted ' +JSON.stringify(this.DisplayRelatedRecords))*/
-
+    console.log('128 ' +this.strShowMsg)
     if(templist.length!=0){
-        this.DisplayRelatedRecords = templist;
-        this.loaded = false;
-        this.showMsg=true;
-        console.log('133 ' +this.showMsg)
-
+        this.list_DisplayRelatedRecords = templist;
+        this.blnLoaded = false;
+        this.strShowMsg=true;
+        console.log('133 ' +this.strShowMsg)
     }
     else{
-
     }
-    
-
-    
-       //this.recordId = this.record;
-    
     }) .catch(error=>{
         console.log('error24 : '+JSON.stringify(error));
     })
-    
-
 }
 
-
+//The code is handling the checkbox click event and performs various actions such as getting input values, and filtering lists based on the checkbox selection.
 handlecheckbox(event){
-    this.selectedRows = event.target.checked;
-    this.idVariable=event.target.dataset.astid;
-   if(this.selectedRows){
-    
-    
-    this.inputvalue1 = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.firstinputvalue;
-    this.inputvalue2 =  this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value;
-    this.InputIntegersList.push(parseInt((this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value)));
-    this.BatchNumbersList.push(this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid);
+    this.blnSelectedRows = event.target.checked;
+    this.strIdVariable=event.target.dataset.astid;
+   if(this.blnSelectedRows){
+    this.intInputvalue1 = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.firstinputvalue;
+    this.intInputvalue2 =  this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).value;
+    this.list_InputIntegersList.push(parseInt((this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).value)));
+    this.list_BatchNumbersList.push(this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.batchid);
     console.log('150')
-    
-
-    //this.ListStockValues.push(this.inputvalue1);
-    this.assetIdValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.astid;
-    console.log('line 158'+ this.assetIdValue);
-
-    this.IntAssignBatchValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid;
-    
-
-    //let stockValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.stock; 
-    const inputEle = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`);
+    this.strAssetIdValue = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.astid;
+    console.log('line 158'+ this.strAssetIdValue);
+    this.IntAssignBatchValue = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.batchid;
+    const inputEle = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`);
     console.log('159')
-    //console.log('stockValue',stockValue +'_')
-    //if(this.inputvalue2==null){
-    inputEle.value = this.inputvalue1;
-   // }
+    inputEle.value = this.intInputvalue1;
     console.log('IntAssignBatchValue:'+JSON.stringify(this.IntAssignBatchValue))
-    console.log('inputvalue1:'+JSON.stringify(this.inputvalue1))
+    console.log('inputvalue1:'+JSON.stringify(this.intInputvalue1))
     console.log(typeof this.mapAssests)
-   this.mapAssests.set( this.IntAssignBatchValue,this.inputvalue1);
-   this.mapAssestsSOHValues.set(this.IntAssignBatchValue,this.inputvalue1)
-// this.mapAssests.set('key1', 'value1');
-  
-    //MapAsset.set(, 500);
-     //this.GetInputValue = { IntAssignBatchValue : this.inputvalue1 };
-
-   }else{
-    console.log('false '+this.selectedRows );
-    this.showErrorMessage =  false;
-    this.inputvalue2 =  '';
-    this.inputvalue1 = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.firstinputvalue;
-    this.inputvalue2 =  this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value;
-
-    this.InputIntegersList=this.InputIntegersList.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value);
-    this.BatchNumbersList=this.BatchNumbersList.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid);
-    this.ListStockValues=this.ListStockValues.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.firstinputvalue);
-    this.IntAssignBatchValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid;
-
-    this.assetIdValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.astid;
-
-    //fruits.delete(this.inputvalue1);
+    this.mapAssests.set( this.IntAssignBatchValue,this.intInputvalue1);
+    this.mapAssestsSOHValues.set(this.IntAssignBatchValue,this.intInputvalue1)
+    }else{
+    console.log('false '+this.blnSelectedRows );
+    this.blnShowErrorMessage =  false;
+    this.intInputvalue2 =  '';
+    this.intInputvalue1 = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.firstinputvalue;
+    this.intInputvalue2 =  this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).value;
+    this.list_InputIntegersList=this.list_InputIntegersList.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value);
+    this.list_BatchNumbersList=this.list_BatchNumbersList.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid);
+    this.list_StockValues=this.list_StockValues.filter(value=>value !==this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.firstinputvalue);
+    this.IntAssignBatchValue = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.batchid;
+    this.strAssetIdValue = this.template.querySelector(`lightning-input[data-assetid="${this.strIdVariable}"]`).dataset.astid;
     this.mapAssests.delete( this.IntAssignBatchValue);
     this.mapAssestsSOHValues.delete( this.IntAssignBatchValue);
-
-
-
    }
-
-
-
-//    console.log('Map:'+JSON.stringify(this.MapAsset));
    this.mapAssests.forEach((value, key) => {
     console.log(key + ' = ' + value);
 });
 this.mapAssestsSOHValues.forEach((value, key) => {
     console.log( 'MAP SOH '  +key + ' = ' + value);
 });
-//    console.log('input value one : '+ this.inputvalue1 );
-//    console.log('input two : '+ this.inputvalue2 );
-//    console.log('select'+ this.selectedRows)
-//    console.log('stockvalues '+ JSON.stringify(fruits));
- 
-
-    if(this.inputvalue2!= ''){
-        if ((Number(this.inputvalue2)  > Number(this.inputvalue1)) && this.selectedRows) {
-
-            // show error message
-             
-                //Alert has been closed
-            
+    if(this.intInputvalue2!= ''){
+        if ((Number(this.intInputvalue2)  > Number(this.intInputvalue1)) && this.blnSelectedRows) {
             console.log('Enter values is greater')
-            this.booleanvalue = true;
-           // this.errorMessage = ;
-        } else if(this.inputvalue2 <=0){
-        
-            
-            this.booleanvalue = true;
-           // this.errorMessage = ;
-        }else if(this.inputvalue2 === null){
-            
-    
-            this.booleanvalue = true;
-            // this.errorMessage = ;
+            this.blnValue1 = true;
+        } else if(this.intInputvalue2 <=0){
+            this.blnValue1 = true;
+        }else if(this.intInputvalue2 === null){
+            this.blnValue1 = true;
          }
     }
         else {
-            this.booleanvalue = false;
+            this.blnValue1 = false;
         }
-
-   
-
-    
-    console.log('check boxes',this.InputIntegersList);
-    console.log('113',this.BatchNumbersList);
-    this.checkboxValue = event.target.checked;
+    console.log('check boxes',this.list_InputIntegersList);
+    console.log('113',this.list_BatchNumbersList);
+    this.blnCheckboxValue = event.target.checked;
     this.batchnumber = event.target.dataset.batchid;
-   // console.log('check '+ this.checkboxValue)
-    
-    
-    
-
 }
 
+//The code is used to handle input numbers, validate them, and update values in various lists and maps based on the input.
 handleinputnumbers(event){
     this.IntInputNumber = event.target.value;
     this.batchId = event.target.dataset.batchid;
     console.log('264 '+this.batchId);
     let getastid = event.target.dataset.assetid;
     this.IntGetRelatedDataInputChange = event.target.dataset.firstinputvalue;
-
-    if(this.inputvalue2!=null){
-       // this.inputvalue1 = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.firstinputvalue;
-        //this.inputvalue2 =  this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value;
-       // this.InputIntegersList.push(parseInt((this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value)));
-   // this.BatchNumbersList.push(this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid);
+    if(this.intInputvalue2!=null){
     this.BooleanCheckedStatus = this.template.querySelector(`input[data-astid="${getastid}"]`);
     console.log('Boolean '+this.BooleanCheckedStatus.checked)
-    this.BooleanValue = this.BooleanCheckedStatus.checked
-    //console.log('input2 '+this.inputvalue2)
-
-
-    if(this.BooleanValue){
+    this.blnValue2 = this.BooleanCheckedStatus.checked
+    if(this.blnValue2){
         console.log('301')
         this.IntAssignBatchValue = this.template.querySelector(`lightning-input[data-assetid="${getastid}"]`).dataset.batchid;
-        //console.log('batchid '+ this.IntAssignBatchValue)
         this.mapAssests.set( this.batchId,this.IntInputNumber);
-
-
     }
-
-   // console.log('mapassetbatch ')
-    //this.assetIdValue = this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.astid;
-    //fruits.set(this.inputvalue1, this.inputvalue2);
-    //console.log('252 '+ fruits)
-
-       // this.InputIntegersList.push(parseInt((this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).value)));
-       // this.BatchNumbersList.push(this.template.querySelector(`lightning-input[data-assetid="${this.idVariable}"]`).dataset.batchid);
-      // this.ListStockValues.push(this.inputvalue1);
        }
        this.mapAssests.forEach((value, key) => {
         console.log('mapassetbatch '+key + ' = ' + value);
     });
-
-
-
-
-       if(this.inputvalue2!= ''){
-        if ((Number(this.inputvalue2)  > Number(this.inputvalue1)) && this.selectedRows) {
-
-            // show error message
-             
-                //Alert has been closed
-            
+       if(this.intInputvalue2!= ''){
+        if ((Number(this.intInputvalue2)  > Number(this.intInputvalue1)) && this.blnSelectedRows) {
             console.log('Enter values is greater')
-            this.booleanvalue = true;
-           // this.errorMessage = ;
-        } else if(this.inputvalue2 <=0){
-        
-            
-            this.booleanvalue = true;
-           // this.errorMessage = ;
-        }else if(this.inputvalue2 === null){
-            
-    
-            this.booleanvalue = true;
-            // this.errorMessage = ;
+            this.blnValue1 = true;
+        } else if(this.intInputvalue2 <=0){
+            this.blnValue1 = true;
+        }else if(this.intInputvalue2 === null){
+            this.blnValue1 = true;
          }
     }
         else {
-            this.booleanvalue = false;
+            this.blnValue1 = false;
         }
-      /* if(this.inputvalue2!= ''){
-        if ((Number(this.inputvalue2)  > Number(this.inputvalue1)) && this.selectedRows) {
-
-            // show error message
-             LightningAlert.open({
-                    message: 'Value should not greater than SOH',
-                    theme: 'error', // a red theme intended for error states
-                    label: 'Error!', // this is the header text
-                });
-                //Alert has been closed
-            
-            console.log('Enter values is greater')
-            this.showErrorMessage = true;
-           // this.errorMessage = ;
-        } else if(this.inputvalue2 <=0){
-        
-            LightningAlert.open({
-                message: 'Value should not be zero or negative',
-                theme: 'error', // a red theme intended for error states
-                label: 'Error!', // this is the header text
-            });
-            this.showErrorMessage = true;
-           // this.errorMessage = ;
-        }
-
-        
-     }
-     
-     else {
-         this.showErrorMessage = false;
-     }*/
     if(this.IntInputNumber!=''){
-
-
      if ((Number(this.IntInputNumber)  > Number(this.IntGetRelatedDataInputChange)) ) {
-
-        // show error message
          LightningAlert.open({
                 message: 'Value should not greater than SOH',
                 theme: 'error', // a red theme intended for error states
                 label: 'Error!', // this is the header text
-            });
-            //Alert has been closed
-        
+            });        
         console.log('Enter values is greater')
-        this.showErrorMessage = true;
-       // this.errorMessage = ;
+        this.blnShowErrorMessage = true;
     } else if(this.IntInputNumber <=0){
-    
         LightningAlert.open({
             message: 'Value should not be zero or negative',
             theme: 'error', // a red theme intended for error states
             label: 'Error!', // this is the header text
         });
-        this.showErrorMessage = true;
-       // this.errorMessage = ;
+        this.blnShowErrorMessage = true;
     }
-
-    
  }
- 
+
  else {
-     this.showErrorMessage = false;
+     this.blnShowErrorMessage = false;
  }
-
-
-
-
 }
 
+//This is function handles the delivery of assets and includes error handling and toast messages.
 handledeliver(event){
     console.log('values '+JSON.stringify(typeof this.mapAssests.values()) );
-    this.showtoast=[];
-    this.InputIntegersList=[];
-    this.BatchNumbersList=[];
-    
-    
-
-   /* fruits.forEach (function(value, key) {
-        if(key<= value){
-            this.showtoast=true;
-        }else if(value<=0){
-        this.showtoast=true;
-    }else{
-        this.showtoast=false;
-    }
-      })*/
-    
-    /*for (let i = 0; i <= fruits.size; i++) {
-        
-        if(this.ListStockValues[i]<= this.InputIntegersList[i]){
-            this.showtoast=true;
-        }else if(this.InputIntegersList[i]<=0){
-        this.showtoast=true;
-    }else{
-        this.showtoast=false;
-    }
-}*/
-this.mapAssests.forEach ((value, key)=>  {
-    
+    this.list_Showtoast=[];
+    this.list_InputIntegersList=[];
+    this.list_BatchNumbersList=[];
+    this.mapAssests.forEach ((value, key)=>  {
     console.log(value +' '+ this.mapAssestsSOHValues.get(key)+' '+key);
     console.log('433 '+typeof value +' '+typeof this.mapAssestsSOHValues.get(key));
-
-    this.InputIntegersList.push(value)
-    this.BatchNumbersList.push(key)
-    //console.log(this.mapAssestsSOHValues.get(key));
-    //console.log(key);
+    this.list_InputIntegersList.push(value)
+    this.list_BatchNumbersList.push(key)
     if(Number(value)> Number(this.mapAssestsSOHValues.get(key))){
         console.log('440 ')
-        
-        
-        this.showtoast.push(true);
+        this.list_Showtoast.push(true);
     }else if(Number(value)<=0){
         console.log('445 ')
-
-        this.showtoast.push(true);
-        
-
+        this.list_Showtoast.push(true);
 }else{
     console.log('451 ')
-
-
-    this.showtoast.push(false);}
+    this.list_Showtoast.push(false);}
   });
-
-  console.log('InputIntegersList  '+ this.InputIntegersList)
-
+  console.log('InputIntegersList  '+ this.list_InputIntegersList)
   this.IntSelectedQuantity = 0;
-
-  this.InputIntegersList.forEach(element => {
-    this.IntSelectedQuantity= this.IntSelectedQuantity + Number(element)
-
-    
+  this.list_InputIntegersList.forEach(element => {
+  this.IntSelectedQuantity= this.IntSelectedQuantity + Number(element)  
   });
   console.log('intq '+this.IntSelectedQuantity)
-
-   
-
-  console.log('toast'+this.showtoast);
-  console.log('436 '+this.showtoast.includes(true));
-
-
-
-
-    if(this.InputIntegersList.length!==0){
-
-
-     if(this.showtoast.includes(true)){
+  console.log('toast'+this.list_Showtoast);
+  console.log('436 '+this.list_Showtoast.includes(true));
+    if(this.list_InputIntegersList.length!==0){
+     if(this.list_Showtoast.includes(true)){
         const evt = new ShowToastEvent({
             title: 'Check the Errors',
             message: 'Please check the error and enter proper values before clicking the deliver button',
@@ -510,12 +247,10 @@ this.mapAssests.forEach ((value, key)=>  {
             mode: 'dismissable'
         });
         this.dispatchEvent(evt);
-    
-
      }else{
-        console.log('Batches '+this.BatchNumbersList)
-        console.log('input integers '+this.InputIntegersList)
-        console.log('order '+this.ordervalue)
+        console.log('Batches '+this.list_BatchNumbersList)
+        console.log('input integers '+this.list_InputIntegersList)
+        console.log('order '+this.strOrdervalue)
         if((this.IntSelectedQuantity + this.IntAssetCount)>this.IntOrderQuantity){
             const evt = new ShowToastEvent({
                 title: 'delivery error',
@@ -524,52 +259,25 @@ this.mapAssests.forEach ((value, key)=>  {
                 mode: 'dismissable'
             });
             this.dispatchEvent(evt);
-        
-
         }
         else{
-
-
-
-        DeliveryAutomation({ batchnumber : this.BatchNumbersList,inputqunatity : this.InputIntegersList, orderid : this.ordervalue  }).then(result=>{
+        DeliveryAutomation({ batchnumber : this.list_BatchNumbersList,inputqunatity : this.list_InputIntegersList, orderid : this.strOrdervalue  }).then(result=>{
             console.log('result'); 
-            
             const evt = new ShowToastEvent({
                 title: 'SUCCESS',
                 message: 'Product Assets assigned to the sales order',
                 variant: 'Success',
                 mode: 'dismissable'
             });
-            this.dispatchEvent(evt); 
-            
-            //return refreshApex(this.wiredTableData);
-            this.loaded = true;
-          // this.AssetMethods();
-           //window.location.reload();
-            
-            
+            this.dispatchEvent(evt);             
+            this.blnLoaded = true;
         }).catch(error=>{
             console.log('error 192: '+JSON.stringify(error));
         })
     }
-
-
-
-
-
-
-
-     }
-
-
-
-
-
-
-    
+    }
     }
     else{
-
         const evt = new ShowToastEvent({
             title: 'Select atleast one row',
             message: 'Please select atleast one row before clicking the deliver button',
@@ -577,61 +285,43 @@ this.mapAssests.forEach ((value, key)=>  {
             mode: 'dismissable'
         });
         this.dispatchEvent(evt);
-
     }
-   
-    
-    
-       //this.recordId = this.record;
-    
-     
 }
 
+//This method is used to navigate to batch number with a specific ID and opens it in a new tab.
 Navigatetobatchnumber(event){
     const strassetid=event.target.dataset.strassetid;
      this[NavigationMixin.GenerateUrl]({
          type: 'standard__recordPage',
          attributes:{
              recordId: strassetid,
-             objectApiName: 'quote',
+             objectApiName: 'Batch_Number__c',
              actionName:'view'
          }
      }).then(url =>{
          window.open(url, "_blank");
      })
-
-
 }
 
+//This function is used to get asset details based on the selected batch number and display them in a modal popup window.
 getassestdetails(event){
-       
-    this.batchnumberid = event.currentTarget.dataset.strbatch;
-
-
-    Assetvalues({batchname:this.batchnumberid}).then(result=>{
-       
+    this.strBatchNumberId = event.currentTarget.dataset.strbatch;
+    Assetvalues({batchname:this.strBatchNumberId}).then(result=>{
         console.log('line 13');
         // this.Asset=result;
         let resultArray=result;
-        this.Asset = resultArray.map((record, index) => {
+        this.list_Asset = resultArray.map((record, index) => {
           return {...record,index: index+1};
         });    
     console.log('line 17'+JSON.stringify(result));
     }).catch(error=>{
         console.log('error'+error);
     });    
-    this.isShowModal = true;
+    this.blnIsShowModal = true;
 }
 
-
+//This function is used to hide a modal box in the user interface.
 hideModalBox() {  
-    this.isShowModal = false;
+    this.blnIsShowModal = false;
 }
-
-
-
-
-
-
-
 }

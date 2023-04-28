@@ -1,5 +1,5 @@
 @istest
-public class Pf_TestClassFor_GetSupplierDetailsClass {
+public class Pf_GetSupplierDetailsClassTest {
     @testsetup static void data_setup(){
         Id RecordTypeIdOrder = Schema.SObjectType.order.getRecordTypeInfosByName().get('Purchase Orders').getRecordTypeId();
         Id RecordTypeIdaccount = Schema.SObjectType.account.getRecordTypeInfosByName().get('Supplier').getRecordTypeId();
@@ -120,200 +120,190 @@ public class Pf_TestClassFor_GetSupplierDetailsClass {
     
     @istest static void test_productsuppliers(){
         id ID_prid=[select id,
-        name 
-        from Product2].id;
-        string String_Productid=(string)ID_prid;
+                    name 
+                    from Product2].id;
+        string StrProductid=(string)ID_prid;
         test.startTest();
-        GetSuppleirDetails.productsuppliers(String_Productid);       
+        PF_GetSuppleirDetails.productsuppliers(StrProductid);       
         test.stopTest();      
     }
     @istest static void test_GetSuppleirDetails(){
-        id ID_psid=[select id,name from Product_Supplier__c].id;
+        id ID_psid=[select id,
+                    name 
+                    from Product_Supplier__c].id;
         list<string> List_productsupplierid=new list<string>();
         List_productsupplierid.add((string)ID_psid);
         list<string> List_Orderquantity=new list<string>{'1'};
-            string String_psname=[select id,
-            name 
-            from Product_Supplier__c].name;
+            string Strpsname=[select id,name from Product_Supplier__c].name;
         list<string> List_supplierNamesList=new list<string>();
-        List_supplierNamesList.add(String_psname);            
+        List_supplierNamesList.add(Strpsname);            
         test.startTest();
-        GetSuppleirDetails.SendAnEmail(List_productsupplierid,List_Orderquantity,List_supplierNamesList,'Miyapur');       
+        PF_GetSuppleirDetails.SendAnEmail(List_productsupplierid,List_Orderquantity,List_supplierNamesList,'Miyapur');       
         test.stopTest();      
     }
     @istest static void test_GetQuoteDetailsdummy(){
         
         test.startTest();
-        GetSuppleirDetails.GetQuoteDetailsdummy();       
+        PF_GetSuppleirDetails.GetQuoteDetailsdummy();       
         test.stopTest();      
     }
     @istest static void test_OrderRecords(){    
-        string String_suppname=[select id,
-        name 
-        from account].name;
-        string String_warname=[select id,
-        name 
-        from Location].name;
-        id ID_quoteid=[select id 
-        from quote].id;
-        string String_quoteidvalue=(string)ID_quoteid;
+        string Strsuppname=[select id,
+                                name from account].name;
+        string Strwarname=[select id,
+                               name from Location].name;
+        id ID_quoteid=[select id from quote].id;
+        string Strquoteidvalue=(string)ID_quoteid;
         list<string> List_suppliername=new list<string>();
-        List_suppliername.add(String_suppname);
+        List_suppliername.add(Strsuppname);
         list<string> List_warehousename=new list<string>();
-        List_warehousename.add(String_warname);
+        List_warehousename.add(Strwarname);
         test.startTest();
-        GetSuppleirDetails.OrderRecords(List_suppliername,List_warehousename,String_quoteidvalue);
+        PF_GetSuppleirDetails.OrderRecords(List_suppliername,List_warehousename,Strquoteidvalue);
         
         test.stopTest();
     }
     
     @istest static void test_OrderRecordsDatatable(){
-        string String_procure='Procured';
+        string Strprocure='Procured';
         test.startTest();
-        GetSuppleirDetails.OrderRecordsDatatable(String_procure);
+        PF_GetSuppleirDetails.OrderRecordsDatatable(Strprocure);
         test.stopTest();
     }
     @istest static void test_sendemailtosuppliers(){
-        string String_suppname=[select id,
-        name 
-        from account].name;
+        string Strsuppname=[select id,name from account].name;
         list<string> List_suppliername=new list<string>();
-        List_suppliername.add(String_suppname);        
+        List_suppliername.add(Strsuppname);        
         test.startTest();
-        GetSuppleirDetails.sendemailtosuppliers(List_suppliername);
+        PF_GetSuppleirDetails.sendemailtosuppliers(List_suppliername);
         test.stopTest();
         
     }
     
     @istest static void test_searchOrders(){
-        string String_suppname=[select id,
-        name 
-        from account].name;
-        string String_ordertypename='Procured';       
+        string Strsuppname=[select id,name from account].name;
+        string Strordertypename='Procured';       
         test.startTest();
-        GetSuppleirDetails.searchOrders(String_suppname,String_ordertypename);      
+        PF_GetSuppleirDetails.searchOrders(Strsuppname,Strordertypename);      
         test.stopTest();        
     }
     @istest static void test_opprecords(){
-        string String_productname='teset product';
+        string Strproductname='teset product';
         test.startTest();
-        GetSuppleirDetails.opprecords(String_productname);
+        PF_GetSuppleirDetails.opprecords(Strproductname);
         test.stopTest();
     }
     @istest static void test_GetSupplierrDetailsfornewtable(){
         
         test.startTest();
-        GetSuppleirDetails.GetSupplierrDetailsfornewtable('teset product','miyapur');
+        PF_GetSuppleirDetails.GetSupplierrDetailsfornewtable('teset product','miyapur');
         test.stopTest();
     }
         @istest static void test_supplierSection(){
         
         test.startTest();
-        GetSuppleirDetails.supplierSection('teset product');
+        PF_GetSuppleirDetails.supplierSection('teset product');
         test.stopTest();
     }
     @istest static void test_retrieveRecords(){
         
         test.startTest();
-        GetSuppleirDetails.retrieveRecords('test account','teset product');
+        PF_GetSuppleirDetails.retrieveRecords('test account','teset product');
         test.stopTest();
     }
      @istest static void test_supplierSearchFilter(){
         
         test.startTest();
-        GetSuppleirDetails.supplierSearchFilter();
+        PF_GetSuppleirDetails.supplierSearchFilter();
         test.stopTest();
     }
     @istest static void test_supplierNamesList(){
         
         test.startTest();
-        GetSuppleirDetails.supplierNamesList('test account');
+        PF_GetSuppleirDetails.supplierNamesList('test account');
         test.stopTest();
     }
      @istest static void test_PFGetQuoteLineItems(){
         
         test.startTest();
-        GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur','open');
+        PF_GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur','open');
 
-        GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur','closed');
-          GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur',null);
+        PF_GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur','closed');
+          PF_GetSuppleirDetails.PFGetQuoteLineItems('teset product','test account','miyapur',null);
         test.stopTest();
     }
      @istest static void test_CreateQuotelineitems(){
-         id ID_quotelineitemid=[select id 
-         from QuoteLineItem].id;
-         string String_quotelineitemvalue=(string)ID_quotelineitemid;
+         id ID_quotelineitemid=[select id from QuoteLineItem].id;
+         string Strquotelineitemvalue=(string)ID_quotelineitemid;
          date Date_datevalue=system.today();
         
         test.startTest();
-        GetSuppleirDetails.CreateQuotelineitems(String_quotelineitemvalue,10,10,10.0,'hi',Date_datevalue);
+        PF_GetSuppleirDetails.CreateQuotelineitems(Strquotelineitemvalue,10,10,10.0,'hi',Date_datevalue);
         test.stopTest();
     }
      @istest static void test_UpdateQuoteLineItemAndQuoteStatus(){
-         id ID_quoteid=[select id 
-         from quote].id;
-         string String_quoteidvalue=(string)ID_quoteid;
+         id ID_quoteid=[select id from quote].id;
+         string Strquoteidvalue=(string)ID_quoteid;
          list<quote> List_quote=[select id,
-         status 
-         from quote];
+                                 status
+                                 from quote];
          List_quote[0].Status='closed';
          update List_quote;         
          id ID_opportunityid=[select id 
-         from opportunity].id;
+                              from opportunity].id;
          list<string> List_oppids=new list<string>();
          List_oppids.add(ID_opportunityid);                
         test.startTest();
-        GetSuppleirDetails.UpdateQuoteLineItemAndQuoteStatus(String_quoteidvalue,List_oppids);
+        PF_GetSuppleirDetails.UpdateQuoteLineItemAndQuoteStatus(Strquoteidvalue,List_oppids);
         test.stopTest();
     }
     @istest static void test_getRelatedFilesByRecordId(){
-        id ID_quoteid=[select id 
-        from quote].id;
-         string String_quoteidvalue=(string)ID_quoteid;
+        id ID_quoteid=[select id
+                       from quote].id;
+         string Strquoteidvalue=(string)ID_quoteid;
         
         test.startTest();
-        GetSuppleirDetails.getRelatedFilesByRecordId(String_quoteidvalue);
+        PF_GetSuppleirDetails.getRelatedFilesByRecordId(Strquoteidvalue);
         test.stopTest();
     }
      @istest static void test_RejectedQuoteStatusUpdation(){
         list<QuoteLineItem> List_QuoteLineItemid=[select id,
-        QuoteId 
-        from QuoteLineItem];        
+                                                  QuoteId 
+                                                  from QuoteLineItem];        
         test.startTest();
-        GetSuppleirDetails.RejectedQuoteStatusUpdation(List_QuoteLineItemid);
+        PF_GetSuppleirDetails.RejectedQuoteStatusUpdation(List_QuoteLineItemid);
         test.stopTest();
     }
     @istest static void test_CreateQuoteAndQuoteLineItems(){
-         id ID_quoteid=[select id
-          from quote].id;
-         string String_quoteidvalue=(string)ID_quoteid;       
+         id ID_quoteid=[select id from quote].id;
+         string Strquoteidvalue=(string)ID_quoteid;       
         test.startTest();
-        GetSuppleirDetails.CreateQuoteAndQuoteLineItems(String_quoteidvalue);
+        PF_GetSuppleirDetails.CreateQuoteAndQuoteLineItems(Strquoteidvalue);
         test.stopTest();
     }
         @istest static void test_get(){
          id ID_quoteid=[select id
-          from quote].id;
-         string String_quoteidvalue=(string)ID_quoteid;       
+                        from quote].id;
+         string Strquoteidvalue=(string)ID_quoteid;       
         test.startTest();
-        GetSuppleirDetails.get(String_quoteidvalue);
+        PF_GetSuppleirDetails.get(Strquoteidvalue);
         test.stopTest();
         }
     @istest static void test_GetAssetRecordsFromProduct(){
-         id ID_productid=[select id
-          from product2].id;
-         string String_productidvalue=(string)ID_productid;       
+         id ID_productid=[select id 
+                          from product2].id;
+         string Strproductidvalue=(string)ID_productid;       
         test.startTest();
-        GetSuppleirDetails.GetAssetRecordsFromProduct(String_productidvalue);
+        PF_GetSuppleirDetails.GetAssetRecordsFromProduct(Strproductidvalue);
         test.stopTest();
         }
     
     @istest static void test_GetProductIdFromOppProductUsingOpportunity(){
          id ID_oppid=[select id 
-         from opportunity].id;
-         string Stringoppidvalue=(string)ID_oppid;       
+                      from opportunity].id;
+         string Stroppidvalue=(string)ID_oppid;       
         test.startTest();
-        GetSuppleirDetails.GetProductIdFromOppProductUsingOpportunity(Stringoppidvalue);
+        PF_GetSuppleirDetails.GetProductIdFromOppProductUsingOpportunity(Stroppidvalue);
         test.stopTest();
         }
 

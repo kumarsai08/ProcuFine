@@ -9,42 +9,42 @@ import getSupplierDetails from '@salesforce/apex/PF_orderdetails.getSupplierDeta
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class OrdersDatatable extends NavigationMixin (LightningElement) {
-@api OrderList=[];
-@api ChangedString;
-@api productNameOptions;
-@api productNamesList=[];
-@api AllProductList;
-@api orderIdStatus;
-@api supplierNameStatus;
-isAsc = false;
-isDsc = false;
-isDateSort = false;
-sortedDirection = 'asc';
-sortedColumn;
-@track searchData;
-@track errorMsg = '';
+@api list_OrderList=[];
+@api strChangedString;
+@api list_ProductNameOptions;
+@api list_ProductNamesList=[];
+@api list_AllProductList;
+@api strOrderIdStatus;
+@api strSupplierNameStatus;
+@api strSortedDirection = 'asc';
+@api strSortedColumn;
 @api strSupplierName = '';
-@api displayFullData;
-searchKey = '';
-supplierName = '';
+blnIsAsc = false;
+blnIsDsc = false;
+blnIsDateSort = false;
+strSearchKey = '';
+//@track searchData;
+//@track strErrorMessage = '';
+//@api displayFullData;
+//strSupplierName = '';
 
+//This code is used to fetch and store data in component variables during the component's initialization.
 connectedCallback(){
-       
     OrderRecordsDatatable({}).then(result=>{
         console.log('line 10');
-       this.OrderList=result;
-       this.AllProductList=result;
+       this.list_OrderList=result;
+       this.list_AllProductList=result;
        console.log('Line 12'+JSON.stringify(result));
     })
 .catch(error=>{
     console.log('error'+error);
 })  
 getproductnamerecords({}).then(result=>{
-    this.productNamesList.push({label:'All',value:'All'});
+    this.list_ProductNamesList.push({label:'All',value:'All'});
     result.forEach(element => {
-        this.productNamesList.push({label:element,value:element});
-        this.productNameOptions = JSON.parse(JSON.stringify(this.productNamesList));
-        console.log('line 53'+JSON.stringify(this.productNameOptions));
+        this.list_ProductNamesList.push({label:element,value:element});
+        this.list_ProductNameOptions = JSON.parse(JSON.stringify(this.list_ProductNamesList));
+        console.log('line 53'+JSON.stringify(this.list_ProductNameOptions));
     });
 })
 .catch(error=>{
@@ -53,39 +53,19 @@ getproductnamerecords({}).then(result=>{
                 
 }
 
-// handleKeyChange(event) {
-//     this.orderIdStatus = event.detail.value;
-//     console.log('line 95');
-//     if (this.orderIdStatus==='All') {
-//      console.log('line 104');
-//      this.OrderList=this.AllProductList;
-//     } 
-//     else {
-//         getOrderId({searchKey:this.orderIdStatus}).then(result=>{
-//         console.log('line 13');
-//         this.OrderList=result;
-//         console.log('line 15'+JSON.stringify(this.OrderList));
-//         })
-//         .catch(error=>{
-//             console.log('103 error'+error);
-//         })
-//     }
-// }
-
+//This function is used to handle the change in the selected supplier name and filter the order list accordingly based on the selected supplier.    
 handleSupplierChange(event) {
-    this.supplierNameStatus = event.detail.value;
-
+    this.strSupplierNameStatus = event.detail.value;
     console.log('line 95');
-    console.log('line 97'+this.supplierNameStatus);
-
-    if (this.supplierNameStatus==='') {
+    console.log('line 97'+this.strSupplierNameStatus);
+    if (this.strSupplierNameStatus==='') {
      console.log('line 104');
-     this.OrderList=this.AllProductList;
+     this.list_OrderList=this.list_AllProductList;
     } 
     else {
-        getSupplierDetails({searchSupplier:this.supplierNameStatus}).then(result=>{
+        getSupplierDetails({searchSupplier:this.strSupplierNameStatus}).then(result=>{
         console.log('line 13');
-        this.OrderList=result;
+        this.list_OrderList=result;
         console.log('line 15'+JSON.stringify(result));
         })
         .catch(error=>{
@@ -94,44 +74,35 @@ handleSupplierChange(event) {
     }
 }
 
+//This function handles changes in the product dropdown and updates the order list based on the selected product and order status.
 handleProductChange(event){
     console.log('line 95');
-    this.ChangedString=event.detail.value;
-    console.log('line 95'+ this.ChangedString);
+    this.strChangedString=event.detail.value;
+    console.log('line 95'+ this.strChangedString);
     if(this.statusChange==null || this.statusChange=='All'){
-        if (this.ChangedString==='All') {
+        if (this.strChangedString==='All') {
             console.log('line 104');
-            this.OrderList=this.AllProductList;
+            this.list_OrderList=this.list_AllProductList;
         } else {
-             orderStatusRecords({searchstatus:this.statusChange, searchsname:this.ChangedString}).then(result=>{
+             orderStatusRecords({searchstatus:this.statusChange, searchsname:this.strChangedString}).then(result=>{
                 console.log('line 13');
-                console.log('this.ChangedString'+this.ChangedString);
+                console.log('this.strChangedString'+this.strChangedString);
                 console.log('this.statusChange'+this.statusChange);
-                this.OrderList=result;
-                console.log('line 15'+JSON.stringify(this.OrderList));
+                this.list_OrderList=result;
+                console.log('line 15'+JSON.stringify(this.list_OrderList));
             })
             .catch(error=>{
                 console.log('103 error'+error);
             })
         }
-            
-            /*orderProductNameFilter({searchsname: this.ChangedString}).then(result=>{
-                console.log('line 13');
-                this.OrderList=result;
-                console.log('line 15'+JSON.stringify(this.OrderList));
-            })
-            .catch(error=>{
-                console.log('103 error'+error);
-            })
-        }*/
     }
         else {            
-            orderStatusRecords({searchstatus:this.statusChange, searchsname:this.ChangedString}).then(result=>{
+            orderStatusRecords({searchstatus:this.statusChange, searchsname:this.strChangedString}).then(result=>{
                 console.log('line 13');
-                console.log('this.ChangedString'+this.ChangedString);
+                console.log('this.strChangedString'+this.strChangedString);
                 console.log('this.statusChange'+this.statusChange);
-                this.OrderList=result;
-                console.log('line 15'+JSON.stringify(this.OrderList));
+                this.list_OrderList=result;
+                console.log('line 15'+JSON.stringify(this.list_OrderList));
             })
             .catch(error=>{
                 console.log('103 error'+error);
@@ -148,55 +119,39 @@ get orderOptions() {
     ];
 }
 
+//This function handles the change of order status and filters the order records based on the selected status and the previously selected product name. 
 handleStatusChange(event) {
-    console.log('line 233'+this.ChangedString);
+    console.log('line 233'+this.strChangedString);
     this.statusChange = event.detail.value;
     console.log('line 95');
     
-    if ( this.ChangedString==null || this.ChangedString=='All') {
-        //   console.log('line 104');
-        //  this.OrderItem=this.AllProductList;
+    if ( this.strChangedString==null || this.strChangedString=='All') {
         if(this.statusChange == 'All'){
             console.log('148')
-            console.log(this.AllProductList)
-            this.OrderList= this.AllProductList;
+            console.log(this.list_AllProductList)
+            this.list_OrderList= this.list_AllProductList;
         } else{
-            orderStatusRecords({searchstatus:this.statusChange, searchsname:this.ChangedString}).then(result=>{
+            orderStatusRecords({searchstatus:this.statusChange, searchsname:this.strChangedString}).then(result=>{
                 console.log('enter')
                 console.log('line 13');
-                console.log('this.ChangedString'+this.ChangedString);
+                console.log('this.strChangedString'+this.strChangedString);
                 console.log('this.statusChange'+this.statusChange);
-                this.OrderList=result;
-                console.log('line 15'+JSON.stringify(this.OrderList));
+                this.list_OrderList=result;
+                console.log('line 15'+JSON.stringify(this.list_OrderList));
             })
             .catch(error=>{
                 console.log('103 error'+error);
             })
         }
-        
-        /*orderStatusFilter({searchstatus:this.statusChange}).then(result=>{
-            console.log('line 13');
-            console.log('this.ChangedString'+this.ChangedString);
-            console.log('this.statusChange'+this.statusChange);
-            this.OrderList=result;
-            console.log('line 15'+JSON.stringify(this.OrderList));
-        })
-        .catch(error=>{
-            console.log('103 error'+error);
-        })
-    }*/
     }
-    
-    else {
-        //if ( this.ChangedString==='All')this.ChangedString=this.AllProductList;
-        
-        orderStatusRecords({searchstatus:this.statusChange, searchsname:this.ChangedString}).then(result=>{
+    else {        
+        orderStatusRecords({searchstatus:this.statusChange, searchsname:this.strChangedString}).then(result=>{
             console.log('enter')
             console.log('line 13');
-            console.log('this.ChangedString'+this.ChangedString);
+            console.log('this.strChangedString'+this.strChangedString);
             console.log('this.statusChange'+this.statusChange);
-            this.OrderList=result;
-            console.log('line 15'+JSON.stringify(this.OrderList));
+            this.list_OrderList=result;
+            console.log('line 15'+JSON.stringify(this.list_OrderList));
         })
         .catch(error=>{
             console.log('103 error'+error);
@@ -204,22 +159,23 @@ handleStatusChange(event) {
     }
 }
 
-        searchKey = '';
+//This is used to handle changes in the search key input field and retrieve the list of orders matching the search key using a wire method called getOrderId.
+            strSearchKey = '';
             @wire(getOrderId, { searchKey: '$searchKey' })
             Order;
                 handleKeyChange(event) {
-                    this.orderIdStatus = event.detail.value;
-                    console.log('SEARCHVALUE : '+ this.orderIdStatus );
+                    this.strOrderIdStatus = event.detail.value;
+                    console.log('SEARCHVALUE : '+ this.strOrderIdStatus );
                     
-                    if (this.orderIdStatus==='') {
+                    if (this.strOrderIdStatus==='') {
                      console.log('line 104');
-                     this.OrderList=this.AllProductList;
+                     this.list_OrderList=this.list_AllProductList;
                     } 
                     else {
-                        getOrderId({searchKey:this.orderIdStatus}).then(result=>{
+                        getOrderId({searchKey:this.strOrderIdStatus}).then(result=>{
                         console.log('line 13');
-                        this.OrderList=result;
-                        console.log('line 15'+JSON.stringify(this.OrderList));
+                        this.list_OrderList=result;
+                        console.log('line 15'+JSON.stringify(this.list_OrderList));
                         })
                         .catch(error=>{
                             console.log('103 error'+error);
@@ -227,47 +183,42 @@ handleStatusChange(event) {
                     }
                 }
 
+//This function is used to sort the data based on the column name passed as a parameter and the current sort direction.
                 sortDate(event) {
-                    this.isDateSort = true;
+                    this.blnIsDateSort = true;
                     this.sortData(event.currentTarget.dataset.id);
                    }
                    sortData(sortColumnName) {
                     // check previous column and direction
-                    if (this.sortedColumn === sortColumnName) {
-                        this.sortedDirection = this.sortedDirection === 'asc' ? 'desc' : 'asc';
+                    if (this.strSortedColumn === sortColumnName) {
+                        this.strSortedDirection = this.strSortedDirection === 'asc' ? 'desc' : 'asc';
                     } 
                     else {
-                        this.sortedDirection = 'asc';
+                        this.strSortedDirection = 'asc';
                     }
-                
                     // check arrow direction
-                    if (this.sortedDirection === 'asc') {
-                        this.isAsc = true;
-                        this.isDsc = false;
+                    if (this.strSortedDirection === 'asc') {
+                        this.blnIsAsc = true;
+                        this.blnIsDsc = false;
                     } 
                     else {
-                        this.isAsc = false;
-                        this.isDsc = true;
+                        this.blnIsAsc = false;
+                        this.blnIsDsc = true;
                     }
-                
                     // check reverse direction
-                    let isReverse = this.sortedDirection === 'asc' ? 1 : -1;
-                
-                    this.sortedColumn = sortColumnName;
-                
+                    let isReverse = this.strSortedDirection === 'asc' ? 1 : -1;
+                    this.strSortedColumn = sortColumnName;
                     // sort the data
-                    this.OrderList = JSON.parse(JSON.stringify(this.OrderList)).sort((a, b) => {
+                    this.list_OrderList = JSON.parse(JSON.stringify(this.list_OrderList)).sort((a, b) => {
                         a = a[sortColumnName] ? a[sortColumnName].toLowerCase() : ''; // Handle null values
                         b = b[sortColumnName] ? b[sortColumnName].toLowerCase() : '';
-                
                         return a > b ? 1 * isReverse : -1 * isReverse;
                     });;
                 }
                 
-                
+        //This method is used to navigate to Order with a specific ID and opens it in a new tab.
                 RecordPage(event){
                     const ordId=event.target.dataset.strorderid;
-                    // Navigate to a URL
                     this[NavigationMixin.GenerateUrl]({
                         type: 'standard__recordPage',
                         attributes:{
@@ -280,11 +231,10 @@ handleStatusChange(event) {
                     })
                     }
                 
-                
+     //This method is used to navigate to product with a specific ID and opens it in a new tab.
                     Navigatetoproductpage(event){
                         const ordId=event.target.dataset.strprodid;
-                    // Navigate to a URL
-                    this[NavigationMixin.GenerateUrl]({
+                        this[NavigationMixin.GenerateUrl]({
                         type: 'standard__recordPage',
                         attributes:{
                             recordId: ordId,
@@ -294,59 +244,5 @@ handleStatusChange(event) {
                     }).then(url =>{
                         window.open(url, "_blank");
                     })
-                    }
-
-//                 // handlesuppliername(event) {
-//                 //             this.strSupplierName = event.detail.value;
-//                 //             console.log(this.strSupplierName);
-//                 //             if(!this.strSupplierName) {
-//                 //                 //this.errorMsg = 'Please enter Supplier name to search.';
-//                 //                 this.displayFullData=true;
-//                 //                 this.searchData = undefined;
-//                 //                 return;
-//                 //             }
-//                 //             this.displayFullData=false;
-                    
-//                 //             searchOrders({strSupplierName : this.strSupplierName,Ordertypename : this.OrderTypeValue})
-//                 //             .then(result => {
-//                 //                 let templist=[];
-                           
-//                 //             var newData = JSON.parse(JSON.stringify(result));
-//                 //             console.log('line 44'+JSON.stringify(newData));
-                    
-                            
-//                 //             newData.forEach(record => {
-//                 //                let tempRecs = Object.assign({},record);
-//                 //                console.log('LINE 1'+JSON.stringify(tempRecs));
-                               
-//                 //                //tempRecs.SupplierName = record.supplier__c;
-//                 //                tempRecs.suppliername = record.Account.Name;
-//                 //                console.log('LINE 2'+record.Account.Name);
-                               
-//                 //                tempRecs.OrderUrl='/'+record.Id;
-//                 //                console.log('LINE 3'+record.Id);
-//                 //                tempRecs.ProductName= record.Product__r.Name;
-//                 //                console.log('LINE 4'+record.OrderNumber);
-//                 //                tempRecs.warehousename=record.Warehouse__r.Name;
-                               
-//                 //                //if(record.Warehouse__r.Name)tempRecs.warehousename=record.Warehouse__r.Name;
-//                 //                 //Console.log('LINE 5');
-                               
-//                 //                templist.push(tempRecs);
-//                 //                console.log('LINE 6'+templist);
-//                 //             });
-                            
-//                 //                 this.searchData = templist;
-                                
-//                 //             })
-//                 //             .catch(error => {
-//                 //                 this.searchData = undefined;
-//                 //                 window.console.log('error =====> '+JSON.stringify(error));
-//                 //                 if(error) {
-//                 //                     this.errorMsg = error.body.message;
-//                 //                 }
-//                 //             }) 
-//                 //         }
-                    
-                        
+                    }   
 }

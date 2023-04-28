@@ -1,5 +1,5 @@
 @istest
-public class Pf_TestClassForPF_DeliveryAutomation {
+public class Pf_DeliveryAutomationTest {
     @TestSetup static void datasetup(){
         Order Objorder=new Order();
         Objorder.Name='test order';
@@ -32,13 +32,13 @@ public class Pf_TestClassForPF_DeliveryAutomation {
     }
     @IsTest static void testdeliveryAutomationmethod(){
         order Record_orderrecord=[select id,
-        name 
-        from order
-         where name='test order'];
+                                  name
+                                  from order 
+                                  where name='test order'];
         system.debug(Record_orderrecord);
         Batch_Number__c Record_batchnumberid=[select id,
-        name 
-        from Batch_Number__c];        
+                                              name 
+                                              from Batch_Number__c];        
         list<string> List_batchnumber=new list<string>{Record_batchnumberid.id};
             list<integer> List_inputquantity=new list<integer>{1};
          test.startTest();

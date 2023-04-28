@@ -1,5 +1,5 @@
 @istest
-public class Pf_TestClassFor_GetQuoteDetails {
+public class Pf_GetQuoteDetailsTest {
     @isTest
     static void OutboundEmailHandler(){
         opportunity objopportunity = new opportunity();

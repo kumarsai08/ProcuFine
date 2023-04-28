@@ -1,5 +1,18 @@
+<!--
+* 
+* @ Name    :   oppQuantityUrl
+* @ Purpose :   This Component displays a data table of opportunities and handles row actions based on user interaction.
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      kumarsai.vadapalli@absyz.com
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*
+-->
 <template>
-    <!-- <lightning-button class="slds-m-left_x-small" label="Close" onclick={closeTab} variant="base"></lightning-button> -->
     <template if:true={listopportunities}>
         <lightning-datatable data={listopportunities} columns={columns} key-field="Id" onrowaction={handleClick}>
         </lightning-datatable>

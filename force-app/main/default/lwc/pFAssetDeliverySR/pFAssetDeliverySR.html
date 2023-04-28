@@ -1,19 +1,20 @@
+<!--
+* 
+* @ Name    :   pFAssetDeliverySR
+* @ Purpose :   This code displays a table of assets with their details and allows the user to select and modify some values. It also includes a modal box for displaying more details about a specific asset.
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
-    
     <lightning-card>
         <div class="slds-box slds-theme_default">
-            
-            <!-- <template if:true={loaded}>
-                <div class="demo-only demo-only_viewport demoinverse" style="height:6rem;background-color:#16325c;position:relative">
-                    <div class="slds-spinner_container slds-is-fixed">
-                        <div role="status" class="slds-spinner slds-spinner_medium">
-                            <span class="slds-assistive-text">Loading</span>
-                            <div class="slds-spinner__dot-a"></div>
-                            <div class="slds-spinner__dot-b"></div>
-                        </div>
-                    </div>
-                </div>
-            </template> -->
             <template lwc:if ={showMsg}>
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                     <thead>
@@ -37,31 +38,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template for:each={DisplayRelatedRecords} for:item="Asset">
+                        <template for:each={list_DisplayRelatedRecords} for:item="Asset">
                             <tr key={Asset.Id}>
                                 <td><input type="checkbox" name='finalise' onchange={handlecheckbox} data-astid={Asset.Id} data-batchid={Asset.Batch_Number_lookup__c} data-stock ={Asset.Batch_Number_lookup__r.Child_Assets_Count__c} class="slds-p-left_xx-large" ></input></td>
                                 <td>{Asset.InstallDate} </td>
                                 <td><a  name={Asset.Batch_Number_lookup__c} data-strassetid= {Asset.Batch_Number_lookup__c}  onclick={Navigatetobatchnumber}  target="_blank">{Asset.Batch_Number_lookup__r.Name}</a></td>
-                                <!-- <td> onclick={getProductName}{Batchno.Child_Assets_Count__c}</td> -->
                                 <td><a onclick={getassestdetails}  class="slds-p-left_xx-large" data-strbatch= {Asset.Batch_Number_lookup__c} >{Asset.Batch_Number_lookup__r.Child_Assets_Count__c}</a></td>
-                                
                                 <td><lightning-input type="number" name="input1"  class="slds-p-bottom_large"   label="" data-astid={Asset.Id}   data-assetid={Asset.Id} data-batchid={Asset.Batch_Number_lookup__c} data-firstinputvalue={Asset.Batch_Number_lookup__r.Child_Assets_Count__c} onchange={handleinputnumbers} ></lightning-input>
                                 </td>
-                                
                             </tr>
                         </template>
-                        <!-- <template >
-                            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
-                                <span class="slds-assistive-text">Error</span>
-                                <div class="slds-notify__content">
-                                    <h2>{errorMessage}</h2>
-                                </div>
-                            </div>
-                        </template> -->
-                    
-    
-                        <!-- popup -->
-                        
                 </tbody>
             </table>
         <div> <lightning-button variant="brand" label="Deliver"  onclick={handledeliver} class="slds-align_absolute-center"></lightning-button></div>
@@ -72,14 +58,9 @@
 </div>
 </lightning-card>
 
-
-
-    
-
-    <template if:true={isShowModal}>
+    <template if:true={blnIsShowModal}>
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
-                <!-- modal header start -->
                 <header class="slds-modal__header">
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
                         <lightning-icon icon-name="utility:close"
@@ -89,17 +70,13 @@
                         <span class="slds-assistive-text">Close</span>
                     </button>
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Asset Details</h2>
-                </header>
-                
-                <!-- modal body start -->
+                </header>                
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                     <lightning-card>
                         <table class="slds-table slds-table_cell-buffer slds-p-horizontal_xx-small" border="1"
                         cellspacing="0" cellpadding="0" bordercolor="#ccc" style="border-collapse:collapse;">
-                        
                         <thead>
                             <tr class="slds-table-height_reset">
-                                
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Product Name">SL.No</div>
                                 </th>
@@ -109,46 +86,24 @@
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Batch Number">SKU-Id</div>
                                 </th>
-                                <!-- <th class="" scope="col">
-                                    <div class="slds-truncate" title="Batch Number">Serial Number</div>
-                                </th>  -->
                             </tr>
                         </thead>
                         <tbody>
-                            <template for:each={Asset} for:item="Assetno" for:index="index">
+                            <template for:each={list_Asset} for:item="Assetno" for:index="index">
                                 <tr key={Assetno.Id}>
                                     <td>{Assetno.index}</td>
                                     <td>{Assetno.Product2.Name}</td>
                                     <td>{Assetno.SKU_Id__c}</td>
-                                    <!-- <td>{Assetno.Serial_number__c}</td> -->
                                 </tr>
                             </template>
                         </tbody>
                     </table>
                 </lightning-card>
-            </div>
-            
-            <!-- modal footer start-->
+            </div>            
             <footer class="slds-modal__footer">
-                <!-- <button class="slds-button slds-button_neutral" onclick={hideModalBox}>Save</button> -->
             </footer>
-            
         </div>
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
 </template>
-
-
-
-
-
-
-
-    
-    <!-- <div> -->
-    
-    
-    <!-- <lightning-card>
-        <lightning-button variant="brand" label="Deliver"  onclick={handledeliver} class="slds-align_absolute-center"></lightning-button> 
-    </lightning-card> -->
 </template>

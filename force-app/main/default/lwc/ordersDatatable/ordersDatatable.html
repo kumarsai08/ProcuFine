@@ -1,3 +1,17 @@
+<!--
+* 
+* @ Name    :   ordersDatatable
+* @ Purpose :   This Web Component is used to display a table of orders with search, filter, sort, and navigation functionality.
+* @ Author  :   Srikanth,Hima Bindu,Manogna,Kumar Sai
+*
+*   Date            |  Developer Name                 |  Version      |  Changes
+* ======================================================================================================
+*   26-12-2022      |  manogna.koppula@absyz.com      |  1.0          |  Initial Version
+*                      himabindu.vanaparthi@absyz.com
+*                      srikanth.halavath@absyz.com
+*                      kumarsai.vadapalli@absyz.com
+*
+-->
 <template>
     <lightning-card>
         <div class="slds-box slds-theme_default">
@@ -21,11 +35,11 @@
                                 <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
                                     <span class="slds-assistive-text">Sort</span>
                                     <span class="slds-truncate" >Order Date</span>
-                                    <div if:true={isDateSort}>
-                                        <div if:true={isAsc}>
+                                    <div if:true={blnIsDateSort}>
+                                        <div if:true={blnIsAsc}>
                                             &#9650;
                                         </div>
-                                        <div if:true={isDsc}>
+                                        <div if:true={blnIsDsc}>
                                             &#9660;
                                         </div>
                                     </div>
@@ -37,13 +51,13 @@
                                 name="Order Products"
                                 label="Order Products"
                                 value={value}
-                                options={productNameOptions}
+                                options={list_ProductNameOptions}
                                 onchange={handleProductChange} ></lightning-combobox>
                             </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <template for:each={OrderList} for:item="ord">
+                    <template for:each={list_OrderList} for:item="ord">
                         <tr key={ord.Id}>
                             <td><a  name={ord.Id} data-strorderid= {ord.Id}  onclick={RecordPage}  target="_blank">{ord.OrderNumber}</a></td>
                             <td>{ord.Status}</td>

@@ -1,5 +1,5 @@
 @isTest
-public class Pf_TestClassFor_Pf_Inventory_Summary {
+public class Pf_Inventory_SummaryTest {
     @testsetup static void TestfetchInventory(){
         account objAccount = new account();
         objAccount.name = 'test account';
@@ -54,18 +54,19 @@ public class Pf_TestClassFor_Pf_Inventory_Summary {
     @isTest
     static void testapp(){
         List < Inventory__c > list_inv = [select id,
-        Threshold__c, 
-        Warehouse__r.Name,
-         Product__r.name,
-         Product__c,Warehouse__c, 
-         Quantity__c, 
-         Exsisting_Stock_On_Hand__c,
-          On_Order__c,
-          defective_quantity__c, 
-          Order__c,
-           Under_QA_Num__c, 
-           Shortfall__c 
-           from Inventory__c];
+                                          Threshold__c,
+                                          Warehouse__r.Name, 
+                                          Product__r.name,
+                                          Product__c,
+                                          Warehouse__c, 
+                                          Quantity__c,
+                                          Exsisting_Stock_On_Hand__c, 
+                                          On_Order__c,
+                                          defective_quantity__c,
+                                          Order__c, 
+                                          Under_QA_Num__c, 
+                                          Shortfall__c
+                                          from Inventory__c];
         test.startTest();
         Pf_Inventory_Summary.fetchInventory();
         test.stopTest();

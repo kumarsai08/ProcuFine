@@ -3,16 +3,16 @@ import fetchOrderProduct from '@salesforce/apex/PF_orderdetails.fetchOrderProduc
 import updateOrder from '@salesforce/apex/PF_orderdetails.updateOrder';
 import createAsset from '@salesforce/apex/PF_orderdetails.createAsset';
 //import updatePendingQuantity from '@salesforce/apex/orderdetails.updatePendingQuantity';
-import getassetrecords from '@salesforce/apex/Assetdetails.getassetrecords';
+//import getassetrecords from '@salesforce/apex/Assetdetails.getassetrecords';
 import getproductnamerecords from '@salesforce/apex/PF_orderdetails.getproductnamerecords';
-import retrieveProductRecords from '@salesforce/apex/PF_orderdetails.retrieveProductRecords';
+//import retrieveProductRecords from '@salesforce/apex/orderdetails.retrieveProductRecords';
 //import getStatusRecords from '@salesforce/apex/orderdetails.getStatusRecords';
 import statusRecords from '@salesforce/apex/PF_orderdetails.statusRecords';
-import getOrderId from '@salesforce/apex/PF_orderdetails.getOrderId';
-import statusRecordsWithoutProduct from '@salesforce/apex/PF_orderdetails.statusRecordsWithoutProduct';  
+//import getOrderId from '@salesforce/apex/orderdetails.getOrderId';
+//import statusRecordsWithoutProduct from '@salesforce/apex/orderdetails.statusRecordsWithoutProduct';  
 import fetchSearchResultsDeliveryInfo from '@salesforce/apex/PF_orderdetails.fetchSearchResultsDeliveryInfo';
 import { NavigationMixin } from 'lightning/navigation';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+//import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 
 

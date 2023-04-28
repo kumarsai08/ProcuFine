@@ -7,7 +7,6 @@ import retrieveRecords from '@salesforce/apex/PF_GetSuppleirDetails.retrieveReco
 import SendAnEmail from '@salesforce/apex/PF_GetSuppleirDetails.SendAnEmail';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
-//import sendEmailtoUser from '@salesforce/apex/GetSuppleirDetails.sendEmailtoUser';
 
 export default class SupplierDetailsTable extends NavigationMixin (LightningElement) {
 
@@ -166,17 +165,6 @@ export default class SupplierDetailsTable extends NavigationMixin (LightningElem
                 this.intTotalQuantity=this.intTotalQuantity+parseInt(element);
                 console.log('line 232'+this.intTotalQuantity);
             });
-            //console.log('193:'+document.getElementById(this.selectedSupp[0]).value);
-           /* if(this.totalquantity>this.differenceValue){
-                const evt = new ShowToastEvent({
-                    title: 'Recheck Quantity',
-                    message: 'Please Recheck the sum of input quanity',
-                    variant: 'error',
-                    mode: 'dismissable'
-                });
-                this.dispatchEvent(evt);
-
-            }else{*/
             SendAnEmail({supplierids : this.list_SelectedSupp,Orderquantity : this.list_inptq,supplierNamesList : this.list_SupplierNamesList,WarehouseName : this.strWareName}).then(result=>{
                 console.log('line 24');
                 console.log('line 26'+ JSON.stringify(result));
@@ -195,13 +183,7 @@ export default class SupplierDetailsTable extends NavigationMixin (LightningElem
                 console.log('send an email error'+JSON.stringify(error));
             })
         }
-            //sendEmailtoUser({prodSupId: this.selectedSupp}).then(result=>{
-                //console.log('line 175');
-                
-            //})
-           // .catch(error=>{
-                //console.log('103 error'+JSON.stringify(error));
-           // })
+            
         
         //This method is used to handle changes made in the input field for quantity. 
         handleInputQuantity(event){
@@ -216,11 +198,6 @@ export default class SupplierDetailsTable extends NavigationMixin (LightningElem
             }
             console.log('line 268'+this.list_inptq);
             console.log('line 269'+this.list_SupplierNamesList);
-            /*this.inptq.forEach(element => {
-                let IntTotalValue=0;
-                IntTotalValue=IntTotalValue+parseInt(element);
-                
-            });*/
         }
 
         //This method is used to navigate to product with a specific ID and opens it in a new tab.
@@ -241,7 +218,6 @@ export default class SupplierDetailsTable extends NavigationMixin (LightningElem
         //This method is used to navigate to warehouse with a specific ID and opens it in a new tab.
         NavigatetowarehousePage(event){
             const ordId=event.target.dataset.strwarehouseid;
-             // Navigate to a URL
              this[NavigationMixin.GenerateUrl]({
                  type: 'standard__recordPage',
                  attributes:{
